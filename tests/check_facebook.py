@@ -15,7 +15,9 @@ with sync_playwright() as p:
             "flood",
             "weather",
             "assess",
-            "ajax",
+            "search",
+            "geocod",
+            "nominatim",
             "json"
         ]):
             print("NETWORK:", response.status, response.url)
@@ -24,7 +26,7 @@ with sync_playwright() as p:
 
     page.goto(URL, wait_until="networkidle", timeout=120000)
 
-    # Enter a Mandaluyong location
+    # Enter Mandaluyong location
     address = page.locator(
         'input[placeholder*="Enter address"]'
     )
@@ -33,28 +35,32 @@ with sync_playwright() as p:
 
     print("Entered address.")
 
-    # Show available buttons
-    print("\n===== BUTTONS =====")
+    # First search for the address
+    search_button = page.get_by_role("button", name="Search", exact=True)
 
-    for button in page.locator("button").all():
-        try:
-            print("BUTTON:", button.inner_text().strip())
-        except:
-            pass
+    print("Clicking Search...")
+    search_button.click()
 
-    # Try the button containing "risk"
-    risk_button = page.get_by_text("Check Risk", exact=True)
+    # Allow geocoding/search to complete
+    page.wait_for_timeout(5000)
 
-    if risk_button.count() > 0:
-        print("\nClicking Check Risk...")
-        risk_button.click()
-    else:
-        print("\nCheck Risk button not found.")
+    print("\n===== AFTER SEARCH =====")
+    print(page.locator("body").inner_text()[-5000:])
 
-    # Give the page time to process the assessment
+    # Now click Assess Risk
+    assess_button = page.get_by_role(
+        "button",
+        name="Assess Risk",
+        exact=True
+    )
+
+    print("\nClicking Assess Risk...")
+    assess_button.click()
+
+    # Allow risk assessment to complete
     page.wait_for_timeout(10000)
 
-    print("\n===== RESULT PAGE TEXT =====")
-    print(page.locator("body").inner_text()[:10000])
+    print("\n===== FINAL RESULT =====")
+    print(page.locator("body").inner_text()[-8000:])
 
     browser.close()

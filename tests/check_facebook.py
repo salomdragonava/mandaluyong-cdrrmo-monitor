@@ -6,33 +6,22 @@ with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
     page = browser.new_page()
 
-    def handle_response(response):
-        url = response.url
-
-        # Show likely data/API requests
-        if any(x in url.lower() for x in [
-            "api",
-            "json",
-            "advis",
-            "warning",
-            "alert",
-            "weather",
-            "risk",
-            "report"
-        ]):
-            print("NETWORK:", response.status, url)
-
-    page.on("response", handle_response)
-
     page.goto(URL, wait_until="networkidle", timeout=120000)
 
-    print("\n===== PAGE TITLE =====")
-    print(page.title())
+    print("===== LINKS ON MENCHIE =====")
 
-    print("\n===== PAGE URL =====")
-    print(page.url)
+    links = page.locator("a").all()
 
-    print("\n===== PAGE TEXT =====")
-    print(page.locator("body").inner_text()[:10000])
+    for link in links:
+        try:
+            text = link.inner_text().strip()
+            href = link.get_attribute("href")
+
+            if text or href:
+                print(f"TEXT: {text}")
+                print(f"URL:  {href}")
+                print("---")
+        except:
+            pass
 
     browser.close()

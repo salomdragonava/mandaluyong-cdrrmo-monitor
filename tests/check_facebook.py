@@ -1,6 +1,6 @@
 from playwright.sync_api import sync_playwright
 
-URL = "https://www.resilient-mandaluyong.org/"
+URL = "https://www.resilient-mandaluyong.org/resources"
 
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
@@ -8,19 +8,22 @@ with sync_playwright() as p:
 
     page.goto(URL, wait_until="networkidle", timeout=120000)
 
-    print("===== LINKS ON MENCHIE =====")
+    print("===== RESOURCES PAGE =====")
+    print("TITLE:", page.title())
+    print("URL:", page.url)
 
-    links = page.locator("a").all()
+    print("\n===== PAGE TEXT =====")
+    print(page.locator("body").inner_text()[:15000])
 
-    for link in links:
+    print("\n===== LINKS =====")
+
+    for link in page.locator("a").all():
         try:
             text = link.inner_text().strip()
             href = link.get_attribute("href")
 
             if text or href:
-                print(f"TEXT: {text}")
-                print(f"URL:  {href}")
-                print("---")
+                print(f"{text} -> {href}")
         except:
             pass
 

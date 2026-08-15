@@ -26,7 +26,7 @@ with sync_playwright() as p:
 
     page.goto(URL, wait_until="networkidle", timeout=120000)
 
-    # Enter Mandaluyong location
+    # Enter address
     address = page.locator(
         'input[placeholder*="Enter address"]'
     )
@@ -35,29 +35,41 @@ with sync_playwright() as p:
 
     print("Entered address.")
 
-    # First search for the address
-    search_button = page.get_by_role("button", name="Search", exact=True)
+    # Find the visible Search button
+    search_button = page.locator("button").filter(
+        has_text="Search"
+    ).first
+
+    print("Search button count:", search_button.count())
+
+    if search_button.count() == 0:
+        print("ERROR: Search button not found.")
+        browser.close()
+        raise SystemExit(1)
 
     print("Clicking Search...")
     search_button.click()
 
-    # Allow geocoding/search to complete
     page.wait_for_timeout(5000)
 
     print("\n===== AFTER SEARCH =====")
     print(page.locator("body").inner_text()[-5000:])
 
-    # Now click Assess Risk
-    assess_button = page.get_by_role(
-        "button",
-        name="Assess Risk",
-        exact=True
-    )
+    # Find Assess Risk button
+    assess_button = page.locator("button").filter(
+        has_text="Assess Risk"
+    ).first
 
-    print("\nClicking Assess Risk...")
+    print("\nAssess Risk button count:", assess_button.count())
+
+    if assess_button.count() == 0:
+        print("ERROR: Assess Risk button not found.")
+        browser.close()
+        raise SystemExit(1)
+
+    print("Clicking Assess Risk...")
     assess_button.click()
 
-    # Allow risk assessment to complete
     page.wait_for_timeout(10000)
 
     print("\n===== FINAL RESULT =====")

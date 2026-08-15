@@ -9,7 +9,6 @@ with sync_playwright() as p:
     def handle_response(response):
         url = response.url.lower()
 
-        # Print requests that look like data/API requests
         if any(word in url for word in [
             "api",
             "risk",
@@ -25,22 +24,37 @@ with sync_playwright() as p:
 
     page.goto(URL, wait_until="networkidle", timeout=120000)
 
-    print("===== PAGE LOADED =====")
-    print("TITLE:", page.title())
-    print("URL:", page.url)
+    # Enter a Mandaluyong location
+    address = page.locator(
+        'input[placeholder*="Enter address"]'
+    )
 
-    # Find inputs
-    print("\n===== INPUTS =====")
+    address.fill("Highway Hills, Mandaluyong, Philippines")
 
-    for i, element in enumerate(page.locator("input").all()):
+    print("Entered address.")
+
+    # Show available buttons
+    print("\n===== BUTTONS =====")
+
+    for button in page.locator("button").all():
         try:
-            print(
-                i,
-                "type=", element.get_attribute("type"),
-                "name=", element.get_attribute("name"),
-                "placeholder=", element.get_attribute("placeholder")
-            )
+            print("BUTTON:", button.inner_text().strip())
         except:
             pass
+
+    # Try the button containing "risk"
+    risk_button = page.get_by_text("Check Risk", exact=True)
+
+    if risk_button.count() > 0:
+        print("\nClicking Check Risk...")
+        risk_button.click()
+    else:
+        print("\nCheck Risk button not found.")
+
+    # Give the page time to process the assessment
+    page.wait_for_timeout(10000)
+
+    print("\n===== RESULT PAGE TEXT =====")
+    print(page.locator("body").inner_text()[:10000])
 
     browser.close()

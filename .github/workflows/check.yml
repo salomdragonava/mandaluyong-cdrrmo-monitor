@@ -34,8 +34,10 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          MESSAGE=$(cat <<'EOF'
-🟢 CDRRMO Monitor Online
+          curl --fail --silent --show-error \
+            --request POST \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=🟢 CDRRMO Monitor Online
 
 Mandaluyong flood monitoring is connected.
 
@@ -47,14 +49,7 @@ Monitoring points:
 🚨 P5 J.P. Rizal × Saniboy
 🚨 P6 J.P. Rizal × Coronado
 
-Telegram connection test successful.
-EOF
-          )
-
-          curl --fail --silent --show-error \
-            --request POST \
-            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
-            --data-urlencode "text=${MESSAGE}" \
+Telegram connection test successful." \
             "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
 
       - name: Save monitoring state

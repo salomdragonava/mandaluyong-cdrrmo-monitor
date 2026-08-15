@@ -1,4 +1,4 @@
-name: Mandaluyong CDRRMO Monitor
+name: CDRRMO Monitor
 
 on:
   workflow_dispatch:
@@ -34,46 +34,11 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          python - <<'PY'
-          import urllib.request
-          import urllib.parse
-          import os
-
-          token = os.environ["TELEGRAM_BOT_TOKEN"]
-          chat_id = os.environ["TELEGRAM_CHAT_ID"]
-
-          message = """🟢 CDRRMO Monitor Online
-
-Mandaluyong flood monitoring is connected.
-
-Monitoring:
-🔴 P1 Pananalig × Villarica
-🔴 P2 Villarica × Nanirahan
-🚨 P3 J.P. Rizal × San Pedro
-🚨 P4 J.P. Rizal × Ilino Cruz
-🚨 P5 J.P. Rizal × Saniboy
-🚨 P6 J.P. Rizal × Coronado
-
-Telegram connection test successful."""
-
-          url = f"https://api.telegram.org/bot{token}/sendMessage"
-
-          data = urllib.parse.urlencode({
-              "chat_id": chat_id,
-              "text": message
-          }).encode()
-
-          request = urllib.request.Request(
-              url,
-              data=data,
-              method="POST"
-          )
-
-          with urllib.request.urlopen(request, timeout=30) as response:
-              result = response.read().decode()
-
-          print("Telegram response:", result)
-          PY
+          curl --fail --silent --show-error \
+            --request POST \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=🟢 CDRRMO Monitor Online%0A%0AMandaluyong flood monitoring is connected.%0A%0AMonitoring P1-P6 successfully." \
+            "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
 
       - name: Save monitoring state
         run: |

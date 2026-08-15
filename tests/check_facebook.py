@@ -1,6 +1,7 @@
 import urllib.request
 import urllib.parse
 import json
+import os
 
 # ============================================================
 # MANDALUYONG FLOOD MONITORING POINTS
@@ -15,8 +16,15 @@ points = [
     ("P6", "J.P. Rizal × Coronado", 14.570609, 121.030969, "ESCAPE ROUTE"),
 ]
 
+STATE_FILE = "flood_state.json"
+
+
+# ============================================================
+# GET JSON
+# ============================================================
 
 def get_json(url):
+
     request = urllib.request.Request(
         url,
         headers={
@@ -25,22 +33,48 @@ def get_json(url):
     )
 
     with urllib.request.urlopen(request, timeout=30) as response:
-        body = response.read().decode("utf-8")
-        return json.loads(body)
+
+        return json.loads(
+            response.read().decode("utf-8")
+        )
+
+
+# ============================================================
+# LOAD PREVIOUS STATE
+# ============================================================
+
+if os.path.exists(STATE_FILE):
+
+    with open(STATE_FILE, "r") as file:
+        previous = json.load(file)
+
+else:
+
+    previous = {}
+
+
+# ============================================================
+# CURRENT STATE
+# ============================================================
+
+current = {}
 
 
 print("=" * 70)
-print("MANDALUYONG FLOOD POINT VALIDATION")
+print("MANDALUYONG FLOOD MONITOR")
 print("=" * 70)
+
+
+# ============================================================
+# CHECK EACH POINT
+# ============================================================
 
 for point_id, name, lat, lng, purpose in points:
 
-    print("\n")
-    print("=" * 70)
+    print("\n" + "-" * 70)
+
     print(point_id, "-", name)
     print("PURPOSE:", purpose)
-    print("COORDINATES:", lat, lng)
-    print("=" * 70)
 
     try:
 
@@ -56,26 +90,93 @@ for point_id, name, lat, lng, purpose in points:
 
         result = get_json(url)
 
-        print("\nPROJECTLIGTAS RESULT:")
-        print(json.dumps(result, indent=2))
-
         data = result.get("data", {})
 
-        print("\nSUMMARY:")
-        print("Risk Level:", data.get("risk_level"))
-        print("Risk Score:", data.get("risk_score"))
-        print("Rainfall:", data.get("rainfall"), "mm")
-        print("Elevation:", data.get("elevation"), "m")
-        print("Flood History:", data.get("flood_history"))
-        print("API Location:", data.get("location"))
+        risk_level = data.get("risk_level")
+        risk_score = data.get("risk_score")
+        rainfall = data.get("rainfall")
+        flood_history = data.get("flood_history")
+
+        current[point_id] = {
+            "name": name,
+            "purpose": purpose,
+            "lat": lat,
+            "lng": lng,
+            "risk_level": risk_level,
+            "risk_score": risk_score,
+            "rainfall": rainfall,
+            "flood_history": flood_history,
+            "timestamp": data.get("timestamp")
+        }
+
+        print("Risk:", risk_level)
+        print("Score:", risk_score)
+        print("Rainfall:", rainfall, "mm")
+        print("Flood history:", flood_history)
+
+        # ----------------------------------------------------
+        # COMPARE WITH PREVIOUS RUN
+        # ----------------------------------------------------
+
+        if point_id in previous:
+
+            old = previous[point_id]
+
+            old_score = old.get("risk_score", 0)
+            old_level = old.get("risk_level")
+
+            score_change = risk_score - old_score
+
+            print("\nPrevious:")
+            print("Risk:", old_level)
+            print("Score:", old_score)
+
+            print("\nChange:")
+            print("Score:", round(score_change, 2))
+
+            if risk_level != old_level:
+
+                print(
+                    "⚠️ RISK LEVEL CHANGED:",
+                    old_level,
+                    "→",
+                    risk_level
+                )
+
+            elif abs(score_change) >= 1:
+
+                print(
+                    "⚠️ RISK SCORE CHANGED:",
+                    round(score_change, 2)
+                )
+
+            else:
+
+                print("No significant change.")
+
+        else:
+
+            print("\n🆕 First reading for this point.")
 
     except Exception as error:
 
-        print("\n❌ ERROR:")
-        print(error)
+        print("❌ ERROR:", error)
+
+
+# ============================================================
+# SAVE CURRENT STATE
+# ============================================================
+
+with open(STATE_FILE, "w") as file:
+
+    json.dump(
+        current,
+        file,
+        indent=2
+    )
 
 
 print("\n")
 print("=" * 70)
-print("VALIDATION COMPLETE")
+print("CURRENT STATE SAVED")
 print("=" * 70)

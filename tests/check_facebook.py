@@ -1,29 +1,30 @@
-import requests
-import json
+import urllib.request
+import urllib.parse
 
 LAT = 14.5790363
 LNG = 121.0496244
 
-URL = "https://projectligtas.com/floodrisk/predict"
+base_url = "https://projectligtas.com/floodrisk/predict"
 
-response = requests.get(
-    URL,
-    params={
-        "lat": LAT,
-        "lng": LNG
-    },
-    timeout=30
-)
+params = urllib.parse.urlencode({
+    "lat": LAT,
+    "lng": LNG
+})
+
+url = f"{base_url}?{params}"
 
 print("===== FLOOD RISK API TEST =====")
-print("URL:", response.url)
-print("STATUS:", response.status_code)
-print("CONTENT TYPE:", response.headers.get("content-type"))
-
-print("\n===== RESPONSE =====")
+print("URL:", url)
 
 try:
-    data = response.json()
-    print(json.dumps(data, indent=2))
-except Exception:
-    print(response.text[:10000])
+    with urllib.request.urlopen(url, timeout=30) as response:
+        body = response.read().decode("utf-8")
+
+        print("STATUS:", response.status)
+        print("CONTENT TYPE:", response.headers.get("content-type"))
+
+        print("\n===== RESPONSE =====")
+        print(body[:10000])
+
+except Exception as e:
+    print("ERROR:", e)

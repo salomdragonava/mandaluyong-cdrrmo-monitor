@@ -29,30 +29,21 @@ jobs:
       - name: Run flood monitor
         run: python tests/check_facebook.py
 
-      - name: Send Telegram test
+      - name: Send Telegram alert
+        if: ${{ hashFiles('telegram_alert.txt') != '' }}
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_MESSAGE: |
-            🟢 CDRRMO Monitor Online
-
-            Mandaluyong flood monitoring is connected.
-
-            Monitoring points:
-            🔴 P1 Pananalig × Villarica
-            🔴 P2 Villarica × Nanirahan
-            🚨 P3 J.P. Rizal × San Pedro
-            🚨 P4 J.P. Rizal × Ilino Cruz
-            🚨 P5 J.P. Rizal × Saniboy
-            🚨 P6 J.P. Rizal × Coronado
-
-            Telegram connection test successful.
         run: |
-          curl --fail --silent --show-error \
-            --request POST \
-            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
-            --data-urlencode "text=${TELEGRAM_MESSAGE}" \
-            "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
+          if [ -s telegram_alert.txt ]; then
+            curl --fail --silent --show-error \
+              --request POST \
+              --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+              --data-urlencode "text@telegram_alert.txt" \
+              "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
+          else
+            echo "No Telegram alert."
+          fi
 
       - name: Save monitoring state
         run: |

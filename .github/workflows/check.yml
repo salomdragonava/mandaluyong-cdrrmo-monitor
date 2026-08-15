@@ -1,0 +1,23 @@
+name: CDRRMO Monitor
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-facebook:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install Playwright
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+
+      - name: Test Facebook
+        run: python tests/check_facebook.py

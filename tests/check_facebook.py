@@ -3,10 +3,6 @@ import urllib.parse
 import json
 import os
 
-# ============================================================
-# MANDALUYONG FLOOD MONITOR
-# ============================================================
-
 points = [
     ("P1", "Pananalig × Villarica", 14.586620, 121.023037, "LOCAL"),
     ("P2", "Villarica × Nanirahan", 14.586289, 121.023049, "LOCAL"),
@@ -23,25 +19,18 @@ ALERT_FILE = "telegram_alert.txt"
 def get_json(url):
     request = urllib.request.Request(
         url,
-        headers={
-            "User-Agent": "MandaluyongFloodMonitor/1.0"
-        }
+        headers={"User-Agent": "MandaluyongFloodMonitor/1.0"}
     )
 
     with urllib.request.urlopen(request, timeout=30) as response:
         return json.loads(response.read().decode("utf-8"))
 
 
-# ============================================================
-# LOAD PREVIOUS STATE
-# ============================================================
+previous = {}
 
 if os.path.exists(STATE_FILE):
     with open(STATE_FILE, "r") as file:
         previous = json.load(file)
-else:
-    previous = {}
-
 
 current = {}
 alerts = []
@@ -50,11 +39,6 @@ print("=" * 70)
 print("MANDALUYONG FLOOD MONITOR")
 print("=" * 70)
 
-
-# ============================================================
-# CHECK ALL POINTS
-# ============================================================
-
 for point_id, name, lat, lng, purpose in points:
 
     print("\n" + "-" * 70)
@@ -62,7 +46,6 @@ for point_id, name, lat, lng, purpose in points:
     print("PURPOSE:", purpose)
 
     try:
-
         params = urllib.parse.urlencode({
             "lat": lat,
             "lng": lng
@@ -98,19 +81,11 @@ for point_id, name, lat, lng, purpose in points:
         print("Rainfall:", rainfall, "mm")
         print("Flood history:", flood_history)
 
-        # ----------------------------------------------------
-        # COMPARE WITH PREVIOUS READING
-        # ----------------------------------------------------
-
         if point_id not in previous:
-
             print("🆕 First reading for this point.")
-
-            # First run establishes baseline.
             continue
 
         old = previous[point_id]
-
         old_level = old.get("risk_level", "Unknown")
         old_score = float(old.get("risk_score", 0))
 
@@ -122,10 +97,6 @@ for point_id, name, lat, lng, purpose in points:
 
         print("\nChange:")
         print("Score:", round(score_change, 2))
-
-        # ----------------------------------------------------
-        # ALERT WHEN ENTERING MEDIUM/HIGH
-        # ----------------------------------------------------
 
         if old_level == "Low" and risk_level == "Medium":
 
@@ -145,10 +116,6 @@ for point_id, name, lat, lng, purpose in points:
                 f"Score: {risk_score}"
             )
 
-        # ----------------------------------------------------
-        # RECOVERY
-        # ----------------------------------------------------
-
         elif old_level in ("Medium", "High") and risk_level == "Low":
 
             alerts.append(
@@ -159,45 +126,25 @@ for point_id, name, lat, lng, purpose in points:
             )
 
         else:
-
             print("No individual alert.")
 
-
     except Exception as error:
-
         print("❌ ERROR:", error)
 
 
-# ============================================================
-# ESCAPE ROUTE ANALYSIS
-# ============================================================
-
-route_points = [
-    current[p]
-    for p in ["P3", "P4", "P5", "P6"]
-    if p in current
-]
+route_ids = ["P3", "P4", "P5", "P6"]
 
 elevated_route = [
-    p for p in route_points
-    if p["risk_level"] in ("Medium", "High")
-]
-
-previous_route = [
-    previous[p]
-    for p in ["P3", "P4", "P5", "P6"]
-    if p in previous
+    current[p]
+    for p in route_ids
+    if p in current and current[p]["risk_level"] in ("Medium", "High")
 ]
 
 previous_elevated_route = [
-    p for p in previous_route
-    if p.get("risk_level") in ("Medium", "High")
+    previous[p]
+    for p in route_ids
+    if p in previous and previous[p].get("risk_level") in ("Medium", "High")
 ]
-
-
-# ------------------------------------------------------------
-# MULTIPLE ESCAPE-ROUTE POINTS
-# ------------------------------------------------------------
 
 if len(elevated_route) >= 2 and len(previous_elevated_route) < 2:
 
@@ -209,24 +156,20 @@ if len(elevated_route) >= 2 and len(previous_elevated_route) < 2:
         ""
     ]
 
-    for p in elevated_route:
+    for point in elevated_route:
         lines.append(
-            f"{p['name']} — {p['risk_level']} "
-            f"(score {p['risk_score']})"
+            f"{point['name']} — {point['risk_level']} "
+            f"(score {point['risk_score']})"
         )
 
     lines.extend([
         "",
         "⚠️ Multiple points along the monitored route are affected.",
-        "Consider checking conditions before using this route."
+        "Check conditions before using this route."
     ])
 
     alerts.append("\n".join(lines))
 
-
-# ============================================================
-# WRITE TELEGRAM ALERT
-# ============================================================
 
 if alerts:
 
@@ -243,20 +186,14 @@ if alerts:
 
 else:
 
-    # Empty file means Telegram should remain silent.
     open(ALERT_FILE, "w", encoding="utf-8").close()
 
     print("\nNo alerts generated.")
 
 
-# ============================================================
-# SAVE CURRENT STATE
-# ============================================================
-
 with open(STATE_FILE, "w") as file:
     json.dump(current, file, indent=2)
 
-print("\n")
-print("=" * 70)
+print("\n" + "=" * 70)
 print("CURRENT STATE SAVED")
 print("=" * 70)

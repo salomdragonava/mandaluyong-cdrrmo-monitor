@@ -4,7 +4,7 @@ import json
 import os
 
 # ============================================================
-# MANDALUYONG FLOOD MONITORING POINTS
+# MANDALUYONG FLOOD MONITOR
 # ============================================================
 
 points = [
@@ -17,14 +17,10 @@ points = [
 ]
 
 STATE_FILE = "flood_state.json"
+ALERT_FILE = "telegram_alert.txt"
 
-
-# ============================================================
-# GET JSON
-# ============================================================
 
 def get_json(url):
-
     request = urllib.request.Request(
         url,
         headers={
@@ -33,10 +29,7 @@ def get_json(url):
     )
 
     with urllib.request.urlopen(request, timeout=30) as response:
-
-        return json.loads(
-            response.read().decode("utf-8")
-        )
+        return json.loads(response.read().decode("utf-8"))
 
 
 # ============================================================
@@ -44,21 +37,14 @@ def get_json(url):
 # ============================================================
 
 if os.path.exists(STATE_FILE):
-
     with open(STATE_FILE, "r") as file:
         previous = json.load(file)
-
 else:
-
     previous = {}
 
 
-# ============================================================
-# CURRENT STATE
-# ============================================================
-
 current = {}
-
+alerts = []
 
 print("=" * 70)
 print("MANDALUYONG FLOOD MONITOR")
@@ -66,13 +52,12 @@ print("=" * 70)
 
 
 # ============================================================
-# CHECK EACH POINT
+# CHECK ALL POINTS
 # ============================================================
 
 for point_id, name, lat, lng, purpose in points:
 
     print("\n" + "-" * 70)
-
     print(point_id, "-", name)
     print("PURPOSE:", purpose)
 
@@ -89,11 +74,10 @@ for point_id, name, lat, lng, purpose in points:
         )
 
         result = get_json(url)
-
         data = result.get("data", {})
 
-        risk_level = data.get("risk_level")
-        risk_score = data.get("risk_score")
+        risk_level = data.get("risk_level", "Unknown")
+        risk_score = float(data.get("risk_score", 0))
         rainfall = data.get("rainfall")
         flood_history = data.get("flood_history")
 
@@ -115,48 +99,69 @@ for point_id, name, lat, lng, purpose in points:
         print("Flood history:", flood_history)
 
         # ----------------------------------------------------
-        # COMPARE WITH PREVIOUS RUN
+        # COMPARE WITH PREVIOUS READING
         # ----------------------------------------------------
 
-        if point_id in previous:
+        if point_id not in previous:
 
-            old = previous[point_id]
+            print("🆕 First reading for this point.")
 
-            old_score = old.get("risk_score", 0)
-            old_level = old.get("risk_level")
+            # First run establishes baseline.
+            continue
 
-            score_change = risk_score - old_score
+        old = previous[point_id]
 
-            print("\nPrevious:")
-            print("Risk:", old_level)
-            print("Score:", old_score)
+        old_level = old.get("risk_level", "Unknown")
+        old_score = float(old.get("risk_score", 0))
 
-            print("\nChange:")
-            print("Score:", round(score_change, 2))
+        score_change = risk_score - old_score
 
-            if risk_level != old_level:
+        print("\nPrevious:")
+        print("Risk:", old_level)
+        print("Score:", old_score)
 
-                print(
-                    "⚠️ RISK LEVEL CHANGED:",
-                    old_level,
-                    "→",
-                    risk_level
-                )
+        print("\nChange:")
+        print("Score:", round(score_change, 2))
 
-            elif abs(score_change) >= 1:
+        # ----------------------------------------------------
+        # ALERT WHEN ENTERING MEDIUM/HIGH
+        # ----------------------------------------------------
 
-                print(
-                    "⚠️ RISK SCORE CHANGED:",
-                    round(score_change, 2)
-                )
+        if old_level == "Low" and risk_level == "Medium":
 
-            else:
+            alerts.append(
+                f"🟡 WATCH — {point_id}\n"
+                f"{name}\n"
+                f"Risk changed: Low → Medium\n"
+                f"Score: {risk_score}"
+            )
 
-                print("No significant change.")
+        elif old_level in ("Low", "Medium") and risk_level == "High":
+
+            alerts.append(
+                f"🔴 FLOOD RISK ALERT — {point_id}\n"
+                f"{name}\n"
+                f"Risk changed: {old_level} → High\n"
+                f"Score: {risk_score}"
+            )
+
+        # ----------------------------------------------------
+        # RECOVERY
+        # ----------------------------------------------------
+
+        elif old_level in ("Medium", "High") and risk_level == "Low":
+
+            alerts.append(
+                f"🟢 RECOVERY — {point_id}\n"
+                f"{name}\n"
+                f"Risk changed: {old_level} → Low\n"
+                f"Score: {risk_score}"
+            )
 
         else:
 
-            print("\n🆕 First reading for this point.")
+            print("No individual alert.")
+
 
     except Exception as error:
 
@@ -164,17 +169,92 @@ for point_id, name, lat, lng, purpose in points:
 
 
 # ============================================================
+# ESCAPE ROUTE ANALYSIS
+# ============================================================
+
+route_points = [
+    current[p]
+    for p in ["P3", "P4", "P5", "P6"]
+    if p in current
+]
+
+elevated_route = [
+    p for p in route_points
+    if p["risk_level"] in ("Medium", "High")
+]
+
+previous_route = [
+    previous[p]
+    for p in ["P3", "P4", "P5", "P6"]
+    if p in previous
+]
+
+previous_elevated_route = [
+    p for p in previous_route
+    if p.get("risk_level") in ("Medium", "High")
+]
+
+
+# ------------------------------------------------------------
+# MULTIPLE ESCAPE-ROUTE POINTS
+# ------------------------------------------------------------
+
+if len(elevated_route) >= 2 and len(previous_elevated_route) < 2:
+
+    lines = [
+        "🚨 ESCAPE ROUTE ALERT",
+        "",
+        f"{len(elevated_route)} points on the J.P. Rizal escape route "
+        "are now elevated:",
+        ""
+    ]
+
+    for p in elevated_route:
+        lines.append(
+            f"{p['name']} — {p['risk_level']} "
+            f"(score {p['risk_score']})"
+        )
+
+    lines.extend([
+        "",
+        "⚠️ Multiple points along the monitored route are affected.",
+        "Consider checking conditions before using this route."
+    ])
+
+    alerts.append("\n".join(lines))
+
+
+# ============================================================
+# WRITE TELEGRAM ALERT
+# ============================================================
+
+if alerts:
+
+    message = (
+        "🚨 MANDALUYONG CDRRMO MONITOR\n\n"
+        + "\n\n".join(alerts)
+    )
+
+    with open(ALERT_FILE, "w", encoding="utf-8") as file:
+        file.write(message)
+
+    print("\n🚨 ALERT GENERATED")
+    print(message)
+
+else:
+
+    # Empty file means Telegram should remain silent.
+    open(ALERT_FILE, "w", encoding="utf-8").close()
+
+    print("\nNo alerts generated.")
+
+
+# ============================================================
 # SAVE CURRENT STATE
 # ============================================================
 
 with open(STATE_FILE, "w") as file:
-
-    json.dump(
-        current,
-        file,
-        indent=2
-    )
-
+    json.dump(current, file, indent=2)
 
 print("\n")
 print("=" * 70)

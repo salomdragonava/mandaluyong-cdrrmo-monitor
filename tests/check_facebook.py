@@ -1,30 +1,169 @@
 import urllib.request
 import urllib.parse
+import json
+import time
 
-LAT = 14.5790363
-LNG = 121.0496244
+# ============================================
+# MANDALUYONG FLOOD MONITORING POINTS
+# ============================================
 
-base_url = "https://projectligtas.com/floodrisk/predict"
+points = [
+    (
+        "P1",
+        "Pananalig Street and Villarica Street, Mandaluyong, Philippines",
+        "LOCAL"
+    ),
+    (
+        "P2",
+        "Villarica Street and Nanirahan Street, Mandaluyong, Philippines",
+        "LOCAL"
+    ),
+    (
+        "P3",
+        "J.P. Rizal Street and A. Mabini Street, Mandaluyong, Philippines",
+        "ESCAPE ROUTE"
+    ),
+    (
+        "P4",
+        "J.P. Rizal Street and San Pedro Street, Mandaluyong, Philippines",
+        "ESCAPE ROUTE"
+    ),
+    (
+        "P5",
+        "J.P. Rizal Street and Ilino Cruz Street, Mandaluyong, Philippines",
+        "ESCAPE ROUTE"
+    ),
+    (
+        "P6",
+        "J.P. Rizal Street and Saniboy Street, Mandaluyong, Philippines",
+        "ESCAPE ROUTE"
+    ),
+    (
+        "P7",
+        "J.P. Rizal Street and Coronado Street, Mandaluyong, Philippines",
+        "ESCAPE ROUTE"
+    ),
+]
 
-params = urllib.parse.urlencode({
-    "lat": LAT,
-    "lng": LNG
-})
 
-url = f"{base_url}?{params}"
+# ============================================
+# HELPER: GET JSON
+# ============================================
 
-print("===== FLOOD RISK API TEST =====")
-print("URL:", url)
+def get_json(url):
+    request = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": "MandaluyongFloodMonitor/1.0"
+        }
+    )
 
-try:
-    with urllib.request.urlopen(url, timeout=30) as response:
+    with urllib.request.urlopen(request, timeout=30) as response:
         body = response.read().decode("utf-8")
+        return json.loads(body)
 
-        print("STATUS:", response.status)
-        print("CONTENT TYPE:", response.headers.get("content-type"))
 
-        print("\n===== RESPONSE =====")
-        print(body[:10000])
+# ============================================
+# PROCESS EACH MONITORING POINT
+# ============================================
 
-except Exception as e:
-    print("ERROR:", e)
+for point_id, location, purpose in points:
+
+    print("\n")
+    print("=" * 60)
+    print(point_id)
+    print("LOCATION:", location)
+    print("PURPOSE:", purpose)
+    print("=" * 60)
+
+    # ----------------------------------------
+    # 1. FIND LOCATION USING OPENSTREETMAP
+    # ----------------------------------------
+
+    params = urllib.parse.urlencode({
+        "format": "json",
+        "q": location,
+        "countrycodes": "ph",
+        "limit": 5
+    })
+
+    search_url = (
+        "https://nominatim.openstreetmap.org/search?"
+        + params
+    )
+
+    try:
+
+        results = get_json(search_url)
+
+        if not results:
+            print("❌ NO LOCATION FOUND")
+            continue
+
+        print("\nOpenStreetMap results:")
+
+        for result in results:
+
+            print(
+                "•",
+                result.get("display_name"),
+                "| LAT:",
+                result.get("lat"),
+                "| LNG:",
+                result.get("lon")
+            )
+
+        # ----------------------------------------
+        # 2. SELECT FIRST RESULT
+        # ----------------------------------------
+
+        result = results[0]
+
+        lat = float(result["lat"])
+        lng = float(result["lon"])
+
+        print("\nSelected coordinates:")
+        print("LAT:", lat)
+        print("LNG:", lng)
+
+        # ----------------------------------------
+        # 3. QUERY PROJECTLIGTAS
+        # ----------------------------------------
+
+        api_params = urllib.parse.urlencode({
+            "lat": lat,
+            "lng": lng
+        })
+
+        api_url = (
+            "https://projectligtas.com/floodrisk/predict?"
+            + api_params
+        )
+
+        risk = get_json(api_url)
+
+        print("\nProjectLIGTAS response:")
+
+        print(
+            json.dumps(
+                risk,
+                indent=2
+            )
+        )
+
+    except Exception as error:
+
+        print("\n❌ ERROR:")
+        print(error)
+
+    # ----------------------------------------
+    # 4. WAIT BEFORE NEXT NOMINATIM REQUEST
+    # ----------------------------------------
+
+    time.sleep(1)
+
+
+print("\n")
+print("=" * 60)
+print("MONITORING POINT DISCOVERY COMPLETE")
+print("=" * 60)

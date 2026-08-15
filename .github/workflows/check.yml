@@ -7,7 +7,7 @@ permissions:
   contents: write
 
 jobs:
-  test-facebook:
+  flood-monitor:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,7 +29,7 @@ jobs:
       - name: Run flood monitor
         run: python tests/check_facebook.py
 
-      - name: Send Telegram alert
+      - name: Send Telegram status
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -41,7 +41,7 @@ jobs:
               --data-urlencode "text@telegram_alert.txt" \
               "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
           else
-            echo "No Telegram alert."
+            echo "No Telegram message generated."
           fi
 
       - name: Save monitoring state

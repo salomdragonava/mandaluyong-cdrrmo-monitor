@@ -85,6 +85,17 @@ def track(previous,current):
             matches.append({'class':a['class'],'pixels_previous':a['pixels'],'pixels_current':b['pixels'],'from_lonlat':[lon1,lat1],'to_lonlat':[lon2,lat2],'pixel_displacement':round(d,1),'movement_km':round(km,1),'bearing_deg':round(bearing,1),'previous_distance_km':round(olddist,1),'distance_to_mandaluyong_km':b['distance_km'],'approaching_mandaluyong':b['distance_km']<olddist-2})
     return matches
 
+def capture_response(resp,previous_timestamp,captured,radar_frames):
+    u=resp.url
+    if '/radar/timeline/mosaic-hybrid/' not in u or resp.status!=200 or u in captured:return
+    m=re.search(r'ph_hybrid_mosaic_(\d{14})',u);ts=m.group(1) if m else str(len(captured))
+    if ts==previous_timestamp:return
+    try:body=resp.body()
+    except Exception:return
+    if not body:return
+    captured.append(u);path=OUTPUT_DIR/f'radar_{ts}.png';path.write_bytes(body)
+    radar_frames.append({'url':u,'timestamp':ts,'path':str(path),'bytes':len(body),'analysis':analyze(body,False),'source':'current_run'})
+
 def main():
     OUTPUT_DIR.mkdir(exist_ok=True);frames=[];captured=[];script_result={};radar_frames=[]
     previous_timestamp=None
@@ -95,25 +106,40 @@ def main():
         except Exception:pass
     with sync_playwright() as p:
         browser=p.chromium.launch(headless=True);page=browser.new_page()
-        def on_response(resp):
-            u=resp.url
-            if '/radar/timeline/mosaic-hybrid/' in u and resp.status==200 and u not in captured:
-                body=resp.body();m=re.search(r'ph_hybrid_mosaic_(\d{14})',u);ts=m.group(1) if m else str(len(captured))
-                if ts==previous_timestamp:return
-                captured.append(u);path=OUTPUT_DIR/f'radar_{ts}.png';path.write_bytes(body);radar_frames.append({'url':u,'timestamp':ts,'path':str(path),'bytes':len(body),'analysis':analyze(body,False),'source':'current_run'})
-        page.on('response',on_response);page.goto(RADAR_PAGE,wait_until='networkidle',timeout=60000);page.wait_for_timeout(10000)
+        page.on('response',lambda resp:capture_response(resp,previous_timestamp,captured,radar_frames))
+        page.goto(RADAR_PAGE,wait_until='networkidle',timeout=60000);page.wait_for_timeout(15000)
+        # PAGASA can load the radar mosaic through a cached/service-worker request which
+        # may not produce a normal Playwright response event. Inspect browser resource
+        # timing entries and fetch any hybrid mosaic URL we can recover from the page.
+        try:
+            resource_urls=page.evaluate("""() => performance.getEntriesByType('resource').map(e => e.name).filter(u => u.includes('/radar/timeline/mosaic-hybrid/'))""")
+            for u in dict.fromkeys(resource_urls):
+                if u in captured:continue
+                try:
+                    r=page.request.get(u,timeout=30000)
+                    if r.ok:
+                        capture_response(r,previous_timestamp,captured,radar_frames)
+                except Exception:pass
+        except Exception:pass
+        # Also inspect the page's current JavaScript globals for the hybrid timeline.
+        # This is intentionally diagnostic; no fabricated URL is constructed.
+        try:
+            timeline=page.evaluate("""() => ({
+                href: location.href,
+                resources: performance.getEntriesByType('resource').map(e=>e.name).filter(u=>u.includes('meteopilipinas') || u.includes('mosaic-hybrid'))
+            })""")
+        except Exception: timeline={}
         for i,f in enumerate(page.frames):
             try:frames.append({'frame_index':i,'url':f.url,'ol':f.evaluate('() => !!window.ol'),'scripts':f.evaluate("() => [...document.querySelectorAll('script[src]')].map(x=>x.src).filter(x=>x.includes('/app/radar/map.js'))")})
             except Exception as e:frames.append({'frame_index':i,'error':str(e)})
         urls=list(dict.fromkeys([u for f in frames for u in f.get('scripts',[])]))
         if urls:
-            try:r=page.request.get(urls[0]);t=r.text();SCRIPT_FILE.write_text(t,encoding='utf-8');script_result={'url':urls[0],'status':r.status,'bytes':len(t),'radarBoundaries':extract_assignment(t,'radarBoundaries'),'images':extract_assignment(t,'images')}
-            except Exception as e:script_result={'url':urls[0],'error':str(e)}
+            try:r=page.request.get(urls[0]);t=r.text();SCRIPT_FILE.write_text(t,encoding='utf-8');script_result={'url':urls[0],'status':r.status,'bytes':len(t),'radarBoundaries':extract_assignment(t,'radarBoundaries'),'images':extract_assignment(t,'images'),'resource_diagnostics':timeline}
+            except Exception as e:script_result={'url':urls[0],'error':str(e),'resource_diagnostics':timeline}
         page.screenshot(path=str(OUTPUT_DIR/'pagasa_radar_page.png'),full_page=True);browser.close()
     current_frames=[f for f in radar_frames if f.get('source')=='current_run']
     if not current_frames:
-        # Do not fail the workflow when PAGASA returns no radar image. Preserve the prior state.
-        result={'frames':frames,'map_script':script_result,'captured_images':captured,'radar_frames':radar_frames,'radar_tracking':{'status':'no_current_frame','message':'PAGASA did not return a new hybrid radar image during this run.'}}
+        result={'frames':frames,'map_script':script_result,'captured_images':captured,'radar_frames':radar_frames,'radar_tracking':{'status':'no_current_frame','message':'PAGASA did not return or expose a new hybrid radar image during this run.'}}
         MAP_STATE_FILE.write_text(json.dumps(result,indent=2),encoding='utf-8');print(json.dumps(result,indent=2));return
     current=current_frames[-1];radar_frames=([radar_frames[0]] if radar_frames and radar_frames[0].get('source')=='previous_run' else [])+[current]
     if len(radar_frames)==2 and radar_frames[0]['timestamp']!=radar_frames[1]['timestamp']:tracking={'status':'ok','previous_timestamp':radar_frames[0]['timestamp'],'current_timestamp':radar_frames[1]['timestamp'],'matches':track(radar_frames[0]['analysis'],radar_frames[1]['analysis'])}

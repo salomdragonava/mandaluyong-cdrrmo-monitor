@@ -11,6 +11,7 @@ OUTPUT_DIR=Path('radar_data'); STATE_FILE=Path('radar_state.json'); MAP_STATE_FI
 SCRIPT_FILE=OUTPUT_DIR/'pagasa_radar_map.js'; PREVIOUS_IMAGE=OUTPUT_DIR/'previous_radar.png'; PH_TZ=timezone(timedelta(hours=8))
 TARGET_LAT,TARGET_LON=14.5794,121.0359
 WEST,SOUTH=115.969111093,3.80912641587; EAST,NORTH=129.511990464,22.322581275
+MAX_MOVEMENT_KM_PER_FRAME=80.0
 COLOR_CLASS_RANGES={'cyan':lambda r,g,b:b>180 and g>180 and r<190,'blue':lambda r,g,b:b>180 and g<190 and r<160,'green':lambda r,g,b:g>180 and r<190 and b<130,'yellow':lambda r,g,b:r>200 and g>190 and b<130,'orange':lambda r,g,b:r>180 and 70<g<200 and b<100,'red':lambda r,g,b:r>150 and g<100 and b<80,'purple':lambda r,g,b:r>100 and b>100 and g<150}
 
 def extract_assignment(text,name):
@@ -72,16 +73,18 @@ def analyze(img_bytes,draw_target=True):
     return {'image_size':[w,h],'target':{'lat':TARGET_LAT,'lon':TARGET_LON},'target_pixel':{'x':round(tx,2),'y':round(ty,2)},'color_class_counts':dict(counts),'components_count':len(components),'components':components,'note':'Color classes are diagnostic only. They are not dBZ or PAGASA rainfall warning thresholds.'}
 
 def match_score(a,b):
-    dx=b['centroid_pixel'][0]-a['centroid_pixel'][0];dy=b['centroid_pixel'][1]-a['centroid_pixel'][1];dist=math.hypot(dx,dy)
-    if dist>140:return None
+    dx=b['centroid_pixel'][0]-a['centroid_pixel'][0];dy=b['centroid_pixel'][1]-a['centroid_pixel'][1];dist_px=math.hypot(dx,dy)
+    if dist_px>140:return None
+    lon1,lat1=a['centroid_lonlat'];lon2,lat2=b['centroid_lonlat'];mid=(lat1+lat2)/2
+    movement_km=111*math.sqrt((lat2-lat1)**2+(math.cos(math.radians(mid))*(lon2-lon1))**2)
+    if movement_km>MAX_MOVEMENT_KM_PER_FRAME:return None
     size=max(a['pixels'],b['pixels'])/max(1,min(a['pixels'],b['pixels']))
     size_penalty=min(size,4.0)-1
     color_penalty=0 if a['class']==b['class'] else 0.75
-    return dist + 12*size_penalty + 18*color_penalty
+    return dist_px + 12*size_penalty + 18*color_penalty
 
 def track(previous,current):
-    matches=[];used=set()
-    pairs=[]
+    matches=[];used=set();pairs=[]
     for ai,a in enumerate(previous['components']):
         for bi,b in enumerate(current['components']):
             s=match_score(a,b)
@@ -91,6 +94,7 @@ def track(previous,current):
         a=previous['components'][ai];b=current['components'][bi];used.add(ai);used.add(bi)
         lon1,lat1=a['centroid_lonlat'];lon2,lat2=b['centroid_lonlat'];mid=(lat1+lat2)/2
         km=111*math.sqrt((lat2-lat1)**2+(math.cos(math.radians(mid))*(lon2-lon1))**2)
+        if km>MAX_MOVEMENT_KM_PER_FRAME:continue
         bearing=(math.degrees(math.atan2((lon2-lon1)*math.cos(math.radians(mid)),lat2-lat1))+360)%360
         olddist=111*math.sqrt((lat1-TARGET_LAT)**2+(math.cos(math.radians(TARGET_LAT))*(lon1-TARGET_LON))**2)
         matches.append({'previous_class':a['class'],'current_class':b['class'],'pixels_previous':a['pixels'],'pixels_current':b['pixels'],'from_lonlat':[lon1,lat1],'to_lonlat':[lon2,lat2],'movement_km':round(km,1),'bearing_deg':round(bearing,1),'previous_distance_km':round(olddist,1),'distance_to_mandaluyong_km':b['distance_km'],'distance_change_km':round(b['distance_km']-olddist,1),'approaching_mandaluyong':b['distance_km']<olddist-2})
@@ -183,9 +187,9 @@ def main():
         MAP_STATE_FILE.write_text(json.dumps(result,indent=2),encoding='utf-8');print(json.dumps(result,indent=2));return
     current=current_frames[-1];previous=next((f for f in radar_frames if f.get('source')=='previous_run'),None)
     if previous and previous['timestamp']!=current['timestamp']:
-        matches=track(previous['analysis'],current['analysis']);tracking={'status':'ok','previous_timestamp':previous['timestamp'],'current_timestamp':current['timestamp'],'matches_count':len(matches),'approaching_matches_count':sum(1 for m in matches if m['approaching_mandaluyong']),'matches':matches}
-    elif previous:tracking={'status':'unchanged_frame','previous_timestamp':previous['timestamp'],'current_timestamp':current['timestamp'],'matches_count':0,'approaching_matches_count':0,'matches':[],'message':'Current PAGASA radar mosaic is the same timestamp as the previous run; image capture is working, but movement tracking requires a newer frame.'}
-    else:tracking={'status':'insufficient_frames','message':'The current PAGASA radar frame has been persisted for the next run.'}
+        matches=track(previous['analysis'],current['analysis']);tracking={'status':'ok','previous_timestamp':previous['timestamp'],'current_timestamp':current['timestamp'],'matches_count':len(matches),'approaching_matches_count':sum(1 for m in matches if m['approaching_mandaluyong']),'matches':matches,'max_movement_km_per_frame':MAX_MOVEMENT_KM_PER_FRAME}
+    elif previous:tracking={'status':'unchanged_frame','previous_timestamp':previous['timestamp'],'current_timestamp':current['timestamp'],'matches_count':0,'approaching_matches_count':0,'matches':[],'max_movement_km_per_frame':MAX_MOVEMENT_KM_PER_FRAME,'message':'Current PAGASA radar mosaic is the same timestamp as the previous run; image capture is working, but movement tracking requires a newer frame.'}
+    else:tracking={'status':'insufficient_frames','max_movement_km_per_frame':MAX_MOVEMENT_KM_PER_FRAME,'message':'The current PAGASA radar frame has been persisted for the next run.'}
     PREVIOUS_IMAGE.write_bytes(Path(current['path']).read_bytes())
     result={'frames':frames,'map_script':script_result,'legend_diagnostics':legend_diagnostics,'captured_images':captured,'radar_frames':([previous] if previous else [])+[current],'radar_tracking':tracking}
     MAP_STATE_FILE.write_text(json.dumps(result,indent=2),encoding='utf-8');STATE_FILE.write_text(json.dumps({'success':True,'checked_at':datetime.now(PH_TZ).isoformat(),'image_url':current['url'],'image_timestamp':current['timestamp'],'localized_image':str(OUTPUT_DIR/'mandaluyong_radar_localized.png'),'tracking_status':tracking['status']},indent=2),encoding='utf-8');print(json.dumps(result,indent=2))

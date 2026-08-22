@@ -25,6 +25,20 @@ jobs:
           python -m pip install playwright pillow
           python -m playwright install chromium --with-deps
 
+      - name: Fix Playwright page creation compatibility
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path("tests/radar_monitor.py")
+          s = p.read_text()
+          old = "browser=p.chromium.launch(headless=True);page=p.new_page()"
+          new = "browser=p.chromium.launch(headless=True);page=browser.new_page()"
+          if old not in s:
+              raise SystemExit("Expected Playwright initialization line was not found")
+          p.write_text(s.replace(old, new, 1))
+          print("Patched Playwright initialization")
+          PY
+
       - name: Capture PAGASA radar and inspect OpenLayers configuration
         run: python tests/radar_monitor.py
 

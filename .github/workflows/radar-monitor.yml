@@ -24,15 +24,16 @@ jobs:
           pip install playwright
           playwright install chromium --with-deps
 
-      - name: Capture PAGASA radar
+      - name: Capture PAGASA radar and discover map bounds
         run: python tests/radar_monitor.py
 
-      - name: Upload radar image
+      - name: Upload radar diagnostics
         uses: actions/upload-artifact@v6
         with:
           name: pagasa-radar-${{ github.run_number }}
           path: |
             radar_data/*.png
             radar_state.json
+            radar_map_state.json
           if-no-files-found: error
           retention-days: 7

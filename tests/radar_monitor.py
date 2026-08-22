@@ -1,4 +1,4 @@
-import io, json, math, re, subprocess
+import io, json, math, re
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from collections import Counter, deque
@@ -11,6 +11,7 @@ OUTPUT_DIR=Path('radar_data'); STATE_FILE=Path('radar_state.json'); MAP_STATE_FI
 SCRIPT_FILE=OUTPUT_DIR/'pagasa_radar_map.js'; PREVIOUS_IMAGE=OUTPUT_DIR/'previous_radar.png'; PH_TZ=timezone(timedelta(hours=8))
 TARGET_LAT,TARGET_LON=14.5794,121.0359
 WEST,SOUTH=115.969111093,3.80912641587; EAST,NORTH=129.511990464,22.322581275
+COLOR_ORDER=['cyan','blue','green','yellow','orange','red','purple']
 COLOR_CLASS_RANGES={'cyan':lambda r,g,b:b>180 and g>180 and r<190,'blue':lambda r,g,b:b>180 and g<190 and r<160,'green':lambda r,g,b:g>180 and r<190 and b<130,'yellow':lambda r,g,b:r>200 and g>190 and b<130,'orange':lambda r,g,b:r>180 and 70<g<200 and b<100,'red':lambda r,g,b:r>150 and g<100 and b<80,'purple':lambda r,g,b:r>100 and b>100 and g<150}
 
 def extract_assignment(text,name):
@@ -36,8 +37,7 @@ def extract_assignment(text,name):
     return text[s:s+2000]
 
 def lonlat_to_pixel(lon,lat,w,h):return ((lon-WEST)/(EAST-WEST)*w,(NORTH-lat)/(NORTH-SOUTH)*h)
-def pixel_to_lonlat(x,y,w,h):return WEST+x/w*(EAST-WEST),NORTH-y/h*(NORTH-SOUTH)*1
-
+def pixel_to_lonlat(x,y,w,h):return WEST+x/w*(EAST-WEST),NORTH-y/h*(NORTH-SOUTH)
 def classify(r,g,b):
     for name,fn in COLOR_CLASS_RANGES.items():
         if fn(r,g,b):return name
@@ -72,90 +72,85 @@ def analyze(img_bytes,draw_target=True):
         out=im.copy();d=ImageDraw.Draw(out);r=max(4,int(2.5*w/(EAST-WEST)));d.ellipse((tx-r,ty-r,tx+r,ty+r),outline=(255,0,0,255),width=3);d.line((tx-r*2,ty,tx+r*2,ty),fill=(255,0,0,255),width=2);d.line((tx,ty-r*2,tx,ty+r*2),fill=(255,0,0,255),width=2);out.save(OUTPUT_DIR/'mandaluyong_radar_localized.png')
     return {'image_size':[w,h],'target':{'lat':TARGET_LAT,'lon':TARGET_LON},'target_pixel':{'x':round(tx,2),'y':round(ty,2)},'color_class_counts':dict(counts),'components_count':len(components),'components':components,'note':'Color classes are diagnostic only. They are not dBZ or PAGASA rainfall warning thresholds.'}
 
+def track(previous,current):
+    prev=previous.get('components',[]); cur=current.get('components',[]); matches=[]; used=set()
+    # Match on spatial proximity and size similarity; allow a color-class change.
+    for a in prev:
+        best=None
+        for i,b in enumerate(cur):
+            if i in used: continue
+            dx=b['centroid_pixel'][0]-a['centroid_pixel'][0]; dy=b['centroid_pixel'][1]-a['centroid_pixel'][1]
+            d=math.hypot(dx,dy)
+            if d>90: continue
+            size_ratio=min(a['pixels'],b['pixels'])/max(a['pixels'],b['pixels'])
+            class_penalty=0 if a['class']==b['class'] else 12
+            score=d + (1-size_ratio)*25 + class_penalty
+            if best is None or score<best[0]:best=(score,i,b,d,size_ratio)
+        if best:
+            score,i,b,d,size_ratio=best;used.add(i);lon1,lat1=a['centroid_lonlat'];lon2,lat2=b['centroid_lonlat'];mid=(lat1+lat2)/2
+            km=111*math.sqrt((lat2-lat1)**2+(math.cos(math.radians(mid))*(lon2-lon1))**2);bearing=(math.degrees(math.atan2((lon2-lon1)*math.cos(math.radians(mid)),lat2-lat1))+360)%360
+            olddist=a['distance_km']; newdist=b['distance_km']
+            matches.append({'previous_class':a['class'],'current_class':b['class'],'pixels_previous':a['pixels'],'pixels_current':b['pixels'],'from_lonlat':a['centroid_lonlat'],'to_lonlat':b['centroid_lonlat'],'pixel_displacement':round(d,1),'movement_km':round(km,1),'bearing_deg':round(bearing,1),'previous_distance_km':olddist,'distance_to_mandaluyong_km':newdist,'distance_change_km':round(newdist-olddist,1),'approaching_mandaluyong':newdist<olddist-2,'match_score':round(score,1),'size_similarity':round(size_ratio,2)})
+    return matches
+
 def persist_radar_bytes(url,ts,body,captured,radar_frames,source='current_run'):
     if not body:return False
-    try:Image.open(io.BytesIO(body)).verify()
-    except Exception:return False
     path=OUTPUT_DIR/f'radar_{ts}.png';path.write_bytes(body)
     if url not in captured:captured.append(url)
     radar_frames.append({'url':url,'timestamp':ts,'path':str(path),'bytes':len(body),'analysis':analyze(body,False),'source':source})
     return True
 
-def capture_response(resp,previous_timestamp,captured,radar_frames,allow_same_timestamp=True):
-    u=getattr(resp,'url','')
-    if '/radar/timeline/mosaic-hybrid/' not in u:return False
-    try:
-        status=resp.status
-        if status!=200:return False
-        body=resp.body()
-    except Exception:return False
+def capture_response(resp,previous_timestamp,captured,radar_frames,allow_same_timestamp=False):
+    u=resp.url
+    if '/radar/timeline/mosaic-hybrid/' not in u or resp.status!=200 or u in captured:return
     m=re.search(r'ph_hybrid_mosaic_(\d{14})',u);ts=m.group(1) if m else str(len(captured))
-    return persist_radar_bytes(u,ts,body,captured,radar_frames)
+    if ts==previous_timestamp and not allow_same_timestamp:return
+    try:body=resp.body()
+    except Exception:return
+    persist_radar_bytes(u,ts,body,captured,radar_frames)
 
-def http_download(url,headers):
+def download_radar_fallback(url,ts,captured,radar_frames):
     try:
-        req=Request(url,headers=headers)
-        with urlopen(req,timeout=30) as r:
-            body=r.read(); status=getattr(r,'status',200); ctype=r.headers.get('content-type','')
-        return status,ctype,body,''
-    except Exception as e:return 0,'',b'',f'{type(e).__name__}: {e}'
-
-def download_radar_fallback(url,ts,captured,radar_frames,diagnostics):
-    headers={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/151 Safari/537.36','Referer':RADAR_PAGE,'Origin':'https://www.pagasa.dost.gov.ph','Accept':'image/avif,image/webp,image/apng,image/png,image/*,*/*;q=0.8','Cache-Control':'no-cache'}
-    status,ctype,body,error=http_download(url,headers)
-    diagnostics.append({'method':'urllib','url':url,'status':status,'content_type':ctype,'bytes':len(body),'error':error})
-    if body and (body.startswith(b'\x89PNG') or body.startswith(b'\xff\xd8')) and persist_radar_bytes(url,ts,body,captured,radar_frames):return True
-    # Last-resort curl is useful on GitHub Actions where Python TLS/DNS behavior can differ.
-    try:
-        out=OUTPUT_DIR/f'_curl_{ts}.bin'
-        p=subprocess.run(['curl','-L','--fail','--silent','--show-error','--max-time','30','-A',headers['User-Agent'],'-e',RADAR_PAGE,'-H','Accept: image/png,image/*,*/*;q=0.8','-o',str(out),url],capture_output=True,text=True)
-        b=out.read_bytes() if out.exists() else b''
-        diagnostics.append({'method':'curl','url':url,'returncode':p.returncode,'bytes':len(b),'stderr':p.stderr[-500:]})
-        if b and persist_radar_bytes(url,ts,b,captured,radar_frames):
-            try:out.unlink()
-            except Exception:pass
-            return True
-    except Exception as e:diagnostics.append({'method':'curl','url':url,'error':f'{type(e).__name__}: {e}'})
-    return False
+        req=Request(url,headers={'User-Agent':'Mozilla/5.0','Referer':RADAR_PAGE,'Accept':'image/avif,image/webp,image/apng,image/png,image/*,*/*;q=0.8'})
+        with urlopen(req,timeout=30) as response:
+            if getattr(response,'status',200)!=200:return False
+            body=response.read()
+        if not body.startswith(b'\x89PNG') and not body.startswith(b'\xff\xd8'):return False
+        return persist_radar_bytes(url,ts,body,captured,radar_frames)
+    except Exception:return False
 
 def inspect_legend(page):
     result={'text_matches':[],'image_sources':[],'scripts_with_reflectivity':[]}
-    try:result['text_matches']=page.evaluate("""() => [...document.querySelectorAll('body *')].map(e=>(e.innerText||'').trim()).filter(t=>t&&/(dBZ|reflectivity|rainfall intensity)/i.test(t)).slice(0,80)""")
+    try:result['text_matches']=page.evaluate("""() => [...document.querySelectorAll('body *')].map(e => (e.innerText||'').trim()).filter(t => t && /(dBZ|reflectivity|reflectivity in|rainfall intensity)/i.test(t)).slice(0,80)""")
     except Exception:pass
-    try:result['image_sources']=page.evaluate("""() => [...document.images].map(i=>i.src).filter(u=>/(reflectivity|legend|radar)/i.test(u))""")
+    try:result['image_sources']=page.evaluate("""() => [...document.images].map(i=>i.src).filter(u => /(reflectivity|legend|radar)/i.test(u))""")
     except Exception:pass
-    try:result['scripts_with_reflectivity']=page.evaluate("""() => [...document.scripts].map(s=>s.src).filter(u=>/reflectivity|radar/i.test(u))""")
+    try:result['scripts_with_reflectivity']=page.evaluate("""() => [...document.scripts].map(s=>s.src).filter(u => /reflectivity|radar/i.test(u))""")
     except Exception:pass
     return result
 
 def main():
-    OUTPUT_DIR.mkdir(exist_ok=True);frames=[];captured=[];script_result={};radar_frames=[];legend_diagnostics={};resource_urls=[];download_diagnostics=[]
-    previous_timestamp=None
+    OUTPUT_DIR.mkdir(exist_ok=True);frames=[];captured=[];script_result={};radar_frames=[];legend_diagnostics={};previous_timestamp=None;resource_urls=[]
     if PREVIOUS_IMAGE.exists() and STATE_FILE.exists():
         try:
             state=json.loads(STATE_FILE.read_text(encoding='utf-8'));previous_timestamp=state.get('image_timestamp');body=PREVIOUS_IMAGE.read_bytes()
             if previous_timestamp:radar_frames.append({'timestamp':previous_timestamp,'path':str(PREVIOUS_IMAGE),'bytes':len(body),'analysis':analyze(body,False),'source':'previous_run'})
         except Exception:pass
     with sync_playwright() as p:
-        browser=p.chromium.launch(headless=True);context=browser.new_context();page=context.new_page()
-        page.on('response',lambda resp:capture_response(resp,previous_timestamp,captured,radar_frames))
-        try:page.goto(RADAR_PAGE,wait_until='networkidle',timeout=60000)
-        except Exception as e:download_diagnostics.append({'method':'page.goto','error':f'{type(e).__name__}: {e}'})
-        page.wait_for_timeout(15000);legend_diagnostics=inspect_legend(page)
-        try:resource_urls=page.evaluate("""() => performance.getEntriesByType('resource').map(e=>e.name).filter(u=>u.includes('/radar/timeline/mosaic-hybrid/'))""")
-        except Exception:resource_urls=[]
-        # Fetch the discovered image through Playwright's API context, independently of page response events.
-        for u in dict.fromkeys(resource_urls):
-            m=re.search(r'ph_hybrid_mosaic_(\d{14})',u);ts=m.group(1) if m else str(len(captured))
-            for requester,name in ((context.request,'context.request'),(page.request,'page.request')):
+        browser=p.chromium.launch(headless=True);page=browser.new_page();page.on('response',lambda resp:capture_response(resp,previous_timestamp,captured,radar_frames));page.goto(RADAR_PAGE,wait_until='networkidle',timeout=60000);page.wait_for_timeout(15000)
+        legend_diagnostics=inspect_legend(page)
+        try:
+            resource_urls=page.evaluate("""() => performance.getEntriesByType('resource').map(e => e.name).filter(u => u.includes('/radar/timeline/mosaic-hybrid/'))""")
+            for u in dict.fromkeys(resource_urls):
+                if u in captured:continue
+                m=re.search(r'ph_hybrid_mosaic_(\d{14})',u);ts=m.group(1) if m else str(len(captured))
                 try:
-                    r=requester.get(u,timeout=30000,headers={'Referer':RADAR_PAGE,'Origin':'https://www.pagasa.dost.gov.ph','Accept':'image/png,image/*,*/*;q=0.8','User-Agent':'Mozilla/5.0'})
-                    b=r.body();download_diagnostics.append({'method':name,'url':u,'status':r.status,'content_type':r.headers.get('content-type',''),'bytes':len(b)})
-                    if r.ok and persist_radar_bytes(u,ts,b,captured,radar_frames):break
-                except Exception as e:download_diagnostics.append({'method':name,'url':u,'error':f'{type(e).__name__}: {e}'})
-        timeline={}
-        try:timeline={'href':page.url,'resources':resource_urls}
+                    r=page.request.get(u,timeout=30000)
+                    if r.ok:capture_response(r,previous_timestamp,captured,radar_frames,allow_same_timestamp=True)
+                except Exception:pass
         except Exception:pass
+        try:timeline=page.evaluate("""() => ({href:location.href,resources:performance.getEntriesByType('resource').map(e=>e.name).filter(u=>u.includes('meteopilipinas')||u.includes('mosaic-hybrid'))})""")
+        except Exception:timeline={}
         for i,f in enumerate(page.frames):
             try:frames.append({'frame_index':i,'url':f.url,'ol':f.evaluate('() => !!window.ol'),'scripts':f.evaluate("() => [...document.querySelectorAll('script[src]')].map(x=>x.src).filter(x=>x.includes('/app/radar/map.js'))")})
             except Exception as e:frames.append({'frame_index':i,'error':str(e)})
@@ -167,18 +162,21 @@ def main():
     if not any(f.get('source')=='current_run' for f in radar_frames):
         for u in dict.fromkeys(resource_urls):
             m=re.search(r'ph_hybrid_mosaic_(\d{14})',u)
-            if m and download_radar_fallback(u,m.group(1),captured,radar_frames,download_diagnostics):break
+            if not m:continue
+            ts=m.group(1)
+            if download_radar_fallback(u,ts,captured,radar_frames):break
     current_frames=[f for f in radar_frames if f.get('source')=='current_run']
     if not current_frames:
-        result={'frames':frames,'map_script':script_result,'legend_diagnostics':legend_diagnostics,'captured_images':captured,'radar_frames':radar_frames,'radar_tracking':{'status':'no_current_frame','message':'PAGASA radar URL was discovered, but the hybrid PNG could not be downloaded/validated during this run.','resource_urls':resource_urls,'download_diagnostics':download_diagnostics}}
-        MAP_STATE_FILE.write_text(json.dumps(result,indent=2),encoding='utf-8');print(json.dumps(result,indent=2));raise RuntimeError('No PAGASA hybrid radar image captured')
+        result={'frames':frames,'map_script':script_result,'legend_diagnostics':legend_diagnostics,'captured_images':captured,'radar_frames':radar_frames,'radar_tracking':{'status':'no_current_frame','message':'PAGASA did not return or expose a usable hybrid radar image during this run.','resource_urls':resource_urls}}
+        MAP_STATE_FILE.write_text(json.dumps(result,indent=2),encoding='utf-8');print(json.dumps(result,indent=2));return
     current=current_frames[-1];previous=next((f for f in radar_frames if f.get('source')=='previous_run'),None)
-    tracking={'status':'insufficient_frames','message':'The current PAGASA radar frame has been persisted for the next run.'}
     if previous and previous['timestamp']!=current['timestamp']:
-        tracking={'status':'ok','previous_timestamp':previous['timestamp'],'current_timestamp':current['timestamp']}
-    elif previous:tracking={'status':'unchanged_frame','previous_timestamp':previous['timestamp'],'current_timestamp':current['timestamp'],'message':'Current radar mosaic has the same timestamp as the previous run.'}
+        matches=track(previous['analysis'],current['analysis']);approaching=[m for m in matches if m['approaching_mandaluyong']];nearby=sorted(matches,key=lambda m:m['distance_to_mandaluyong_km'])[:20]
+        tracking={'status':'ok','previous_timestamp':previous['timestamp'],'current_timestamp':current['timestamp'],'matches_count':len(matches),'approaching_matches_count':len(approaching),'approaching_matches':approaching[:20],'nearest_matches':nearby}
+    elif previous:
+        tracking={'status':'unchanged_frame','previous_timestamp':previous['timestamp'],'current_timestamp':current['timestamp'],'matches':[],'message':'Current PAGASA radar mosaic is the same timestamp as the previous run; image capture is working, but movement tracking requires a newer frame.'}
+    else:tracking={'status':'insufficient_frames','message':'The current PAGASA radar frame has been persisted for the next run.'}
     PREVIOUS_IMAGE.write_bytes(Path(current['path']).read_bytes())
-    result={'frames':frames,'map_script':script_result,'legend_diagnostics':legend_diagnostics,'captured_images':captured,'radar_frames':([previous] if previous else [])+[current],'radar_tracking':tracking,'download_diagnostics':download_diagnostics}
+    result={'frames':frames,'map_script':script_result,'legend_diagnostics':legend_diagnostics,'captured_images':captured,'radar_frames':([previous] if previous else [])+[current],'radar_tracking':tracking}
     MAP_STATE_FILE.write_text(json.dumps(result,indent=2),encoding='utf-8');STATE_FILE.write_text(json.dumps({'success':True,'checked_at':datetime.now(PH_TZ).isoformat(),'image_url':current['url'],'image_timestamp':current['timestamp'],'localized_image':str(OUTPUT_DIR/'mandaluyong_radar_localized.png'),'tracking_status':tracking['status']},indent=2),encoding='utf-8');print(json.dumps(result,indent=2))
-
 if __name__=='__main__':main()

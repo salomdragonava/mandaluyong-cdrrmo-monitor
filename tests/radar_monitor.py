@@ -2,6 +2,7 @@ import io, json, math, re
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from collections import Counter, deque
+from urllib.request import Request, urlopen
 from PIL import Image, ImageDraw
 from playwright.sync_api import sync_playwright
 
@@ -85,6 +86,13 @@ def track(previous,current):
             matches.append({'class':a['class'],'pixels_previous':a['pixels'],'pixels_current':b['pixels'],'from_lonlat':[lon1,lat1],'to_lonlat':[lon2,lat2],'pixel_displacement':round(d,1),'movement_km':round(km,1),'bearing_deg':round(bearing,1),'previous_distance_km':round(olddist,1),'distance_to_mandaluyong_km':b['distance_km'],'approaching_mandaluyong':b['distance_km']<olddist-2})
     return matches
 
+def persist_radar_bytes(url,ts,body,captured,radar_frames,source='current_run'):
+    if not body:return False
+    path=OUTPUT_DIR/f'radar_{ts}.png';path.write_bytes(body)
+    if url not in captured:captured.append(url)
+    radar_frames.append({'url':url,'timestamp':ts,'path':str(path),'bytes':len(body),'analysis':analyze(body,False),'source':source})
+    return True
+
 def capture_response(resp,previous_timestamp,captured,radar_frames,allow_same_timestamp=False):
     u=resp.url
     if '/radar/timeline/mosaic-hybrid/' not in u or resp.status!=200 or u in captured:return
@@ -92,9 +100,19 @@ def capture_response(resp,previous_timestamp,captured,radar_frames,allow_same_ti
     if ts==previous_timestamp and not allow_same_timestamp:return
     try:body=resp.body()
     except Exception:return
-    if not body:return
-    captured.append(u);path=OUTPUT_DIR/f'radar_{ts}.png';path.write_bytes(body)
-    radar_frames.append({'url':u,'timestamp':ts,'path':str(path),'bytes':len(body),'analysis':analyze(body,False),'source':'current_run'})
+    persist_radar_bytes(u,ts,body,captured,radar_frames)
+
+def download_radar_fallback(url,ts,captured,radar_frames):
+    """Fallback for cases where Playwright exposes the radar URL but not its response body."""
+    try:
+        req=Request(url,headers={'User-Agent':'Mozilla/5.0','Referer':RADAR_PAGE,'Accept':'image/avif,image/webp,image/apng,image/png,image/*,*/*;q=0.8'})
+        with urlopen(req,timeout=30) as response:
+            if getattr(response,'status',200)!=200:return False
+            body=response.read()
+        if not body.startswith(b'\x89PNG') and not body.startswith(b'\xff\xd8'):return False
+        return persist_radar_bytes(url,ts,body,captured,radar_frames)
+    except Exception:
+        return False
 
 def inspect_legend(page):
     result={'text_matches':[],'image_sources':[],'scripts_with_reflectivity':[]}
@@ -116,6 +134,7 @@ def main():
             state=json.loads(STATE_FILE.read_text(encoding='utf-8'));previous_timestamp=state.get('image_timestamp');body=PREVIOUS_IMAGE.read_bytes()
             if previous_timestamp:radar_frames.append({'timestamp':previous_timestamp,'path':str(PREVIOUS_IMAGE),'bytes':len(body),'analysis':analyze(body,False),'source':'previous_run'})
         except Exception:pass
+    resource_urls=[]
     with sync_playwright() as p:
         browser=p.chromium.launch(headless=True);page=browser.new_page()
         page.on('response',lambda resp:capture_response(resp,previous_timestamp,captured,radar_frames));page.goto(RADAR_PAGE,wait_until='networkidle',timeout=60000);page.wait_for_timeout(15000)
@@ -124,6 +143,7 @@ def main():
             resource_urls=page.evaluate("""() => performance.getEntriesByType('resource').map(e => e.name).filter(u => u.includes('/radar/timeline/mosaic-hybrid/'))""")
             for u in dict.fromkeys(resource_urls):
                 if u in captured:continue
+                m=re.search(r'ph_hybrid_mosaic_(\d{14})',u);ts=m.group(1) if m else str(len(captured))
                 try:
                     r=page.request.get(u,timeout=30000)
                     if r.ok:capture_response(r,previous_timestamp,captured,radar_frames,allow_same_timestamp=True)
@@ -140,9 +160,19 @@ def main():
             try:r=page.request.get(urls[0]);t=r.text();SCRIPT_FILE.write_text(t,encoding='utf-8');script_result={'url':urls[0],'status':r.status,'bytes':len(t),'radarBoundaries':extract_assignment(t,'radarBoundaries'),'images':extract_assignment(t,'images'),'resource_diagnostics':timeline}
             except Exception as e:script_result={'url':urls[0],'error':str(e),'resource_diagnostics':timeline}
         page.screenshot(path=str(OUTPUT_DIR/'pagasa_radar_page.png'),full_page=True);browser.close()
+    # Final fallback happens outside the browser so a browser response/body quirk cannot suppress a valid radar frame.
+    if not any(f.get('source')=='current_run' for f in radar_frames):
+        for u in dict.fromkeys(resource_urls):
+            m=re.search(r'ph_hybrid_mosaic_(\d{14})',u)
+            if not m:continue
+            ts=m.group(1)
+            if ts==previous_timestamp and any(f.get('source')=='previous_run' and f.get('timestamp')==ts for f in radar_frames):
+                # Same timestamp is still useful as a freshness/capture check; persist it as a current observation.
+                pass
+            if download_radar_fallback(u,ts,captured,radar_frames):break
     current_frames=[f for f in radar_frames if f.get('source')=='current_run']
     if not current_frames:
-        result={'frames':frames,'map_script':script_result,'legend_diagnostics':legend_diagnostics,'captured_images':captured,'radar_frames':radar_frames,'radar_tracking':{'status':'no_current_frame','message':'PAGASA did not return or expose a new hybrid radar image during this run.'}}
+        result={'frames':frames,'map_script':script_result,'legend_diagnostics':legend_diagnostics,'captured_images':captured,'radar_frames':radar_frames,'radar_tracking':{'status':'no_current_frame','message':'PAGASA did not return or expose a usable hybrid radar image during this run.','resource_urls':resource_urls}}
         MAP_STATE_FILE.write_text(json.dumps(result,indent=2),encoding='utf-8');print(json.dumps(result,indent=2));return
     current=current_frames[-1];previous=next((f for f in radar_frames if f.get('source')=='previous_run'),None)
     if previous and previous['timestamp']!=current['timestamp']:tracking={'status':'ok','previous_timestamp':previous['timestamp'],'current_timestamp':current['timestamp'],'matches':track(previous['analysis'],current['analysis'])}

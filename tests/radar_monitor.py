@@ -89,8 +89,6 @@ def capture_response(resp,previous_timestamp,captured,radar_frames,allow_same_ti
     u=resp.url
     if '/radar/timeline/mosaic-hybrid/' not in u or resp.status!=200 or u in captured:return
     m=re.search(r'ph_hybrid_mosaic_(\d{14})',u);ts=m.group(1) if m else str(len(captured))
-    # A PAGASA mosaic can remain the same for multiple monitor runs. It is still
-    # a valid current observation; only tracking requires a distinct timestamp.
     if ts==previous_timestamp and not allow_same_timestamp:return
     try:body=resp.body()
     except Exception:return
@@ -98,9 +96,21 @@ def capture_response(resp,previous_timestamp,captured,radar_frames,allow_same_ti
     captured.append(u);path=OUTPUT_DIR/f'radar_{ts}.png';path.write_bytes(body)
     radar_frames.append({'url':u,'timestamp':ts,'path':str(path),'bytes':len(body),'analysis':analyze(body,False),'source':'current_run'})
 
+def inspect_legend(page):
+    result={'text_matches':[],'image_sources':[],'scripts_with_reflectivity':[]}
+    try:
+        result['text_matches']=page.evaluate("""() => [...document.querySelectorAll('body *')].map(e => (e.innerText||'').trim()).filter(t => t && /(dBZ|reflectivity|reflectivity in|rainfall intensity)/i.test(t)).slice(0,80)""")
+    except Exception:pass
+    try:
+        result['image_sources']=page.evaluate("""() => [...document.images].map(i=>i.src).filter(u => /(reflectivity|legend|radar)/i.test(u))""")
+    except Exception:pass
+    try:
+        result['scripts_with_reflectivity']=page.evaluate("""() => [...document.scripts].map(s=>s.src).filter(u => /reflectivity|radar/i.test(u))""")
+    except Exception:pass
+    return result
+
 def main():
-    OUTPUT_DIR.mkdir(exist_ok=True);frames=[];captured=[];script_result={};radar_frames=[]
-    previous_timestamp=None
+    OUTPUT_DIR.mkdir(exist_ok=True);frames=[];captured=[];script_result={};radar_frames=[];legend_diagnostics={};previous_timestamp=None
     if PREVIOUS_IMAGE.exists() and STATE_FILE.exists():
         try:
             state=json.loads(STATE_FILE.read_text(encoding='utf-8'));previous_timestamp=state.get('image_timestamp');body=PREVIOUS_IMAGE.read_bytes()
@@ -108,27 +118,20 @@ def main():
         except Exception:pass
     with sync_playwright() as p:
         browser=p.chromium.launch(headless=True);page=browser.new_page()
-        page.on('response',lambda resp:capture_response(resp,previous_timestamp,captured,radar_frames))
-        page.goto(RADAR_PAGE,wait_until='networkidle',timeout=60000);page.wait_for_timeout(15000)
-        # PAGASA can load the radar mosaic through a cached/service-worker request which
-        # may not produce a normal Playwright response event. Inspect browser resource
-        # timing entries and fetch any hybrid mosaic URL we can recover from the page.
+        page.on('response',lambda resp:capture_response(resp,previous_timestamp,captured,radar_frames));page.goto(RADAR_PAGE,wait_until='networkidle',timeout=60000);page.wait_for_timeout(15000)
+        legend_diagnostics=inspect_legend(page)
         try:
             resource_urls=page.evaluate("""() => performance.getEntriesByType('resource').map(e => e.name).filter(u => u.includes('/radar/timeline/mosaic-hybrid/'))""")
             for u in dict.fromkeys(resource_urls):
                 if u in captured:continue
                 try:
                     r=page.request.get(u,timeout=30000)
-                    if r.ok:
-                        capture_response(r,previous_timestamp,captured,radar_frames,allow_same_timestamp=True)
+                    if r.ok:capture_response(r,previous_timestamp,captured,radar_frames,allow_same_timestamp=True)
                 except Exception:pass
         except Exception:pass
         try:
-            timeline=page.evaluate("""() => ({
-                href: location.href,
-                resources: performance.getEntriesByType('resource').map(e=>e.name).filter(u=>u.includes('meteopilipinas') || u.includes('mosaic-hybrid'))
-            })""")
-        except Exception: timeline={}
+            timeline=page.evaluate("""() => ({href:location.href,resources:performance.getEntriesByType('resource').map(e=>e.name).filter(u=>u.includes('meteopilipinas')||u.includes('mosaic-hybrid'))})""")
+        except Exception:timeline={}
         for i,f in enumerate(page.frames):
             try:frames.append({'frame_index':i,'url':f.url,'ol':f.evaluate('() => !!window.ol'),'scripts':f.evaluate("() => [...document.querySelectorAll('script[src]')].map(x=>x.src).filter(x=>x.includes('/app/radar/map.js'))")})
             except Exception as e:frames.append({'frame_index':i,'error':str(e)})
@@ -139,16 +142,13 @@ def main():
         page.screenshot(path=str(OUTPUT_DIR/'pagasa_radar_page.png'),full_page=True);browser.close()
     current_frames=[f for f in radar_frames if f.get('source')=='current_run']
     if not current_frames:
-        result={'frames':frames,'map_script':script_result,'captured_images':captured,'radar_frames':radar_frames,'radar_tracking':{'status':'no_current_frame','message':'PAGASA did not return or expose a new hybrid radar image during this run.'}}
+        result={'frames':frames,'map_script':script_result,'legend_diagnostics':legend_diagnostics,'captured_images':captured,'radar_frames':radar_frames,'radar_tracking':{'status':'no_current_frame','message':'PAGASA did not return or expose a new hybrid radar image during this run.'}}
         MAP_STATE_FILE.write_text(json.dumps(result,indent=2),encoding='utf-8');print(json.dumps(result,indent=2));return
-    current=current_frames[-1]
-    previous=next((f for f in radar_frames if f.get('source')=='previous_run'),None)
-    if previous and previous['timestamp']!=current['timestamp']:
-        tracking={'status':'ok','previous_timestamp':previous['timestamp'],'current_timestamp':current['timestamp'],'matches':track(previous['analysis'],current['analysis'])}
-    elif previous:
-        tracking={'status':'unchanged_frame','previous_timestamp':previous['timestamp'],'current_timestamp':current['timestamp'],'matches':[],'message':'Current PAGASA radar mosaic is the same timestamp as the previous run; image capture is working, but movement tracking requires a newer frame.'}
-    else:
-        tracking={'status':'insufficient_frames','message':'The current PAGASA radar frame has been persisted for the next run.'}
+    current=current_frames[-1];previous=next((f for f in radar_frames if f.get('source')=='previous_run'),None)
+    if previous and previous['timestamp']!=current['timestamp']:tracking={'status':'ok','previous_timestamp':previous['timestamp'],'current_timestamp':current['timestamp'],'matches':track(previous['analysis'],current['analysis'])}
+    elif previous:tracking={'status':'unchanged_frame','previous_timestamp':previous['timestamp'],'current_timestamp':current['timestamp'],'matches':[],'message':'Current PAGASA radar mosaic is the same timestamp as the previous run; image capture is working, but movement tracking requires a newer frame.'}
+    else:tracking={'status':'insufficient_frames','message':'The current PAGASA radar frame has been persisted for the next run.'}
     PREVIOUS_IMAGE.write_bytes(Path(current['path']).read_bytes())
-    result={'frames':frames,'map_script':script_result,'captured_images':captured,'radar_frames':([previous] if previous else [])+[current],'radar_tracking':tracking};MAP_STATE_FILE.write_text(json.dumps(result,indent=2),encoding='utf-8');STATE_FILE.write_text(json.dumps({'success':True,'checked_at':datetime.now(PH_TZ).isoformat(),'image_url':current['url'],'image_timestamp':current['timestamp'],'localized_image':str(OUTPUT_DIR/'mandaluyong_radar_localized.png'),'tracking_status':tracking['status']},indent=2),encoding='utf-8');print(json.dumps(result,indent=2))
+    result={'frames':frames,'map_script':script_result,'legend_diagnostics':legend_diagnostics,'captured_images':captured,'radar_frames':([previous] if previous else [])+[current],'radar_tracking':tracking}
+    MAP_STATE_FILE.write_text(json.dumps(result,indent=2),encoding='utf-8');STATE_FILE.write_text(json.dumps({'success':True,'checked_at':datetime.now(PH_TZ).isoformat(),'image_url':current['url'],'image_timestamp':current['timestamp'],'localized_image':str(OUTPUT_DIR/'mandaluyong_radar_localized.png'),'tracking_status':tracking['status']},indent=2),encoding='utf-8');print(json.dumps(result,indent=2))
 if __name__=='__main__':main()

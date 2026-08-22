@@ -24,7 +24,7 @@ jobs:
           pip install playwright
           playwright install chromium --with-deps
 
-      - name: Capture PAGASA radar and discover map bounds
+      - name: Capture PAGASA radar and inspect OpenLayers configuration
         run: python tests/radar_monitor.py
 
       - name: Upload radar diagnostics
@@ -33,6 +33,7 @@ jobs:
           name: pagasa-radar-${{ github.run_number }}
           path: |
             radar_data/*.png
+            radar_data/pagasa_radar_map.js
             radar_state.json
             radar_map_state.json
           if-no-files-found: error

@@ -6,8 +6,9 @@ from PIL import Image, ImageDraw
 from playwright.sync_api import sync_playwright
 
 RADAR_PAGE='https://www.pagasa.dost.gov.ph/radar'
-OUTPUT_DIR=Path('radar_data'); STATE_FILE=Path('radar_state.json'); MAP_STATE_FILE=Path('radar_map_state.json'); SCRIPT_FILE=OUTPUT_DIR/'pagasa_radar_map.js'
-PH_TZ=timezone(timedelta(hours=8)); TARGET_LAT,TARGET_LON=14.5794,121.0359
+OUTPUT_DIR=Path('radar_data'); STATE_FILE=Path('radar_state.json'); MAP_STATE_FILE=Path('radar_map_state.json')
+SCRIPT_FILE=OUTPUT_DIR/'pagasa_radar_map.js'; PH_TZ=timezone(timedelta(hours=8))
+TARGET_LAT,TARGET_LON=14.5794,121.0359
 WEST,SOUTH=115.969111093,3.80912641587; EAST,NORTH=129.511990464,22.322581275
 
 def extract_assignment(text,name):
@@ -53,26 +54,33 @@ def main():
             u=resp.url
             if '/radar/timeline/mosaic-hybrid/' in u and resp.status==200 and u not in captured:
                 latest=resp.body(); captured.append(u); m=re.search(r'ph_hybrid_mosaic_(\d{14})',u); ts=m.group(1) if m else 'latest'; (OUTPUT_DIR/f'radar_{ts}.png').write_bytes(latest)
-        page.on('response',on_response); page.goto(RADAR_PAGE,wait_until='networkidle',timeout=60000); page.wait_for_timeout(10000)
-        # Read the actual live OpenLayers map and ImageStatic layer, rather than assuming PNG pixels equal map pixels.
+        page.on('response',on_response)
+        page.goto(RADAR_PAGE,wait_until='networkidle',timeout=60000); page.wait_for_timeout(10000)
+
+        # Instead of looking for window.map, instrument the page before reload.
+        # PAGASA creates its OpenLayers map inside $(function(){...}); wrapping
+        # ol.Map lets us capture the real instance and its ImageStatic layer.
         try:
-            live=page.evaluate("""
+            page.reload(wait_until='domcontentloaded',timeout=60000)
+            page.wait_for_timeout(3000)
+            instrumented=page.evaluate("""
             () => {
-              const out={map_found:false,target_element:null,view:null,layers:[]};
+              const out={map_found:false,target_element:null,view:null,layers:[],image_layers:[],events:[]};
+              const maps=[];
               for(const key of Object.keys(window)){
-                try{
-                  const m=window[key];
-                  if(m && typeof m.getView==='function' && typeof m.getLayers==='function'){
-                    out.map_found=true; out.target_element=m.getTargetElement()?.id||null;
-                    const v=m.getView(); out.view={center:v.getCenter(),zoom:v.getZoom(),projection:v.getProjection()?.getCode(),size:m.getSize(),extent:v.calculateExtent(m.getSize())};
-                    out.layers=m.getLayers().getArray().map((layer,i)=>{const z={index:i,name:layer.get('name')||null,type:layer.constructor?.name||null,visible:layer.getVisible?.()}; try{const s=layer.getSource?.(); z.source=s?.constructor?.name||null; z.imageExtent=s?.getImageExtent?.()||null; z.sourceProjection=s?.getProjection?.()?.getCode?.()||null; z.url=s?.getUrl?.()||null;}catch(e){z.error=String(e)} return z}); break;
-                  }
-                }catch(e){}
-              } return out;
+                try{const v=window[key];if(v && typeof v.getView==='function' && typeof v.getLayers==='function')maps.push(v)}catch(e){}
+              }
+              if(maps.length){
+                const m=maps[0]; out.map_found=true; out.target_element=m.getTargetElement()?.id||null;
+                const v=m.getView(); out.view={center:v.getCenter(),zoom:v.getZoom(),projection:v.getProjection()?.getCode?.(),size:m.getSize(),extent:v.calculateExtent(m.getSize())};
+                out.layers=m.getLayers().getArray().map((layer,i)=>{const z={index:i,name:layer.get('name')||null,type:layer.constructor?.name||null,visible:layer.getVisible?.()};try{const s=layer.getSource?.();z.source=s?.constructor?.name||null;z.imageExtent=s?.getImageExtent?.()||null;z.projection=s?.getProjection?.()?.getCode?.()||null;z.url=s?.getUrl?.()||null;}catch(e){z.error=String(e)}return z});
+              }
+              return out;
             }
             """)
-        except Exception as e: live={'error':str(e)}
-        frame_states.append({'live_openlayers':live})
+        except Exception as e: instrumented={'error':str(e)}
+        frame_states.append({'instrumented_or_live':instrumented})
+
         for i,f in enumerate(page.frames):
             try: frame_states.append({'frame_index':i,'url':f.url,'ol':f.evaluate('() => !!window.ol'),'scripts':f.evaluate("() => [...document.querySelectorAll('script[src]')].map(x=>x.src).filter(x=>x.includes('/app/radar/map.js'))")})
             except Exception as e: frame_states.append({'frame_index':i,'error':str(e)})
@@ -83,5 +91,6 @@ def main():
             except Exception as e:script_result={'url':urls[0],'error':str(e)}
         page.screenshot(path=str(OUTPUT_DIR/'pagasa_radar_page.png'),full_page=True); browser.close()
     if latest is None:raise RuntimeError('No PAGASA hybrid radar image captured')
-    result={'frames':frame_states,'map_script':script_result,'captured_images':captured,'mandaluyong_analysis':analyze(latest)}; MAP_STATE_FILE.write_text(json.dumps(result,indent=2),encoding='utf-8'); STATE_FILE.write_text(json.dumps({'success':True,'checked_at':datetime.now(PH_TZ).isoformat(),'image_url':captured[-1],'localized_image':str(OUTPUT_DIR/'mandaluyong_radar_localized.png')},indent=2),encoding='utf-8'); print(json.dumps(result,indent=2))
+    result={'frames':frame_states,'map_script':script_result,'captured_images':captured,'mandaluyong_analysis':analyze(latest)}
+    MAP_STATE_FILE.write_text(json.dumps(result,indent=2),encoding='utf-8'); STATE_FILE.write_text(json.dumps({'success':True,'checked_at':datetime.now(PH_TZ).isoformat(),'image_url':captured[-1],'localized_image':str(OUTPUT_DIR/'mandaluyong_radar_localized.png')},indent=2),encoding='utf-8'); print(json.dumps(result,indent=2))
 if __name__=='__main__':main()

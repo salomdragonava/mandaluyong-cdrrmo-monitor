@@ -1,0 +1,3370 @@
+{
+  "frames": [
+    {
+      "frame_index": 0,
+      "url": "https://www.pagasa.dost.gov.ph/radar",
+      "ol": true,
+      "scripts": [
+        "https://pagasa.dost.gov.ph/themes/hiraia/assets/js/app/radar/map.js?t=195967014"
+      ]
+    },
+    {
+      "frame_index": 1,
+      "url": "chrome-error://chromewebdata/",
+      "ol": false,
+      "scripts": []
+    }
+  ],
+  "map_script": {
+    "url": "https://pagasa.dost.gov.ph/themes/hiraia/assets/js/app/radar/map.js?t=195967014",
+    "status": 200,
+    "bytes": 7838,
+    "radarBoundaries": "{\n    rightTop:[\n        129.511990464,\n        22.322581275\n    ],\n    leftBottom:[\n        115.969111093,\n        3.80912641587\n    ]\n}",
+    "images": "{\n    rainfall_estimate: [],\n    reflectivity:[\n        '/themes/hiraia/assets/images/reflectivity/0.png',\n        '/themes/hiraia/assets/images/reflectivity/1.png',\n        '/themes/hiraia/assets/images/reflectivity/2.png',\n        '/themes/hiraia/assets/images/reflectivity/3.png',\n        '/themes/hiraia/assets/images/reflectivity/4.png',\n        '/themes/hiraia/assets/images/reflectivity/5.png',\n    ]\n}"
+  },
+  "captured_images": [
+    "https://api.meteopilipinas.gov.ph/tmp/d41d8cd98f00b204e9800998ecf8427e/radar/timeline/mosaic-hybrid/ph_hybrid_mosaic_202608221745003YnV.png"
+  ],
+  "radar_frames": [
+    {
+      "url": "https://api.meteopilipinas.gov.ph/tmp/d41d8cd98f00b204e9800998ecf8427e/radar/timeline/mosaic-hybrid/ph_hybrid_mosaic_202608221745003YnV.png",
+      "timestamp": "20260822174500",
+      "path": "radar_data/radar_20260822174500.png",
+      "bytes": 39958,
+      "analysis": {
+        "image_size": [
+          1020,
+          1393
+        ],
+        "target": {
+          "lat": 14.5794,
+          "lon": 121.0359
+        },
+        "target_pixel": {
+          "x": 381.61,
+          "y": 582.62
+        },
+        "color_class_counts": {
+          "blue": 5124,
+          "cyan": 9182,
+          "green": 2148,
+          "yellow": 200,
+          "orange": 168,
+          "red": 153,
+          "purple": 78
+        },
+        "components_count": 254,
+        "components": [
+          {
+            "class": "cyan",
+            "pixels": 3441,
+            "centroid_pixel": [
+              405.8,
+              471.5
+            ],
+            "centroid_lonlat": [
+              121.3565,
+              16.0566
+            ],
+            "distance_km": 167.5
+          },
+          {
+            "class": "cyan",
+            "pixels": 62,
+            "centroid_pixel": [
+              336.5,
+              371.2
+            ],
+            "centroid_lonlat": [
+              120.4365,
+              17.3893
+            ],
+            "distance_km": 318.5
+          },
+          {
+            "class": "cyan",
+            "pixels": 873,
+            "centroid_pixel": [
+              526.2,
+              607.1
+            ],
+            "centroid_lonlat": [
+              122.9562,
+              14.2542
+            ],
+            "distance_km": 209.4
+          },
+          {
+            "class": "cyan",
+            "pixels": 66,
+            "centroid_pixel": [
+              322.5,
+              510.2
+            ],
+            "centroid_lonlat": [
+              120.2508,
+              15.5413
+            ],
+            "distance_km": 136.1
+          },
+          {
+            "class": "cyan",
+            "pixels": 51,
+            "centroid_pixel": [
+              333.2,
+              448.3
+            ],
+            "centroid_lonlat": [
+              120.3933,
+              16.3643
+            ],
+            "distance_km": 209.8
+          },
+          {
+            "class": "cyan",
+            "pixels": 13,
+            "centroid_pixel": [
+              319.8,
+              324.9
+            ],
+            "centroid_lonlat": [
+              120.2148,
+              18.0042
+            ],
+            "distance_km": 390.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 33,
+            "centroid_pixel": [
+              425.2,
+              753.9
+            ],
+            "centroid_lonlat": [
+              121.6144,
+              12.3033
+            ],
+            "distance_km": 260.2
+          },
+          {
+            "class": "cyan",
+            "pixels": 370,
+            "centroid_pixel": [
+              358.3,
+              404.6
+            ],
+            "centroid_lonlat": [
+              120.7267,
+              16.9458
+            ],
+            "distance_km": 264.8
+          },
+          {
+            "class": "cyan",
+            "pixels": 41,
+            "centroid_pixel": [
+              486.7,
+              439.5
+            ],
+            "centroid_lonlat": [
+              122.4306,
+              16.481
+            ],
+            "distance_km": 258.8
+          },
+          {
+            "class": "cyan",
+            "pixels": 110,
+            "centroid_pixel": [
+              413.1,
+              343.0
+            ],
+            "centroid_lonlat": [
+              121.4539,
+              17.7634
+            ],
+            "distance_km": 356.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 11,
+            "centroid_pixel": [
+              554.3,
+              608.6
+            ],
+            "centroid_lonlat": [
+              123.3284,
+              14.2336
+            ],
+            "distance_km": 249.2
+          },
+          {
+            "class": "cyan",
+            "pixels": 214,
+            "centroid_pixel": [
+              420.6,
+              391.1
+            ],
+            "centroid_lonlat": [
+              121.553,
+              17.1251
+            ],
+            "distance_km": 288.0
+          },
+          {
+            "class": "cyan",
+            "pixels": 66,
+            "centroid_pixel": [
+              328.1,
+              519.8
+            ],
+            "centroid_lonlat": [
+              120.3257,
+              15.4138
+            ],
+            "distance_km": 120.0
+          },
+          {
+            "class": "cyan",
+            "pixels": 30,
+            "centroid_pixel": [
+              441.2,
+              446.9
+            ],
+            "centroid_lonlat": [
+              121.8275,
+              16.3831
+            ],
+            "distance_km": 217.5
+          },
+          {
+            "class": "cyan",
+            "pixels": 32,
+            "centroid_pixel": [
+              463.5,
+              459.6
+            ],
+            "centroid_lonlat": [
+              122.1232,
+              16.2144
+            ],
+            "distance_km": 215.8
+          },
+          {
+            "class": "cyan",
+            "pixels": 47,
+            "centroid_pixel": [
+              234.1,
+              448.4
+            ],
+            "centroid_lonlat": [
+              119.0771,
+              16.3626
+            ],
+            "distance_km": 288.9
+          },
+          {
+            "class": "cyan",
+            "pixels": 32,
+            "centroid_pixel": [
+              342.2,
+              400.6
+            ],
+            "centroid_lonlat": [
+              120.512,
+              16.9986
+            ],
+            "distance_km": 274.4
+          },
+          {
+            "class": "cyan",
+            "pixels": 55,
+            "centroid_pixel": [
+              324.0,
+              388.3
+            ],
+            "centroid_lonlat": [
+              120.2705,
+              17.1625
+            ],
+            "distance_km": 298.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 182,
+            "centroid_pixel": [
+              397.6,
+              334.5
+            ],
+            "centroid_lonlat": [
+              121.2483,
+              17.8765
+            ],
+            "distance_km": 366.7
+          },
+          {
+            "class": "cyan",
+            "pixels": 41,
+            "centroid_pixel": [
+              517.0,
+              630.2
+            ],
+            "centroid_lonlat": [
+              122.8341,
+              13.9467
+            ],
+            "distance_km": 205.5
+          },
+          {
+            "class": "cyan",
+            "pixels": 9,
+            "centroid_pixel": [
+              327.0,
+              353.9
+            ],
+            "centroid_lonlat": [
+              120.3108,
+              17.6193
+            ],
+            "distance_km": 346.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 134,
+            "centroid_pixel": [
+              507.8,
+              582.3
+            ],
+            "centroid_lonlat": [
+              122.7115,
+              14.5837
+            ],
+            "distance_km": 180.0
+          },
+          {
+            "class": "cyan",
+            "pixels": 16,
+            "centroid_pixel": [
+              309.2,
+              421.2
+            ],
+            "centroid_lonlat": [
+              120.0751,
+              16.724
+            ],
+            "distance_km": 259.5
+          },
+          {
+            "class": "cyan",
+            "pixels": 79,
+            "centroid_pixel": [
+              328.7,
+              294.8
+            ],
+            "centroid_lonlat": [
+              120.3335,
+              18.4045
+            ],
+            "distance_km": 431.2
+          },
+          {
+            "class": "cyan",
+            "pixels": 45,
+            "centroid_pixel": [
+              554.2,
+              645.0
+            ],
+            "centroid_lonlat": [
+              123.3271,
+              13.7506
+            ],
+            "distance_km": 262.8
+          },
+          {
+            "class": "cyan",
+            "pixels": 155,
+            "centroid_pixel": [
+              395.9,
+              361.1
+            ],
+            "centroid_lonlat": [
+              121.2257,
+              17.5237
+            ],
+            "distance_km": 327.5
+          },
+          {
+            "class": "cyan",
+            "pixels": 49,
+            "centroid_pixel": [
+              429.6,
+              350.8
+            ],
+            "centroid_lonlat": [
+              121.6735,
+              17.6609
+            ],
+            "distance_km": 348.8
+          },
+          {
+            "class": "cyan",
+            "pixels": 10,
+            "centroid_pixel": [
+              366.2,
+              477.6
+            ],
+            "centroid_lonlat": [
+              120.8313,
+              15.9751
+            ],
+            "distance_km": 156.5
+          },
+          {
+            "class": "cyan",
+            "pixels": 105,
+            "centroid_pixel": [
+              477.4,
+              880.6
+            ],
+            "centroid_lonlat": [
+              122.3071,
+              10.619
+            ],
+            "distance_km": 460.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 218,
+            "centroid_pixel": [
+              407.6,
+              370.8
+            ],
+            "centroid_lonlat": [
+              121.3804,
+              17.3941
+            ],
+            "distance_km": 314.6
+          },
+          {
+            "class": "cyan",
+            "pixels": 40,
+            "centroid_pixel": [
+              219.2,
+              476.1
+            ],
+            "centroid_lonlat": [
+              118.8792,
+              15.9944
+            ],
+            "distance_km": 279.9
+          },
+          {
+            "class": "cyan",
+            "pixels": 90,
+            "centroid_pixel": [
+              381.8,
+              358.7
+            ],
+            "centroid_lonlat": [
+              121.0378,
+              17.5552
+            ],
+            "distance_km": 330.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 30,
+            "centroid_pixel": [
+              398.7,
+              368.8
+            ],
+            "centroid_lonlat": [
+              121.2623,
+              17.4211
+            ],
+            "distance_km": 316.4
+          },
+          {
+            "class": "cyan",
+            "pixels": 153,
+            "centroid_pixel": [
+              332.9,
+              314.7
+            ],
+            "centroid_lonlat": [
+              120.3897,
+              18.1399
+            ],
+            "distance_km": 401.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 21,
+            "centroid_pixel": [
+              318.3,
+              419.3
+            ],
+            "centroid_lonlat": [
+              120.1957,
+              16.7501
+            ],
+            "distance_km": 257.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 15,
+            "centroid_pixel": [
+              351.4,
+              374.7
+            ],
+            "centroid_lonlat": [
+              120.6348,
+              17.3422
+            ],
+            "distance_km": 309.7
+          },
+          {
+            "class": "cyan",
+            "pixels": 10,
+            "centroid_pixel": [
+              481.3,
+              414.8
+            ],
+            "centroid_lonlat": [
+              122.3595,
+              16.8097
+            ],
+            "distance_km": 285.5
+          },
+          {
+            "class": "cyan",
+            "pixels": 20,
+            "centroid_pixel": [
+              324.4,
+              540.0
+            ],
+            "centroid_lonlat": [
+              120.2756,
+              15.1465
+            ],
+            "distance_km": 103.1
+          },
+          {
+            "class": "cyan",
+            "pixels": 16,
+            "centroid_pixel": [
+              466.6,
+              890.6
+            ],
+            "centroid_lonlat": [
+              122.1638,
+              10.4859
+            ],
+            "distance_km": 470.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 21,
+            "centroid_pixel": [
+              208.6,
+              487.0
+            ],
+            "centroid_lonlat": [
+              118.7384,
+              15.8495
+            ],
+            "distance_km": 284.2
+          },
+          {
+            "class": "cyan",
+            "pixels": 22,
+            "centroid_pixel": [
+              324.7,
+              361.3
+            ],
+            "centroid_lonlat": [
+              120.2806,
+              17.5205
+            ],
+            "distance_km": 336.4
+          },
+          {
+            "class": "cyan",
+            "pixels": 38,
+            "centroid_pixel": [
+              482.5,
+              428.9
+            ],
+            "centroid_lonlat": [
+              122.3758,
+              16.6224
+            ],
+            "distance_km": 268.6
+          },
+          {
+            "class": "cyan",
+            "pixels": 22,
+            "centroid_pixel": [
+              406.6,
+              507.2
+            ],
+            "centroid_lonlat": [
+              121.3676,
+              15.582
+            ],
+            "distance_km": 116.8
+          },
+          {
+            "class": "cyan",
+            "pixels": 16,
+            "centroid_pixel": [
+              400.4,
+              438.9
+            ],
+            "centroid_lonlat": [
+              121.2859,
+              16.4889
+            ],
+            "distance_km": 213.7
+          },
+          {
+            "class": "cyan",
+            "pixels": 13,
+            "centroid_pixel": [
+              425.8,
+              435.0
+            ],
+            "centroid_lonlat": [
+              121.6232,
+              16.5413
+            ],
+            "distance_km": 226.7
+          },
+          {
+            "class": "cyan",
+            "pixels": 22,
+            "centroid_pixel": [
+              475.0,
+              555.3
+            ],
+            "centroid_lonlat": [
+              122.2758,
+              14.9422
+            ],
+            "distance_km": 139.2
+          },
+          {
+            "class": "cyan",
+            "pixels": 20,
+            "centroid_pixel": [
+              453.1,
+              459.1
+            ],
+            "centroid_lonlat": [
+              121.9844,
+              16.221
+            ],
+            "distance_km": 208.8
+          },
+          {
+            "class": "cyan",
+            "pixels": 12,
+            "centroid_pixel": [
+              364.8,
+              348.2
+            ],
+            "centroid_lonlat": [
+              120.8131,
+              17.6953
+            ],
+            "distance_km": 346.7
+          },
+          {
+            "class": "cyan",
+            "pixels": 13,
+            "centroid_pixel": [
+              323.2,
+              397.5
+            ],
+            "centroid_lonlat": [
+              120.2597,
+              17.0392
+            ],
+            "distance_km": 285.5
+          },
+          {
+            "class": "cyan",
+            "pixels": 18,
+            "centroid_pixel": [
+              355.8,
+              351.1
+            ],
+            "centroid_lonlat": [
+              120.6936,
+              17.6562
+            ],
+            "distance_km": 343.5
+          },
+          {
+            "class": "cyan",
+            "pixels": 15,
+            "centroid_pixel": [
+              553.1,
+              634.2
+            ],
+            "centroid_lonlat": [
+              123.3132,
+              13.8938
+            ],
+            "distance_km": 256.2
+          },
+          {
+            "class": "cyan",
+            "pixels": 25,
+            "centroid_pixel": [
+              302.8,
+              462.8
+            ],
+            "centroid_lonlat": [
+              119.9895,
+              16.1723
+            ],
+            "distance_km": 209.5
+          },
+          {
+            "class": "cyan",
+            "pixels": 10,
+            "centroid_pixel": [
+              332.1,
+              414.8
+            ],
+            "centroid_lonlat": [
+              120.3785,
+              16.8097
+            ],
+            "distance_km": 257.4
+          },
+          {
+            "class": "cyan",
+            "pixels": 43,
+            "centroid_pixel": [
+              431.5,
+              397.3
+            ],
+            "centroid_lonlat": [
+              121.6978,
+              17.0417
+            ],
+            "distance_km": 282.4
+          },
+          {
+            "class": "cyan",
+            "pixels": 49,
+            "centroid_pixel": [
+              350.8,
+              292.3
+            ],
+            "centroid_lonlat": [
+              120.6262,
+              18.438
+            ],
+            "distance_km": 430.6
+          },
+          {
+            "class": "cyan",
+            "pixels": 31,
+            "centroid_pixel": [
+              421.5,
+              469.1
+            ],
+            "centroid_lonlat": [
+              121.5653,
+              16.0886
+            ],
+            "distance_km": 176.9
+          },
+          {
+            "class": "cyan",
+            "pixels": 18,
+            "centroid_pixel": [
+              459.4,
+              465.4
+            ],
+            "centroid_lonlat": [
+              122.0693,
+              16.1367
+            ],
+            "distance_km": 205.4
+          },
+          {
+            "class": "cyan",
+            "pixels": 12,
+            "centroid_pixel": [
+              345.7,
+              410.5
+            ],
+            "centroid_lonlat": [
+              120.5586,
+              16.8669
+            ],
+            "distance_km": 259.0
+          },
+          {
+            "class": "cyan",
+            "pixels": 9,
+            "centroid_pixel": [
+              537.8,
+              582.2
+            ],
+            "centroid_lonlat": [
+              123.1094,
+              14.5846
+            ],
+            "distance_km": 222.7
+          },
+          {
+            "class": "cyan",
+            "pixels": 51,
+            "centroid_pixel": [
+              489.5,
+              541.0
+            ],
+            "centroid_lonlat": [
+              122.4685,
+              15.1322
+            ],
+            "distance_km": 165.7
+          },
+          {
+            "class": "cyan",
+            "pixels": 22,
+            "centroid_pixel": [
+              475.3,
+              422.8
+            ],
+            "centroid_lonlat": [
+              122.2795,
+              16.7032
+            ],
+            "distance_km": 271.0
+          },
+          {
+            "class": "cyan",
+            "pixels": 177,
+            "centroid_pixel": [
+              408.4,
+              552.0
+            ],
+            "centroid_lonlat": [
+              121.3915,
+              14.9864
+            ],
+            "distance_km": 59.2
+          },
+          {
+            "class": "cyan",
+            "pixels": 11,
+            "centroid_pixel": [
+              310.5,
+              368.6
+            ],
+            "centroid_lonlat": [
+              120.0923,
+              17.4233
+            ],
+            "distance_km": 331.5
+          },
+          {
+            "class": "cyan",
+            "pixels": 8,
+            "centroid_pixel": [
+              462.5,
+              888.5
+            ],
+            "centroid_lonlat": [
+              122.1099,
+              10.5141
+            ],
+            "distance_km": 465.8
+          },
+          {
+            "class": "cyan",
+            "pixels": 11,
+            "centroid_pixel": [
+              284.1,
+              389.5
+            ],
+            "centroid_lonlat": [
+              119.7411,
+              17.1466
+            ],
+            "distance_km": 317.1
+          },
+          {
+            "class": "cyan",
+            "pixels": 14,
+            "centroid_pixel": [
+              548.9,
+              625.2
+            ],
+            "centroid_lonlat": [
+              123.2565,
+              14.0133
+            ],
+            "distance_km": 246.7
+          },
+          {
+            "class": "cyan",
+            "pixels": 43,
+            "centroid_pixel": [
+              333.5,
+              393.9
+            ],
+            "centroid_lonlat": [
+              120.3976,
+              17.0874
+            ],
+            "distance_km": 286.7
+          },
+          {
+            "class": "cyan",
+            "pixels": 8,
+            "centroid_pixel": [
+              557.9,
+              631.8
+            ],
+            "centroid_lonlat": [
+              123.3762,
+              13.9264
+            ],
+            "distance_km": 261.6
+          },
+          {
+            "class": "cyan",
+            "pixels": 25,
+            "centroid_pixel": [
+              417.7,
+              478.2
+            ],
+            "centroid_lonlat": [
+              121.5153,
+              15.9677
+            ],
+            "distance_km": 162.5
+          },
+          {
+            "class": "cyan",
+            "pixels": 43,
+            "centroid_pixel": [
+              405.3,
+              400.0
+            ],
+            "centroid_lonlat": [
+              121.3508,
+              17.0071
+            ],
+            "distance_km": 271.6
+          },
+          {
+            "class": "cyan",
+            "pixels": 11,
+            "centroid_pixel": [
+              380.5,
+              345.1
+            ],
+            "centroid_lonlat": [
+              121.0217,
+              17.7362
+            ],
+            "distance_km": 350.4
+          },
+          {
+            "class": "cyan",
+            "pixels": 8,
+            "centroid_pixel": [
+              417.5,
+              524.5
+            ],
+            "centroid_lonlat": [
+              121.5124,
+              15.3518
+            ],
+            "distance_km": 99.9
+          },
+          {
+            "class": "cyan",
+            "pixels": 13,
+            "centroid_pixel": [
+              408.8,
+              418.8
+            ],
+            "centroid_lonlat": [
+              121.3965,
+              16.756
+            ],
+            "distance_km": 244.7
+          },
+          {
+            "class": "cyan",
+            "pixels": 14,
+            "centroid_pixel": [
+              319.4,
+              427.6
+            ],
+            "centroid_lonlat": [
+              120.2103,
+              16.64
+            ],
+            "distance_km": 245.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 9,
+            "centroid_pixel": [
+              310.8,
+              500.2
+            ],
+            "centroid_lonlat": [
+              120.0954,
+              15.6745
+            ],
+            "distance_km": 158.1
+          },
+          {
+            "class": "cyan",
+            "pixels": 9,
+            "centroid_pixel": [
+              463.1,
+              897.2
+            ],
+            "centroid_lonlat": [
+              122.118,
+              10.3982
+            ],
+            "distance_km": 478.5
+          },
+          {
+            "class": "cyan",
+            "pixels": 12,
+            "centroid_pixel": [
+              417.8,
+              602.2
+            ],
+            "centroid_lonlat": [
+              121.5168,
+              14.3196
+            ],
+            "distance_km": 59.2
+          },
+          {
+            "class": "cyan",
+            "pixels": 36,
+            "centroid_pixel": [
+              494.1,
+              550.6
+            ],
+            "centroid_lonlat": [
+              122.5296,
+              15.0048
+            ],
+            "distance_km": 167.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 15,
+            "centroid_pixel": [
+              334.3,
+              382.1
+            ],
+            "centroid_lonlat": [
+              120.4082,
+              17.2439
+            ],
+            "distance_km": 303.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 18,
+            "centroid_pixel": [
+              413.7,
+              498.7
+            ],
+            "centroid_lonlat": [
+              121.4615,
+              15.6951
+            ],
+            "distance_km": 132.0
+          },
+          {
+            "class": "cyan",
+            "pixels": 10,
+            "centroid_pixel": [
+              300.1,
+              440.6
+            ],
+            "centroid_lonlat": [
+              119.9536,
+              16.4669
+            ],
+            "distance_km": 239.6
+          },
+          {
+            "class": "cyan",
+            "pixels": 8,
+            "centroid_pixel": [
+              309.9,
+              345.2
+            ],
+            "centroid_lonlat": [
+              120.0834,
+              17.7341
+            ],
+            "distance_km": 364.8
+          },
+          {
+            "class": "cyan",
+            "pixels": 30,
+            "centroid_pixel": [
+              438.3,
+              751.5
+            ],
+            "centroid_lonlat": [
+              121.789,
+              12.3349
+            ],
+            "distance_km": 261.9
+          },
+          {
+            "class": "cyan",
+            "pixels": 11,
+            "centroid_pixel": [
+              570.5,
+              638.6
+            ],
+            "centroid_lonlat": [
+              123.5432,
+              13.8349
+            ],
+            "distance_km": 281.7
+          },
+          {
+            "class": "cyan",
+            "pixels": 12,
+            "centroid_pixel": [
+              335.8,
+              472.8
+            ],
+            "centroid_lonlat": [
+              120.427,
+              16.0396
+            ],
+            "distance_km": 174.8
+          },
+          {
+            "class": "cyan",
+            "pixels": 12,
+            "centroid_pixel": [
+              214.6,
+              486.9
+            ],
+            "centroid_lonlat": [
+              118.8182,
+              15.8513
+            ],
+            "distance_km": 276.9
+          },
+          {
+            "class": "cyan",
+            "pixels": 22,
+            "centroid_pixel": [
+              417.1,
+              610.9
+            ],
+            "centroid_lonlat": [
+              121.5076,
+              14.204
+            ],
+            "distance_km": 65.6
+          },
+          {
+            "class": "cyan",
+            "pixels": 13,
+            "centroid_pixel": [
+              433.4,
+              761.4
+            ],
+            "centroid_lonlat": [
+              121.7233,
+              12.2035
+            ],
+            "distance_km": 273.9
+          },
+          {
+            "class": "cyan",
+            "pixels": 14,
+            "centroid_pixel": [
+              295.5,
+              490.2
+            ],
+            "centroid_lonlat": [
+              119.8926,
+              15.8075
+            ],
+            "distance_km": 183.5
+          },
+          {
+            "class": "cyan",
+            "pixels": 9,
+            "centroid_pixel": [
+              414.1,
+              426.8
+            ],
+            "centroid_lonlat": [
+              121.4674,
+              16.6506
+            ],
+            "distance_km": 234.5
+          },
+          {
+            "class": "cyan",
+            "pixels": 10,
+            "centroid_pixel": [
+              418.7,
+              557.9
+            ],
+            "centroid_lonlat": [
+              121.5283,
+              14.9079
+            ],
+            "distance_km": 64.2
+          },
+          {
+            "class": "cyan",
+            "pixels": 26,
+            "centroid_pixel": [
+              344.5,
+              461.7
+            ],
+            "centroid_lonlat": [
+              120.5437,
+              16.187
+            ],
+            "distance_km": 186.1
+          },
+          {
+            "class": "cyan",
+            "pixels": 9,
+            "centroid_pixel": [
+              411.0,
+              545.2
+            ],
+            "centroid_lonlat": [
+              121.4261,
+              15.0764
+            ],
+            "distance_km": 69.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 9,
+            "centroid_pixel": [
+              240.6,
+              434.2
+            ],
+            "centroid_lonlat": [
+              119.163,
+              16.5516
+            ],
+            "distance_km": 297.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 8,
+            "centroid_pixel": [
+              319.9,
+              498.4
+            ],
+            "centroid_lonlat": [
+              120.2162,
+              15.699
+            ],
+            "distance_km": 152.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 29,
+            "centroid_pixel": [
+              524.9,
+              625.2
+            ],
+            "centroid_lonlat": [
+              122.9383,
+              14.0138
+            ],
+            "distance_km": 213.8
+          },
+          {
+            "class": "cyan",
+            "pixels": 21,
+            "centroid_pixel": [
+              379.7,
+              509.1
+            ],
+            "centroid_lonlat": [
+              121.0101,
+              15.5565
+            ],
+            "distance_km": 108.5
+          },
+          {
+            "class": "cyan",
+            "pixels": 20,
+            "centroid_pixel": [
+              424.5,
+              508.6
+            ],
+            "centroid_lonlat": [
+              121.6053,
+              15.5631
+            ],
+            "distance_km": 125.2
+          },
+          {
+            "class": "cyan",
+            "pixels": 22,
+            "centroid_pixel": [
+              558.1,
+              651.5
+            ],
+            "centroid_lonlat": [
+              123.3797,
+              13.6639
+            ],
+            "distance_km": 271.5
+          },
+          {
+            "class": "cyan",
+            "pixels": 8,
+            "centroid_pixel": [
+              313.5,
+              375.2
+            ],
+            "centroid_lonlat": [
+              120.1316,
+              17.3354
+            ],
+            "distance_km": 321.0
+          },
+          {
+            "class": "cyan",
+            "pixels": 13,
+            "centroid_pixel": [
+              342.2,
+              446.1
+            ],
+            "centroid_lonlat": [
+              120.513,
+              16.3941
+            ],
+            "distance_km": 209.1
+          },
+          {
+            "class": "cyan",
+            "pixels": 13,
+            "centroid_pixel": [
+              309.0,
+              481.8
+            ],
+            "centroid_lonlat": [
+              120.0718,
+              15.9187
+            ],
+            "distance_km": 181.2
+          },
+          {
+            "class": "cyan",
+            "pixels": 11,
+            "centroid_pixel": [
+              327.6,
+              427.9
+            ],
+            "centroid_lonlat": [
+              120.3192,
+              16.6355
+            ],
+            "distance_km": 240.9
+          },
+          {
+            "class": "cyan",
+            "pixels": 9,
+            "centroid_pixel": [
+              406.2,
+              433.4
+            ],
+            "centroid_lonlat": [
+              121.3627,
+              16.562
+            ],
+            "distance_km": 222.8
+          },
+          {
+            "class": "cyan",
+            "pixels": 8,
+            "centroid_pixel": [
+              367.6,
+              344.6
+            ],
+            "centroid_lonlat": [
+              120.8502,
+              17.7424
+            ],
+            "distance_km": 351.7
+          },
+          {
+            "class": "cyan",
+            "pixels": 8,
+            "centroid_pixel": [
+              375.5,
+              514.5
+            ],
+            "centroid_lonlat": [
+              120.9547,
+              15.4847
+            ],
+            "distance_km": 100.9
+          },
+          {
+            "class": "cyan",
+            "pixels": 8,
+            "centroid_pixel": [
+              339.5,
+              304.5
+            ],
+            "centroid_lonlat": [
+              120.4768,
+              18.2757
+            ],
+            "distance_km": 414.7
+          },
+          {
+            "class": "cyan",
+            "pixels": 9,
+            "centroid_pixel": [
+              348.0,
+              452.8
+            ],
+            "centroid_lonlat": [
+              120.5896,
+              16.305
+            ],
+            "distance_km": 197.5
+          },
+          {
+            "class": "cyan",
+            "pixels": 11,
+            "centroid_pixel": [
+              295.7,
+              476.9
+            ],
+            "centroid_lonlat": [
+              119.8956,
+              15.9843
+            ],
+            "distance_km": 198.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 9,
+            "centroid_pixel": [
+              266.0,
+              468.0
+            ],
+            "centroid_lonlat": [
+              119.5009,
+              16.1027
+            ],
+            "distance_km": 236.2
+          },
+          {
+            "class": "cyan",
+            "pixels": 8,
+            "centroid_pixel": [
+              472.6,
+              889.6
+            ],
+            "centroid_lonlat": [
+              122.2443,
+              10.4992
+            ],
+            "distance_km": 471.1
+          },
+          {
+            "class": "cyan",
+            "pixels": 10,
+            "centroid_pixel": [
+              313.9,
+              531.8
+            ],
+            "centroid_lonlat": [
+              120.1369,
+              15.2548
+            ],
+            "distance_km": 122.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 9,
+            "centroid_pixel": [
+              316.2,
+              431.4
+            ],
+            "centroid_lonlat": [
+              120.1677,
+              16.5885
+            ],
+            "distance_km": 241.7
+          },
+          {
+            "class": "cyan",
+            "pixels": 10,
+            "centroid_pixel": [
+              318.8,
+              382.3
+            ],
+            "centroid_lonlat": [
+              120.2019,
+              17.2417
+            ],
+            "distance_km": 308.8
+          },
+          {
+            "class": "cyan",
+            "pixels": 12,
+            "centroid_pixel": [
+              403.8,
+              391.1
+            ],
+            "centroid_lonlat": [
+              121.3309,
+              17.1249
+            ],
+            "distance_km": 284.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 9,
+            "centroid_pixel": [
+              316.7,
+              486.0
+            ],
+            "centroid_lonlat": [
+              120.1736,
+              15.8635
+            ],
+            "distance_km": 170.0
+          },
+          {
+            "class": "blue",
+            "pixels": 1080,
+            "centroid_pixel": [
+              388.1,
+              410.1
+            ],
+            "centroid_lonlat": [
+              121.1222,
+              16.872
+            ],
+            "distance_km": 254.7
+          },
+          {
+            "class": "blue",
+            "pixels": 36,
+            "centroid_pixel": [
+              238.8,
+              437.2
+            ],
+            "centroid_lonlat": [
+              119.1398,
+              16.5117
+            ],
+            "distance_km": 295.8
+          },
+          {
+            "class": "blue",
+            "pixels": 9,
+            "centroid_pixel": [
+              464.4,
+              900.1
+            ],
+            "centroid_lonlat": [
+              122.1357,
+              10.3598
+            ],
+            "distance_km": 483.0
+          },
+          {
+            "class": "blue",
+            "pixels": 152,
+            "centroid_pixel": [
+              409.9,
+              556.1
+            ],
+            "centroid_lonlat": [
+              121.4119,
+              14.9322
+            ],
+            "distance_km": 56.3
+          },
+          {
+            "class": "blue",
+            "pixels": 38,
+            "centroid_pixel": [
+              522.4,
+              615.4
+            ],
+            "centroid_lonlat": [
+              122.9051,
+              14.1434
+            ],
+            "distance_km": 206.6
+          },
+          {
+            "class": "blue",
+            "pixels": 19,
+            "centroid_pixel": [
+              492.5,
+              549.6
+            ],
+            "centroid_lonlat": [
+              122.5085,
+              15.0178
+            ],
+            "distance_km": 165.5
+          },
+          {
+            "class": "blue",
+            "pixels": 11,
+            "centroid_pixel": [
+              401.0,
+              324.5
+            ],
+            "centroid_lonlat": [
+              121.2933,
+              18.0105
+            ],
+            "distance_km": 381.9
+          },
+          {
+            "class": "blue",
+            "pixels": 62,
+            "centroid_pixel": [
+              408.3,
+              434.8
+            ],
+            "centroid_lonlat": [
+              121.3901,
+              16.5445
+            ],
+            "distance_km": 221.4
+          },
+          {
+            "class": "blue",
+            "pixels": 48,
+            "centroid_pixel": [
+              424.7,
+              398.2
+            ],
+            "centroid_lonlat": [
+              121.6084,
+              17.0308
+            ],
+            "distance_km": 279.0
+          },
+          {
+            "class": "blue",
+            "pixels": 39,
+            "centroid_pixel": [
+              419.9,
+              389.3
+            ],
+            "centroid_lonlat": [
+              121.5449,
+              17.1485
+            ],
+            "distance_km": 290.4
+          },
+          {
+            "class": "blue",
+            "pixels": 176,
+            "centroid_pixel": [
+              398.7,
+              456.1
+            ],
+            "centroid_lonlat": [
+              121.2631,
+              16.2608
+            ],
+            "distance_km": 188.2
+          },
+          {
+            "class": "blue",
+            "pixels": 104,
+            "centroid_pixel": [
+              408.1,
+              355.2
+            ],
+            "centroid_lonlat": [
+              121.3879,
+              17.6013
+            ],
+            "distance_km": 337.6
+          },
+          {
+            "class": "blue",
+            "pixels": 9,
+            "centroid_pixel": [
+              429.4,
+              521.3
+            ],
+            "centroid_lonlat": [
+              121.671,
+              15.3939
+            ],
+            "distance_km": 113.3
+          },
+          {
+            "class": "blue",
+            "pixels": 27,
+            "centroid_pixel": [
+              331.2,
+              360.4
+            ],
+            "centroid_lonlat": [
+              120.3669,
+              17.5331
+            ],
+            "distance_km": 335.6
+          },
+          {
+            "class": "blue",
+            "pixels": 69,
+            "centroid_pixel": [
+              421.3,
+              508.9
+            ],
+            "centroid_lonlat": [
+              121.5629,
+              15.5589
+            ],
+            "distance_km": 122.6
+          },
+          {
+            "class": "blue",
+            "pixels": 9,
+            "centroid_pixel": [
+              365.8,
+              356.7
+            ],
+            "centroid_lonlat": [
+              120.8257,
+              17.5824
+            ],
+            "distance_km": 334.1
+          },
+          {
+            "class": "blue",
+            "pixels": 10,
+            "centroid_pixel": [
+              424.9,
+              409.0
+            ],
+            "centroid_lonlat": [
+              121.6106,
+              16.8868
+            ],
+            "distance_km": 263.5
+          },
+          {
+            "class": "blue",
+            "pixels": 289,
+            "centroid_pixel": [
+              442.5,
+              753.2
+            ],
+            "centroid_lonlat": [
+              121.8438,
+              12.3122
+            ],
+            "distance_km": 266.2
+          },
+          {
+            "class": "blue",
+            "pixels": 280,
+            "centroid_pixel": [
+              366.3,
+              408.2
+            ],
+            "centroid_lonlat": [
+              120.8324,
+              16.8978
+            ],
+            "distance_km": 258.3
+          },
+          {
+            "class": "blue",
+            "pixels": 9,
+            "centroid_pixel": [
+              536.1,
+              580.7
+            ],
+            "centroid_lonlat": [
+              123.0872,
+              14.6053
+            ],
+            "distance_km": 220.4
+          },
+          {
+            "class": "blue",
+            "pixels": 49,
+            "centroid_pixel": [
+              231.2,
+              466.1
+            ],
+            "centroid_lonlat": [
+              119.0389,
+              16.1279
+            ],
+            "distance_km": 274.9
+          },
+          {
+            "class": "blue",
+            "pixels": 9,
+            "centroid_pixel": [
+              270.0,
+              471.0
+            ],
+            "centroid_lonlat": [
+              119.554,
+              16.0628
+            ],
+            "distance_km": 229.0
+          },
+          {
+            "class": "blue",
+            "pixels": 8,
+            "centroid_pixel": [
+              331.5,
+              520.2
+            ],
+            "centroid_lonlat": [
+              120.3705,
+              15.4083
+            ],
+            "distance_km": 116.5
+          },
+          {
+            "class": "blue",
+            "pixels": 114,
+            "centroid_pixel": [
+              329.9,
+              303.9
+            ],
+            "centroid_lonlat": [
+              120.3496,
+              18.2841
+            ],
+            "distance_km": 417.8
+          },
+          {
+            "class": "blue",
+            "pixels": 298,
+            "centroid_pixel": [
+              385.8,
+              360.2
+            ],
+            "centroid_lonlat": [
+              121.0914,
+              17.5357
+            ],
+            "distance_km": 328.2
+          },
+          {
+            "class": "blue",
+            "pixels": 34,
+            "centroid_pixel": [
+              376.7,
+              345.8
+            ],
+            "centroid_lonlat": [
+              120.9704,
+              17.7265
+            ],
+            "distance_km": 349.4
+          },
+          {
+            "class": "blue",
+            "pixels": 202,
+            "centroid_pixel": [
+              420.3,
+              366.2
+            ],
+            "centroid_lonlat": [
+              121.5499,
+              17.4558
+            ],
+            "distance_km": 324.0
+          },
+          {
+            "class": "blue",
+            "pixels": 14,
+            "centroid_pixel": [
+              413.7,
+              484.9
+            ],
+            "centroid_lonlat": [
+              121.4621,
+              15.8787
+            ],
+            "distance_km": 151.3
+          },
+          {
+            "class": "blue",
+            "pixels": 9,
+            "centroid_pixel": [
+              345.0,
+              433.4
+            ],
+            "centroid_lonlat": [
+              120.5498,
+              16.562
+            ],
+            "distance_km": 226.2
+          },
+          {
+            "class": "blue",
+            "pixels": 16,
+            "centroid_pixel": [
+              400.8,
+              414.0
+            ],
+            "centroid_lonlat": [
+              121.29,
+              16.8204
+            ],
+            "distance_km": 250.2
+          },
+          {
+            "class": "blue",
+            "pixels": 13,
+            "centroid_pixel": [
+              404.5,
+              491.2
+            ],
+            "centroid_lonlat": [
+              121.3393,
+              15.794
+            ],
+            "distance_km": 138.7
+          },
+          {
+            "class": "blue",
+            "pixels": 61,
+            "centroid_pixel": [
+              310.8,
+              377.6
+            ],
+            "centroid_lonlat": [
+              120.0957,
+              17.3043
+            ],
+            "distance_km": 318.9
+          },
+          {
+            "class": "blue",
+            "pixels": 18,
+            "centroid_pixel": [
+              340.7,
+              373.7
+            ],
+            "centroid_lonlat": [
+              120.4923,
+              17.3557
+            ],
+            "distance_km": 313.7
+          },
+          {
+            "class": "blue",
+            "pixels": 11,
+            "centroid_pixel": [
+              399.2,
+              547.8
+            ],
+            "centroid_lonlat": [
+              121.2692,
+              15.0419
+            ],
+            "distance_km": 57.1
+          },
+          {
+            "class": "blue",
+            "pixels": 30,
+            "centroid_pixel": [
+              484.6,
+              434.8
+            ],
+            "centroid_lonlat": [
+              122.4037,
+              16.5444
+            ],
+            "distance_km": 263.0
+          },
+          {
+            "class": "blue",
+            "pixels": 10,
+            "centroid_pixel": [
+              487.2,
+              441.1
+            ],
+            "centroid_lonlat": [
+              122.4378,
+              16.4602
+            ],
+            "distance_km": 257.4
+          },
+          {
+            "class": "blue",
+            "pixels": 31,
+            "centroid_pixel": [
+              411.8,
+              446.3
+            ],
+            "centroid_lonlat": [
+              121.4368,
+              16.3912
+            ],
+            "distance_km": 205.7
+          },
+          {
+            "class": "blue",
+            "pixels": 11,
+            "centroid_pixel": [
+              316.9,
+              515.6
+            ],
+            "centroid_lonlat": [
+              120.1768,
+              15.4696
+            ],
+            "distance_km": 135.2
+          },
+          {
+            "class": "blue",
+            "pixels": 20,
+            "centroid_pixel": [
+              389.6,
+              510.9
+            ],
+            "centroid_lonlat": [
+              121.142,
+              15.5319
+            ],
+            "distance_km": 106.3
+          },
+          {
+            "class": "blue",
+            "pixels": 10,
+            "centroid_pixel": [
+              261.9,
+              521.8
+            ],
+            "centroid_lonlat": [
+              119.4464,
+              15.3877
+            ],
+            "distance_km": 192.9
+          },
+          {
+            "class": "blue",
+            "pixels": 27,
+            "centroid_pixel": [
+              416.6,
+              605.8
+            ],
+            "centroid_lonlat": [
+              121.5003,
+              14.2716
+            ],
+            "distance_km": 60.5
+          },
+          {
+            "class": "blue",
+            "pixels": 79,
+            "centroid_pixel": [
+              439.7,
+              484.8
+            ],
+            "centroid_lonlat": [
+              121.8073,
+              15.8793
+            ],
+            "distance_km": 166.4
+          },
+          {
+            "class": "blue",
+            "pixels": 11,
+            "centroid_pixel": [
+              319.8,
+              387.8
+            ],
+            "centroid_lonlat": [
+              120.2154,
+              17.1683
+            ],
+            "distance_km": 300.6
+          },
+          {
+            "class": "blue",
+            "pixels": 11,
+            "centroid_pixel": [
+              325.2,
+              522.3
+            ],
+            "centroid_lonlat": [
+              120.2867,
+              15.3814
+            ],
+            "distance_km": 120.0
+          },
+          {
+            "class": "blue",
+            "pixels": 19,
+            "centroid_pixel": [
+              480.5,
+              740.8
+            ],
+            "centroid_lonlat": [
+              122.3492,
+              12.4772
+            ],
+            "distance_km": 272.7
+          },
+          {
+            "class": "blue",
+            "pixels": 8,
+            "centroid_pixel": [
+              431.5,
+              518.0
+            ],
+            "centroid_lonlat": [
+              121.6983,
+              15.4382
+            ],
+            "distance_km": 119.0
+          },
+          {
+            "class": "blue",
+            "pixels": 10,
+            "centroid_pixel": [
+              311.1,
+              531.2
+            ],
+            "centroid_lonlat": [
+              120.0997,
+              15.2627
+            ],
+            "distance_km": 126.0
+          },
+          {
+            "class": "blue",
+            "pixels": 9,
+            "centroid_pixel": [
+              478.7,
+              425.0
+            ],
+            "centroid_lonlat": [
+              122.3245,
+              16.6742
+            ],
+            "distance_km": 270.6
+          },
+          {
+            "class": "blue",
+            "pixels": 8,
+            "centroid_pixel": [
+              451.0,
+              537.5
+            ],
+            "centroid_lonlat": [
+              121.9572,
+              15.179
+            ],
+            "distance_km": 119.3
+          },
+          {
+            "class": "blue",
+            "pixels": 16,
+            "centroid_pixel": [
+              415.4,
+              478.8
+            ],
+            "centroid_lonlat": [
+              121.485,
+              15.9598
+            ],
+            "distance_km": 160.6
+          },
+          {
+            "class": "blue",
+            "pixels": 27,
+            "centroid_pixel": [
+              430.9,
+              507.9
+            ],
+            "centroid_lonlat": [
+              121.6897,
+              15.5726
+            ],
+            "distance_km": 130.7
+          },
+          {
+            "class": "blue",
+            "pixels": 24,
+            "centroid_pixel": [
+              401.5,
+              330.8
+            ],
+            "centroid_lonlat": [
+              121.3005,
+              17.9268
+            ],
+            "distance_km": 372.6
+          },
+          {
+            "class": "blue",
+            "pixels": 29,
+            "centroid_pixel": [
+              418.2,
+              442.1
+            ],
+            "centroid_lonlat": [
+              121.5222,
+              16.4469
+            ],
+            "distance_km": 213.8
+          },
+          {
+            "class": "blue",
+            "pixels": 19,
+            "centroid_pixel": [
+              327.7,
+              290.9
+            ],
+            "centroid_lonlat": [
+              120.3206,
+              18.4565
+            ],
+            "distance_km": 437.2
+          },
+          {
+            "class": "blue",
+            "pixels": 19,
+            "centroid_pixel": [
+              417.9,
+              407.3
+            ],
+            "centroid_lonlat": [
+              121.5176,
+              16.9099
+            ],
+            "distance_km": 263.8
+          },
+          {
+            "class": "blue",
+            "pixels": 8,
+            "centroid_pixel": [
+              386.6,
+              472.8
+            ],
+            "centroid_lonlat": [
+              121.1025,
+              16.0396
+            ],
+            "distance_km": 162.2
+          },
+          {
+            "class": "blue",
+            "pixels": 14,
+            "centroid_pixel": [
+              220.9,
+              481.4
+            ],
+            "centroid_lonlat": [
+              118.9015,
+              15.9242
+            ],
+            "distance_km": 273.6
+          },
+          {
+            "class": "blue",
+            "pixels": 31,
+            "centroid_pixel": [
+              334.3,
+              371.1
+            ],
+            "centroid_lonlat": [
+              120.4076,
+              17.3901
+            ],
+            "distance_km": 319.2
+          },
+          {
+            "class": "blue",
+            "pixels": 11,
+            "centroid_pixel": [
+              394.2,
+              370.2
+            ],
+            "centroid_lonlat": [
+              121.2028,
+              17.4027
+            ],
+            "distance_km": 313.9
+          },
+          {
+            "class": "blue",
+            "pixels": 33,
+            "centroid_pixel": [
+              212.6,
+              482.8
+            ],
+            "centroid_lonlat": [
+              118.7924,
+              15.9058
+            ],
+            "distance_km": 282.4
+          },
+          {
+            "class": "blue",
+            "pixels": 11,
+            "centroid_pixel": [
+              236.5,
+              464.7
+            ],
+            "centroid_lonlat": [
+              119.1086,
+              16.1462
+            ],
+            "distance_km": 270.4
+          },
+          {
+            "class": "blue",
+            "pixels": 9,
+            "centroid_pixel": [
+              405.1,
+              482.8
+            ],
+            "centroid_lonlat": [
+              121.3479,
+              15.9063
+            ],
+            "distance_km": 151.1
+          },
+          {
+            "class": "blue",
+            "pixels": 17,
+            "centroid_pixel": [
+              379.9,
+              472.7
+            ],
+            "centroid_lonlat": [
+              121.0137,
+              16.0402
+            ],
+            "distance_km": 162.2
+          },
+          {
+            "class": "blue",
+            "pixels": 12,
+            "centroid_pixel": [
+              326.9,
+              384.5
+            ],
+            "centroid_lonlat": [
+              120.3097,
+              17.2124
+            ],
+            "distance_km": 302.5
+          },
+          {
+            "class": "blue",
+            "pixels": 15,
+            "centroid_pixel": [
+              249.8,
+              455.4
+            ],
+            "centroid_lonlat": [
+              119.2858,
+              16.2702
+            ],
+            "distance_km": 265.6
+          },
+          {
+            "class": "blue",
+            "pixels": 13,
+            "centroid_pixel": [
+              372.7,
+              358.5
+            ],
+            "centroid_lonlat": [
+              120.9175,
+              17.5575
+            ],
+            "distance_km": 330.8
+          },
+          {
+            "class": "blue",
+            "pixels": 39,
+            "centroid_pixel": [
+              460.0,
+              464.4
+            ],
+            "centroid_lonlat": [
+              122.0767,
+              16.1504
+            ],
+            "distance_km": 207.1
+          },
+          {
+            "class": "blue",
+            "pixels": 18,
+            "centroid_pixel": [
+              415.7,
+              468.3
+            ],
+            "centroid_lonlat": [
+              121.4881,
+              16.0983
+            ],
+            "distance_km": 175.5
+          },
+          {
+            "class": "blue",
+            "pixels": 14,
+            "centroid_pixel": [
+              422.1,
+              483.6
+            ],
+            "centroid_lonlat": [
+              121.574,
+              15.8957
+            ],
+            "distance_km": 157.1
+          },
+          {
+            "class": "blue",
+            "pixels": 21,
+            "centroid_pixel": [
+              333.6,
+              385.6
+            ],
+            "centroid_lonlat": [
+              120.398,
+              17.1976
+            ],
+            "distance_km": 298.6
+          },
+          {
+            "class": "blue",
+            "pixels": 9,
+            "centroid_pixel": [
+              369.7,
+              356.3
+            ],
+            "centroid_lonlat": [
+              120.8773,
+              17.5868
+            ],
+            "distance_km": 334.3
+          },
+          {
+            "class": "blue",
+            "pixels": 13,
+            "centroid_pixel": [
+              304.4,
+              367.5
+            ],
+            "centroid_lonlat": [
+              120.0105,
+              17.4389
+            ],
+            "distance_km": 336.0
+          },
+          {
+            "class": "blue",
+            "pixels": 9,
+            "centroid_pixel": [
+              350.2,
+              431.9
+            ],
+            "centroid_lonlat": [
+              120.6191,
+              16.5826
+            ],
+            "distance_km": 226.8
+          },
+          {
+            "class": "blue",
+            "pixels": 15,
+            "centroid_pixel": [
+              392.5,
+              336.7
+            ],
+            "centroid_lonlat": [
+              121.18,
+              17.8482
+            ],
+            "distance_km": 363.2
+          },
+          {
+            "class": "blue",
+            "pixels": 9,
+            "centroid_pixel": [
+              320.0,
+              522.3
+            ],
+            "centroid_lonlat": [
+              120.2179,
+              15.3806
+            ],
+            "distance_km": 125.0
+          },
+          {
+            "class": "blue",
+            "pixels": 11,
+            "centroid_pixel": [
+              416.8,
+              432.4
+            ],
+            "centroid_lonlat": [
+              121.5033,
+              16.5763
+            ],
+            "distance_km": 227.3
+          },
+          {
+            "class": "blue",
+            "pixels": 26,
+            "centroid_pixel": [
+              319.3,
+              322.2
+            ],
+            "centroid_lonlat": [
+              120.2092,
+              18.0405
+            ],
+            "distance_km": 394.3
+          },
+          {
+            "class": "blue",
+            "pixels": 17,
+            "centroid_pixel": [
+              217.6,
+              486.0
+            ],
+            "centroid_lonlat": [
+              118.8581,
+              15.8635
+            ],
+            "distance_km": 274.0
+          },
+          {
+            "class": "blue",
+            "pixels": 8,
+            "centroid_pixel": [
+              443.9,
+              441.6
+            ],
+            "centroid_lonlat": [
+              121.8626,
+              16.4532
+            ],
+            "distance_km": 226.2
+          },
+          {
+            "class": "blue",
+            "pixels": 9,
+            "centroid_pixel": [
+              422.8,
+              523.0
+            ],
+            "centroid_lonlat": [
+              121.5825,
+              15.3717
+            ],
+            "distance_km": 105.7
+          },
+          {
+            "class": "blue",
+            "pixels": 12,
+            "centroid_pixel": [
+              417.9,
+              422.8
+            ],
+            "centroid_lonlat": [
+              121.5179,
+              16.703
+            ],
+            "distance_km": 241.3
+          },
+          {
+            "class": "blue",
+            "pixels": 9,
+            "centroid_pixel": [
+              331.3,
+              450.9
+            ],
+            "centroid_lonlat": [
+              120.3683,
+              16.3301
+            ],
+            "distance_km": 207.1
+          },
+          {
+            "class": "blue",
+            "pixels": 13,
+            "centroid_pixel": [
+              375.7,
+              484.0
+            ],
+            "centroid_lonlat": [
+              120.9573,
+              15.8901
+            ],
+            "distance_km": 145.7
+          },
+          {
+            "class": "blue",
+            "pixels": 12,
+            "centroid_pixel": [
+              312.6,
+              352.8
+            ],
+            "centroid_lonlat": [
+              120.1194,
+              17.6344
+            ],
+            "distance_km": 353.1
+          },
+          {
+            "class": "blue",
+            "pixels": 8,
+            "centroid_pixel": [
+              436.8,
+              479.2
+            ],
+            "centroid_lonlat": [
+              121.768,
+              15.9532
+            ],
+            "distance_km": 171.6
+          },
+          {
+            "class": "blue",
+            "pixels": 8,
+            "centroid_pixel": [
+              377.1,
+              433.6
+            ],
+            "centroid_lonlat": [
+              120.9763,
+              16.5596
+            ],
+            "distance_km": 219.9
+          },
+          {
+            "class": "blue",
+            "pixels": 13,
+            "centroid_pixel": [
+              416.2,
+              524.8
+            ],
+            "centroid_lonlat": [
+              121.4955,
+              15.3482
+            ],
+            "distance_km": 98.6
+          },
+          {
+            "class": "green",
+            "pixels": 726,
+            "centroid_pixel": [
+              380.1,
+              398.9
+            ],
+            "centroid_lonlat": [
+              121.0155,
+              17.0206
+            ],
+            "distance_km": 271.0
+          },
+          {
+            "class": "green",
+            "pixels": 12,
+            "centroid_pixel": [
+              396.8,
+              458.8
+            ],
+            "centroid_lonlat": [
+              121.2369,
+              16.2245
+            ],
+            "distance_km": 183.9
+          },
+          {
+            "class": "green",
+            "pixels": 9,
+            "centroid_pixel": [
+              416.6,
+              469.8
+            ],
+            "centroid_lonlat": [
+              121.4999,
+              16.0791
+            ],
+            "distance_km": 173.8
+          },
+          {
+            "class": "green",
+            "pixels": 129,
+            "centroid_pixel": [
+              414.8,
+              436.4
+            ],
+            "centroid_lonlat": [
+              121.4769,
+              16.5233
+            ],
+            "distance_km": 220.9
+          },
+          {
+            "class": "green",
+            "pixels": 8,
+            "centroid_pixel": [
+              241.6,
+              440.2
+            ],
+            "centroid_lonlat": [
+              119.1772,
+              16.4715
+            ],
+            "distance_km": 289.8
+          },
+          {
+            "class": "green",
+            "pixels": 14,
+            "centroid_pixel": [
+              332.5,
+              368.6
+            ],
+            "centroid_lonlat": [
+              120.3838,
+              17.4241
+            ],
+            "distance_km": 323.4
+          },
+          {
+            "class": "green",
+            "pixels": 13,
+            "centroid_pixel": [
+              312.2,
+              464.2
+            ],
+            "centroid_lonlat": [
+              120.1137,
+              16.1528
+            ],
+            "distance_km": 200.8
+          },
+          {
+            "class": "green",
+            "pixels": 15,
+            "centroid_pixel": [
+              369.7,
+              435.2
+            ],
+            "centroid_lonlat": [
+              120.8773,
+              16.5386
+            ],
+            "distance_km": 218.1
+          },
+          {
+            "class": "green",
+            "pixels": 13,
+            "centroid_pixel": [
+              321.1,
+              360.8
+            ],
+            "centroid_lonlat": [
+              120.2322,
+              17.5268
+            ],
+            "distance_km": 338.4
+          },
+          {
+            "class": "green",
+            "pixels": 29,
+            "centroid_pixel": [
+              419.2,
+              483.7
+            ],
+            "centroid_lonlat": [
+              121.5346,
+              15.8946
+            ],
+            "distance_km": 155.5
+          },
+          {
+            "class": "green",
+            "pixels": 12,
+            "centroid_pixel": [
+              408.5,
+              484.8
+            ],
+            "centroid_lonlat": [
+              121.3929,
+              15.8801
+            ],
+            "distance_km": 149.4
+          },
+          {
+            "class": "green",
+            "pixels": 29,
+            "centroid_pixel": [
+              482.4,
+              433.2
+            ],
+            "centroid_lonlat": [
+              122.3743,
+              16.5656
+            ],
+            "distance_km": 263.2
+          },
+          {
+            "class": "green",
+            "pixels": 23,
+            "centroid_pixel": [
+              459.1,
+              749.4
+            ],
+            "centroid_lonlat": [
+              122.0651,
+              12.3629
+            ],
+            "distance_km": 269.7
+          },
+          {
+            "class": "green",
+            "pixels": 55,
+            "centroid_pixel": [
+              388.5,
+              359.7
+            ],
+            "centroid_lonlat": [
+              121.1272,
+              17.5414
+            ],
+            "distance_km": 328.9
+          },
+          {
+            "class": "green",
+            "pixels": 11,
+            "centroid_pixel": [
+              406.7,
+              381.6
+            ],
+            "centroid_lonlat": [
+              121.3694,
+              17.2505
+            ],
+            "distance_km": 298.6
+          },
+          {
+            "class": "green",
+            "pixels": 9,
+            "centroid_pixel": [
+              426.7,
+              399.4
+            ],
+            "centroid_lonlat": [
+              121.6341,
+              17.0138
+            ],
+            "distance_km": 277.8
+          },
+          {
+            "class": "green",
+            "pixels": 54,
+            "centroid_pixel": [
+              413.3,
+              392.9
+            ],
+            "centroid_lonlat": [
+              121.4566,
+              17.1002
+            ],
+            "distance_km": 283.4
+          },
+          {
+            "class": "green",
+            "pixels": 21,
+            "centroid_pixel": [
+              401.2,
+              454.9
+            ],
+            "centroid_lonlat": [
+              121.2965,
+              16.2774
+            ],
+            "distance_km": 190.5
+          },
+          {
+            "class": "green",
+            "pixels": 14,
+            "centroid_pixel": [
+              420.9,
+              520.0
+            ],
+            "centroid_lonlat": [
+              121.5579,
+              15.4116
+            ],
+            "distance_km": 108.1
+          },
+          {
+            "class": "green",
+            "pixels": 14,
+            "centroid_pixel": [
+              420.1,
+              367.1
+            ],
+            "centroid_lonlat": [
+              121.5475,
+              17.4431
+            ],
+            "distance_km": 322.6
+          },
+          {
+            "class": "green",
+            "pixels": 10,
+            "centroid_pixel": [
+              390.8,
+              463.2
+            ],
+            "centroid_lonlat": [
+              121.1579,
+              16.1665
+            ],
+            "distance_km": 176.7
+          },
+          {
+            "class": "green",
+            "pixels": 23,
+            "centroid_pixel": [
+              403.4,
+              441.9
+            ],
+            "centroid_lonlat": [
+              121.3251,
+              16.45
+            ],
+            "distance_km": 209.9
+          },
+          {
+            "class": "green",
+            "pixels": 14,
+            "centroid_pixel": [
+              418.5,
+              383.0
+            ],
+            "centroid_lonlat": [
+              121.5257,
+              17.2324
+            ],
+            "distance_km": 299.1
+          },
+          {
+            "class": "green",
+            "pixels": 8,
+            "centroid_pixel": [
+              397.5,
+              367.2
+            ],
+            "centroid_lonlat": [
+              121.2469,
+              17.4417
+            ],
+            "distance_km": 318.5
+          },
+          {
+            "class": "green",
+            "pixels": 11,
+            "centroid_pixel": [
+              307.5,
+              379.1
+            ],
+            "centroid_lonlat": [
+              120.0525,
+              17.2843
+            ],
+            "distance_km": 318.3
+          },
+          {
+            "class": "green",
+            "pixels": 11,
+            "centroid_pixel": [
+              354.0,
+              426.5
+            ],
+            "centroid_lonlat": [
+              120.6693,
+              16.6549
+            ],
+            "distance_km": 233.7
+          },
+          {
+            "class": "green",
+            "pixels": 15,
+            "centroid_pixel": [
+              400.7,
+              405.4
+            ],
+            "centroid_lonlat": [
+              121.2898,
+              16.9347
+            ],
+            "distance_km": 262.9
+          },
+          {
+            "class": "green",
+            "pixels": 12,
+            "centroid_pixel": [
+              325.8,
+              299.8
+            ],
+            "centroid_lonlat": [
+              120.2953,
+              18.3377
+            ],
+            "distance_km": 424.7
+          },
+          {
+            "class": "green",
+            "pixels": 9,
+            "centroid_pixel": [
+              403.8,
+              385.8
+            ],
+            "centroid_lonlat": [
+              121.3302,
+              17.1955
+            ],
+            "distance_km": 292.1
+          },
+          {
+            "class": "green",
+            "pixels": 9,
+            "centroid_pixel": [
+              317.8,
+              319.3
+            ],
+            "centroid_lonlat": [
+              120.1884,
+              18.0785
+            ],
+            "distance_km": 398.9
+          },
+          {
+            "class": "green",
+            "pixels": 10,
+            "centroid_pixel": [
+              332.1,
+              304.4
+            ],
+            "centroid_lonlat": [
+              120.3785,
+              18.277
+            ],
+            "distance_km": 416.5
+          },
+          {
+            "class": "green",
+            "pixels": 9,
+            "centroid_pixel": [
+              485.6,
+              738.9
+            ],
+            "centroid_lonlat": [
+              122.416,
+              12.5025
+            ],
+            "distance_km": 274.1
+          },
+          {
+            "class": "green",
+            "pixels": 18,
+            "centroid_pixel": [
+              399.6,
+              370.2
+            ],
+            "centroid_lonlat": [
+              121.2749,
+              17.4022
+            ],
+            "distance_km": 314.4
+          },
+          {
+            "class": "green",
+            "pixels": 8,
+            "centroid_pixel": [
+              343.9,
+              433.4
+            ],
+            "centroid_lonlat": [
+              120.5349,
+              16.5629
+            ],
+            "distance_km": 226.6
+          },
+          {
+            "class": "green",
+            "pixels": 18,
+            "centroid_pixel": [
+              214.1,
+              482.1
+            ],
+            "centroid_lonlat": [
+              118.8112,
+              15.9159
+            ],
+            "distance_km": 281.3
+          },
+          {
+            "class": "green",
+            "pixels": 12,
+            "centroid_pixel": [
+              371.1,
+              358.3
+            ],
+            "centroid_lonlat": [
+              120.8961,
+              17.5602
+            ],
+            "distance_km": 331.2
+          },
+          {
+            "class": "green",
+            "pixels": 11,
+            "centroid_pixel": [
+              515.7,
+              617.5
+            ],
+            "centroid_lonlat": [
+              122.8166,
+              14.1164
+            ],
+            "distance_km": 198.1
+          },
+          {
+            "class": "green",
+            "pixels": 15,
+            "centroid_pixel": [
+              427.8,
+              504.3
+            ],
+            "centroid_lonlat": [
+              121.6492,
+              15.6198
+            ],
+            "distance_km": 133.0
+          },
+          {
+            "class": "green",
+            "pixels": 8,
+            "centroid_pixel": [
+              311.2,
+              381.6
+            ],
+            "centroid_lonlat": [
+              120.1017,
+              17.2507
+            ],
+            "distance_km": 313.0
+          },
+          {
+            "class": "green",
+            "pixels": 12,
+            "centroid_pixel": [
+              413.2,
+              373.0
+            ],
+            "centroid_lonlat": [
+              121.4549,
+              17.3653
+            ],
+            "distance_km": 312.5
+          },
+          {
+            "class": "green",
+            "pixels": 19,
+            "centroid_pixel": [
+              317.9,
+              335.4
+            ],
+            "centroid_lonlat": [
+              120.1906,
+              17.8647
+            ],
+            "distance_km": 375.8
+          },
+          {
+            "class": "green",
+            "pixels": 8,
+            "centroid_pixel": [
+              411.0,
+              401.9
+            ],
+            "centroid_lonlat": [
+              121.4261,
+              16.9815
+            ],
+            "distance_km": 269.9
+          },
+          {
+            "class": "green",
+            "pixels": 9,
+            "centroid_pixel": [
+              440.7,
+              755.3
+            ],
+            "centroid_lonlat": [
+              121.82,
+              12.2839
+            ],
+            "distance_km": 268.4
+          },
+          {
+            "class": "green",
+            "pixels": 8,
+            "centroid_pixel": [
+              353.8,
+              432.6
+            ],
+            "centroid_lonlat": [
+              120.666,
+              16.5728
+            ],
+            "distance_km": 224.8
+          },
+          {
+            "class": "green",
+            "pixels": 9,
+            "centroid_pixel": [
+              394.4,
+              351.9
+            ],
+            "centroid_lonlat": [
+              121.2063,
+              17.6459
+            ],
+            "distance_km": 340.9
+          },
+          {
+            "class": "yellow",
+            "pixels": 9,
+            "centroid_pixel": [
+              234.3,
+              466.7
+            ],
+            "centroid_lonlat": [
+              119.0804,
+              16.1204
+            ],
+            "distance_km": 270.9
+          },
+          {
+            "class": "yellow",
+            "pixels": 10,
+            "centroid_pixel": [
+              404.6,
+              548.0
+            ],
+            "centroid_lonlat": [
+              121.3411,
+              15.0395
+            ],
+            "distance_km": 60.7
+          },
+          {
+            "class": "orange",
+            "pixels": 8,
+            "centroid_pixel": [
+              333.5,
+              302.5
+            ],
+            "centroid_lonlat": [
+              120.3971,
+              18.3023
+            ],
+            "distance_km": 418.9
+          },
+          {
+            "class": "red",
+            "pixels": 10,
+            "centroid_pixel": [
+              350.7,
+              429.4
+            ],
+            "centroid_lonlat": [
+              120.6255,
+              16.6157
+            ],
+            "distance_km": 230.3
+          },
+          {
+            "class": "purple",
+            "pixels": 8,
+            "centroid_pixel": [
+              556.6,
+              649.5
+            ],
+            "centroid_lonlat": [
+              123.3596,
+              13.6905
+            ],
+            "distance_km": 268.4
+          },
+          {
+            "class": "purple",
+            "pixels": 9,
+            "centroid_pixel": [
+              330.8,
+              364.3
+            ],
+            "centroid_lonlat": [
+              120.361,
+              17.4805
+            ],
+            "distance_km": 330.1
+          }
+        ],
+        "note": "Color classes are diagnostic only. They are not dBZ or PAGASA rainfall warning thresholds."
+      },
+      "source": "current_run"
+    }
+  ],
+  "radar_tracking": {
+    "status": "insufficient_frames",
+    "message": "Need a prior distinct PAGASA radar frame. The current frame has been persisted for the next run."
+  }
+}

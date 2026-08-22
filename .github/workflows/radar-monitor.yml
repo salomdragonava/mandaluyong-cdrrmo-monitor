@@ -3,6 +3,9 @@ name: PAGASA Radar Monitor
 on:
   workflow_dispatch:
 
+  schedule:
+    - cron: "0 * * * *"
+
 permissions:
   contents: write
 
@@ -88,7 +91,7 @@ jobs:
       - name: Persist latest radar frame and threat state
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.email "41898282+users.noreply.github.com"
           git add radar_state.json radar_map_state.json radar_threat_state.json radar_notification_state.json radar_data/previous_radar.png
           git diff --cached --quiet || git commit -m "Persist latest PAGASA radar threat state"
           git push

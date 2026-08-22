@@ -85,11 +85,13 @@ def track(previous,current):
             matches.append({'class':a['class'],'pixels_previous':a['pixels'],'pixels_current':b['pixels'],'from_lonlat':[lon1,lat1],'to_lonlat':[lon2,lat2],'pixel_displacement':round(d,1),'movement_km':round(km,1),'bearing_deg':round(bearing,1),'previous_distance_km':round(olddist,1),'distance_to_mandaluyong_km':b['distance_km'],'approaching_mandaluyong':b['distance_km']<olddist-2})
     return matches
 
-def capture_response(resp,previous_timestamp,captured,radar_frames):
+def capture_response(resp,previous_timestamp,captured,radar_frames,allow_same_timestamp=False):
     u=resp.url
     if '/radar/timeline/mosaic-hybrid/' not in u or resp.status!=200 or u in captured:return
     m=re.search(r'ph_hybrid_mosaic_(\d{14})',u);ts=m.group(1) if m else str(len(captured))
-    if ts==previous_timestamp:return
+    # A PAGASA mosaic can remain the same for multiple monitor runs. It is still
+    # a valid current observation; only tracking requires a distinct timestamp.
+    if ts==previous_timestamp and not allow_same_timestamp:return
     try:body=resp.body()
     except Exception:return
     if not body:return
@@ -118,11 +120,9 @@ def main():
                 try:
                     r=page.request.get(u,timeout=30000)
                     if r.ok:
-                        capture_response(r,previous_timestamp,captured,radar_frames)
+                        capture_response(r,previous_timestamp,captured,radar_frames,allow_same_timestamp=True)
                 except Exception:pass
         except Exception:pass
-        # Also inspect the page's current JavaScript globals for the hybrid timeline.
-        # This is intentionally diagnostic; no fabricated URL is constructed.
         try:
             timeline=page.evaluate("""() => ({
                 href: location.href,
@@ -141,9 +141,14 @@ def main():
     if not current_frames:
         result={'frames':frames,'map_script':script_result,'captured_images':captured,'radar_frames':radar_frames,'radar_tracking':{'status':'no_current_frame','message':'PAGASA did not return or expose a new hybrid radar image during this run.'}}
         MAP_STATE_FILE.write_text(json.dumps(result,indent=2),encoding='utf-8');print(json.dumps(result,indent=2));return
-    current=current_frames[-1];radar_frames=([radar_frames[0]] if radar_frames and radar_frames[0].get('source')=='previous_run' else [])+[current]
-    if len(radar_frames)==2 and radar_frames[0]['timestamp']!=radar_frames[1]['timestamp']:tracking={'status':'ok','previous_timestamp':radar_frames[0]['timestamp'],'current_timestamp':radar_frames[1]['timestamp'],'matches':track(radar_frames[0]['analysis'],radar_frames[1]['analysis'])}
-    else:tracking={'status':'insufficient_frames','message':'Need a prior distinct PAGASA radar frame. The current frame has been persisted for the next run.'}
+    current=current_frames[-1]
+    previous=next((f for f in radar_frames if f.get('source')=='previous_run'),None)
+    if previous and previous['timestamp']!=current['timestamp']:
+        tracking={'status':'ok','previous_timestamp':previous['timestamp'],'current_timestamp':current['timestamp'],'matches':track(previous['analysis'],current['analysis'])}
+    elif previous:
+        tracking={'status':'unchanged_frame','previous_timestamp':previous['timestamp'],'current_timestamp':current['timestamp'],'matches':[],'message':'Current PAGASA radar mosaic is the same timestamp as the previous run; image capture is working, but movement tracking requires a newer frame.'}
+    else:
+        tracking={'status':'insufficient_frames','message':'The current PAGASA radar frame has been persisted for the next run.'}
     PREVIOUS_IMAGE.write_bytes(Path(current['path']).read_bytes())
-    result={'frames':frames,'map_script':script_result,'captured_images':captured,'radar_frames':radar_frames,'radar_tracking':tracking};MAP_STATE_FILE.write_text(json.dumps(result,indent=2),encoding='utf-8');STATE_FILE.write_text(json.dumps({'success':True,'checked_at':datetime.now(PH_TZ).isoformat(),'image_url':current['url'],'image_timestamp':current['timestamp'],'localized_image':str(OUTPUT_DIR/'mandaluyong_radar_localized.png'),'tracking_status':tracking['status']},indent=2),encoding='utf-8');print(json.dumps(result,indent=2))
+    result={'frames':frames,'map_script':script_result,'captured_images':captured,'radar_frames':([previous] if previous else [])+[current],'radar_tracking':tracking};MAP_STATE_FILE.write_text(json.dumps(result,indent=2),encoding='utf-8');STATE_FILE.write_text(json.dumps({'success':True,'checked_at':datetime.now(PH_TZ).isoformat(),'image_url':current['url'],'image_timestamp':current['timestamp'],'localized_image':str(OUTPUT_DIR/'mandaluyong_radar_localized.png'),'tracking_status':tracking['status']},indent=2),encoding='utf-8');print(json.dumps(result,indent=2))
 if __name__=='__main__':main()

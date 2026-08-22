@@ -89,16 +89,22 @@ jobs:
           fi
 
       - name: Persist latest radar frame and threat state
+        shell: bash
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add radar_state.json radar_map_state.json radar_threat_state.json radar_data/previous_radar.png
           if [ -f radar_notification_state.json ]; then
             git add radar_notification_state.json
           fi
-          git diff --cached --quiet || git commit -m "Persist latest PAGASA radar threat state"
+          if git diff --cached --quiet; then
+            echo "No radar state changes to commit."
+            exit 0
+          fi
+          git commit -m "Persist latest PAGASA radar threat state"
           git fetch origin main
-          git rebase origin/main
+          git rebase --autostash origin/main
           git push origin HEAD:main
 
       - name: Upload radar diagnostics

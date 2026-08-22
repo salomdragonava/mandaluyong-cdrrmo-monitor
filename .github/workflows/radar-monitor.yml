@@ -1,0 +1,38 @@
+name: PAGASA Radar Monitor
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  radar-monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install Playwright
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+
+      - name: Capture PAGASA radar
+        run: python tests/radar_monitor.py
+
+      - name: Upload radar image
+        uses: actions/upload-artifact@v4
+        with:
+          name: pagasa-radar-${{ github.run_number }}
+          path: |
+            radar_data/*.png
+            radar_state.json
+          if-no-files-found: error
+          retention-days: 7

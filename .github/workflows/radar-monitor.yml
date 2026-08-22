@@ -28,6 +28,14 @@ jobs:
       - name: Capture PAGASA radar and inspect OpenLayers configuration
         run: python tests/radar_monitor.py
 
+      - name: Persist latest radar frame for next run
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add radar_state.json radar_map_state.json radar_data/previous_radar.png
+          git diff --cached --quiet || git commit -m "Persist latest PAGASA radar frame"
+          git push
+
       - name: Upload radar diagnostics
         uses: actions/upload-artifact@v6
         with:

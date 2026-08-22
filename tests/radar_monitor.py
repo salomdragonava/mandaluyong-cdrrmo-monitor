@@ -4,6 +4,7 @@ import math
 import re
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
+from collections import Counter
 
 from PIL import Image, ImageDraw
 from playwright.sync_api import sync_playwright
@@ -14,21 +15,18 @@ STATE_FILE = Path("radar_state.json")
 MAP_STATE_FILE = Path("radar_map_state.json")
 SCRIPT_FILE = OUTPUT_DIR / "pagasa_radar_map.js"
 PH_TZ = timezone(timedelta(hours=8))
-
-TARGET_LAT = 14.5794
-TARGET_LON = 121.0359
+TARGET_LAT, TARGET_LON = 14.5794, 121.0359
 WEST, SOUTH = 115.969111093, 3.80912641587
 EAST, NORTH = 129.511990464, 22.322581275
 
 
 def extract_assignment(text, name):
     m = re.search(rf"(?:const|let|var)?\s*{re.escape(name)}\s*=\s*", text, re.I)
-    if not m:
-        return None
+    if not m: return None
     start = m.end()
     while start < len(text) and text[start].isspace(): start += 1
-    opener = text[start:start + 1]
-    if opener not in "[{": return text[start:start + 500]
+    opener = text[start:start+1]
+    if opener not in "[{": return text[start:start+500]
     closer = "]" if opener == "[" else "}"
     depth = 0; quote = None; escaped = False
     for i in range(start, len(text)):
@@ -42,8 +40,8 @@ def extract_assignment(text, name):
         elif c == opener: depth += 1
         elif c == closer:
             depth -= 1
-            if depth == 0: return text[start:i + 1]
-    return text[start:start + 2000]
+            if depth == 0: return text[start:i+1]
+    return text[start:start+2000]
 
 
 def extract_radar_config(text):
@@ -51,10 +49,6 @@ def extract_radar_config(text):
     for name in ["radarBoundaries", "images", "radarImages", "products"]:
         value = extract_assignment(text, name)
         if value is not None: result[name] = value
-    contexts = []
-    for m in re.finditer(r"radarBoundaries", text, re.I):
-        contexts.append(text[max(0, m.start()-1000):min(len(text), m.end()+2500)])
-    result["radarBoundaries_contexts"] = contexts[:10]
     return result
 
 
@@ -66,8 +60,6 @@ def analyze_radar(image_bytes):
     image = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
     width, height = image.size
     tx, ty = lonlat_to_pixel(TARGET_LON, TARGET_LAT, width, height)
-
-    # First validation window: approximately 25 km around Mandaluyong.
     lat_radius = 25 / 111.0
     lon_radius = 25 / (111.0 * math.cos(math.radians(TARGET_LAT)))
     x0, y0 = lonlat_to_pixel(TARGET_LON-lon_radius, TARGET_LAT+lat_radius, width, height)
@@ -75,14 +67,31 @@ def analyze_radar(image_bytes):
     x0, x1 = max(0,int(min(x0,x1))), min(width,int(max(x0,x1)))
     y0, y1 = max(0,int(min(y0,y1))), min(height,int(max(y0,y1)))
 
-    pixels = image.load(); echo = 0; total = 0; color_counts = {}
+    pixels = image.load()
+    total = 0
+    alpha_counts = Counter()
+    rgba_counts = Counter()
+    nonwhite = 0
+    nontransparent = 0
+    strong_candidates = []
+
     for y in range(y0,y1):
         for x in range(x0,x1):
-            r,g,b,a = pixels[x,y]; total += 1
-            if a > 20 and not (r > 245 and g > 245 and b > 245):
-                echo += 1
-                key=(r//16*16,g//16*16,b//16*16,a//32*32)
-                color_counts[key]=color_counts.get(key,0)+1
+            rgba = pixels[x,y]
+            r,g,b,a = rgba
+            total += 1
+            alpha_counts[a] += 1
+            rgba_counts[rgba] += 1
+            if a > 10: nontransparent += 1
+            if a > 10 and not (r > 245 and g > 245 and b > 245):
+                nonwhite += 1
+                # Bright saturated colors are retained for palette calibration.
+                if max(r,g,b)-min(r,g,b) >= 25:
+                    strong_candidates.append(rgba)
+
+    target_rgba = pixels[min(width-1,max(0,round(tx))), min(height-1,max(0,round(ty)))]
+    top_colors = [[list(c), n] for c,n in rgba_counts.most_common(30)]
+    top_colored = [[list(c), n] for c,n in Counter(strong_candidates).most_common(30)]
 
     annotated=image.copy(); draw=ImageDraw.Draw(annotated)
     radius_px=max(4,int(2.5*width/(EAST-WEST)))
@@ -97,11 +106,16 @@ def analyze_radar(image_bytes):
         "target_pixel":{"x":round(tx,2),"y":round(ty,2)},
         "analysis_box_pixels":[x0,y0,x1,y1],
         "analysis_radius_km":25,
-        "echo_pixels":echo,
         "analyzed_pixels":total,
-        "echo_fraction":round(echo/total,5) if total else 0,
-        "top_quantized_colors":[[list(k),v] for k,v in sorted(color_counts.items(),key=lambda kv:kv[1],reverse=True)[:20]],
-        "note":"Echo presence only. dBZ thresholds are not assigned until the PAGASA reflectivity legend is calibrated."
+        "nontransparent_pixels":nontransparent,
+        "nontransparent_fraction":round(nontransparent/total,5) if total else 0,
+        "nonwhite_colored_pixels":nonwhite,
+        "nonwhite_colored_fraction":round(nonwhite/total,5) if total else 0,
+        "target_rgba":list(target_rgba),
+        "top_rgba":top_colors,
+        "top_colored_rgba":top_colored,
+        "alpha_distribution":[[a,n] for a,n in alpha_counts.most_common(20)],
+        "note":"Diagnostic palette/alpha analysis only. No dBZ or alert threshold is assigned yet."
     }
 
 

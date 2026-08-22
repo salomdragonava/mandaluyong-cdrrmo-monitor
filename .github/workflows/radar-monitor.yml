@@ -19,10 +19,11 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install Playwright
+      - name: Install Python dependencies
         run: |
-          pip install playwright
-          playwright install chromium --with-deps
+          python -m pip install --upgrade pip
+          python -m pip install playwright pillow
+          python -m playwright install chromium --with-deps
 
       - name: Capture PAGASA radar and inspect OpenLayers configuration
         run: python tests/radar_monitor.py

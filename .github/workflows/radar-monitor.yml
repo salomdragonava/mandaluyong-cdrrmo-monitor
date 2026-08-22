@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -65,11 +67,29 @@ jobs:
       - name: Calculate radar threat candidates
         run: python tests/radar_threat.py
 
+      - name: Generate radar Telegram alert
+        run: python tests/radar_telegram.py
+
+      - name: Send radar Telegram notification
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          if [ -s radar_alert.txt ]; then
+            curl --fail --silent --show-error \
+              --request POST \
+              --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+              --data-urlencode "text@radar_alert.txt" \
+              "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
+          else
+            echo "No radar Telegram notification generated."
+          fi
+
       - name: Persist latest radar frame and threat state
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add radar_state.json radar_map_state.json radar_threat_state.json radar_data/previous_radar.png
+          git add radar_state.json radar_map_state.json radar_threat_state.json radar_notification_state.json radar_data/previous_radar.png
           git diff --cached --quiet || git commit -m "Persist latest PAGASA radar threat state"
           git push
 
@@ -83,5 +103,6 @@ jobs:
             radar_state.json
             radar_map_state.json
             radar_threat_state.json
+            radar_alert.txt
           if-no-files-found: error
           retention-days: 7

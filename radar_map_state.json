@@ -5,7 +5,7 @@
       "url": "https://www.pagasa.dost.gov.ph/radar",
       "ol": true,
       "scripts": [
-        "https://pagasa.dost.gov.ph/themes/hiraia/assets/js/app/radar/map.js?t=1947746553"
+        "https://pagasa.dost.gov.ph/themes/hiraia/assets/js/app/radar/map.js?t=1678209457"
       ]
     },
     {
@@ -16,7 +16,7 @@
     }
   ],
   "map_script": {
-    "url": "https://pagasa.dost.gov.ph/themes/hiraia/assets/js/app/radar/map.js?t=1947746553",
+    "url": "https://pagasa.dost.gov.ph/themes/hiraia/assets/js/app/radar/map.js?t=1678209457",
     "status": 200,
     "bytes": 7838,
     "radarBoundaries": "{\n    rightTop:[\n        129.511990464,\n        22.322581275\n    ],\n    leftBottom:[\n        115.969111093,\n        3.80912641587\n    ]\n}",
@@ -35,7 +35,7 @@
       "https://www.pagasa.dost.gov.ph/radar"
     ],
     "scripts_with_reflectivity": [
-      "https://pagasa.dost.gov.ph/themes/hiraia/assets/js/app/radar/map.js?t=1947746553"
+      "https://pagasa.dost.gov.ph/themes/hiraia/assets/js/app/radar/map.js?t=1678209457"
     ]
   },
   "captured_images": [],
@@ -3517,13 +3517,38 @@
         "note": "Color classes are diagnostic only. They are not dBZ or PAGASA rainfall warning thresholds."
       },
       "source": "previous_run"
+    },
+    {
+      "url": "https://api.meteopilipinas.gov.ph/tmp/d41d8cd98f00b204e9800998ecf8427e/radar/timeline/mosaic-hybrid/ph_hybrid_mosaic_20260822181500GklG.png",
+      "timestamp": "20260822181500",
+      "source": "download_failed",
+      "download_diagnostics": {
+        "url": "https://api.meteopilipinas.gov.ph/tmp/d41d8cd98f00b204e9800998ecf8427e/radar/timeline/mosaic-hybrid/ph_hybrid_mosaic_20260822181500GklG.png",
+        "method": "urllib",
+        "status": null,
+        "content_type": null,
+        "bytes": 0,
+        "signature": null,
+        "error": "URLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)'))"
+      }
     }
   ],
   "radar_tracking": {
     "status": "no_current_frame",
-    "message": "PAGASA did not return or expose a usable hybrid radar image during this run.",
+    "message": "PAGASA radar URL was discovered but no usable image was downloaded.",
     "resource_urls": [
       "https://api.meteopilipinas.gov.ph/tmp/d41d8cd98f00b204e9800998ecf8427e/radar/timeline/mosaic-hybrid/ph_hybrid_mosaic_20260822181500GklG.png"
+    ],
+    "download_failures": [
+      {
+        "url": "https://api.meteopilipinas.gov.ph/tmp/d41d8cd98f00b204e9800998ecf8427e/radar/timeline/mosaic-hybrid/ph_hybrid_mosaic_20260822181500GklG.png",
+        "method": "urllib",
+        "status": null,
+        "content_type": null,
+        "bytes": 0,
+        "signature": null,
+        "error": "URLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)'))"
+      }
     ]
   }
 }

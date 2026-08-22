@@ -9,6 +9,7 @@ RADAR_PAGE = "https://www.pagasa.dost.gov.ph/radar"
 OUTPUT_DIR = Path("radar_data")
 STATE_FILE = Path("radar_state.json")
 MAP_STATE_FILE = Path("radar_map_state.json")
+SCRIPT_FILE = Path("radar_data/pagasa_radar_map.js")
 
 PH_TZ = timezone(timedelta(hours=8))
 
@@ -28,7 +29,6 @@ def inspect_frame(frame):
                 scripts: []
             };
 
-            // Common map libraries / globals.
             const checks = [
                 ['leaflet', 'L'],
                 ['mapboxgl', 'mapboxgl'],
@@ -47,7 +47,6 @@ def inspect_frame(frame):
                 }
             }
 
-            // Search known globals and common map-like objects.
             const names = Object.keys(window);
             for (const name of names) {
                 if (!/map|radar|layer|leaflet|ol|globe/i.test(name)) continue;
@@ -66,6 +65,30 @@ def inspect_frame(frame):
                                 lng: center.lng
                             };
                         }
+                    }
+
+                    if (typeof value.getView === 'function') {
+                        try {
+                            const view = value.getView();
+                            if (view) {
+                                if (typeof view.getCenter === 'function') {
+                                    candidate.view_center = view.getCenter();
+                                }
+                                if (typeof view.getZoom === 'function') {
+                                    candidate.view_zoom = view.getZoom();
+                                }
+                                if (typeof view.getProjection === 'function') {
+                                    const projection = view.getProjection();
+                                    if (projection) {
+                                        candidate.projection = {
+                                            code: projection.getCode ? projection.getCode() : null,
+                                            units: projection.getUnits ? projection.getUnits() : null,
+                                            extent: projection.getExtent ? projection.getExtent() : null
+                                        };
+                                    }
+                                }
+                            }
+                        } catch (e) {}
                     }
 
                     if (typeof value.getBounds === 'function') {
@@ -90,7 +113,6 @@ def inspect_frame(frame):
                 } catch (e) {}
             }
 
-            // Canvas/WebGL elements are strong indicators of map rendering.
             document.querySelectorAll('canvas').forEach((el, index) => {
                 const rect = el.getBoundingClientRect();
                 result.canvases.push({
@@ -104,7 +126,6 @@ def inspect_frame(frame):
                 });
             });
 
-            // Map-like DOM elements, including Leaflet/Mapbox/OL classes.
             document.querySelectorAll('[class*="map"], [class*="leaflet"], [class*="ol-"], [class*="mapbox"]').forEach((el, index) => {
                 if (index >= 100) return;
                 const rect = el.getBoundingClientRect();
@@ -118,7 +139,6 @@ def inspect_frame(frame):
                 });
             });
 
-            // Capture script URLs, especially radar/map code.
             document.querySelectorAll('script[src]').forEach(script => {
                 const src = script.src;
                 if (/radar|map|weather|hiraia|meteopilipinas/i.test(src)) {
@@ -132,11 +152,92 @@ def inspect_frame(frame):
     )
 
 
+def extract_map_script(page, urls):
+    """Download the PAGASA radar map JavaScript so its OpenLayers configuration can be inspected."""
+    for url in urls:
+        if "/app/radar/map.js" not in url:
+            continue
+
+        print("=" * 70)
+        print("DOWNLOADING PAGASA RADAR MAP SCRIPT")
+        print("=" * 70)
+        print(url)
+
+        try:
+            response = page.request.get(url, timeout=60000)
+            print("MAP SCRIPT HTTP STATUS:", response.status)
+            text = response.text()
+            SCRIPT_FILE.write_text(text, encoding="utf-8")
+
+            patterns = [
+                r"new\\s+ol\\.Map",
+                r"ol\\.View",
+                r"projection",
+                r"extent",
+                r"center",
+                r"zoom",
+                r"mosaic",
+                r"hybrid",
+                r"tile",
+                r"ImageStatic",
+                r"ImageLayer",
+                r"XYZ",
+                r"TileLayer"
+            ]
+
+            hits = {}
+            for pattern in patterns:
+                matches = list(re.finditer(pattern, text, re.IGNORECASE))
+                hits[pattern] = len(matches)
+
+            print("MAP SCRIPT PATTERN COUNTS:")
+            print(json.dumps(hits, indent=2))
+
+            # Print compact context around the most useful OpenLayers terms.
+            context_terms = [
+                "new ol.Map",
+                "ol.View",
+                "projection",
+                "extent",
+                "ImageStatic",
+                "mosaic-hybrid"
+            ]
+
+            for term in context_terms:
+                match = re.search(re.escape(term), text, re.IGNORECASE)
+                if not match:
+                    continue
+
+                start = max(0, match.start() - 700)
+                end = min(len(text), match.end() + 1200)
+                print("\n--- CONTEXT:", term, "---")
+                print(text[start:end])
+
+            return {
+                "url": url,
+                "status": response.status,
+                "bytes": len(text),
+                "pattern_counts": hits,
+                "saved_file": str(SCRIPT_FILE)
+            }
+
+        except Exception as exc:
+            print("MAP SCRIPT ERROR:", exc)
+            return {
+                "url": url,
+                "error": str(exc)
+            }
+
+    return {"error": "Radar map.js URL was not found."}
+
+
 def main():
     OUTPUT_DIR.mkdir(exist_ok=True)
 
     captured = []
     frame_states = []
+    script_urls = []
+    script_result = None
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -146,35 +247,21 @@ def main():
         def handle_response(response):
             url = response.url
 
-            if "/radar/timeline/mosaic-hybrid/" not in url:
-                return
-            if response.status != 200:
-                return
-            if url in captured:
-                return
-
-            try:
-                body = response.body()
-                match = re.search(r"ph_hybrid_mosaic_(\d{14})", url)
-                timestamp = match.group(1) if match else None
-
-                filename = (
-                    f"radar_{timestamp}.png"
-                    if timestamp
-                    else "radar_latest.png"
-                )
-
-                path = OUTPUT_DIR / filename
-                path.write_bytes(body)
-                captured.append(url)
-
-                print("RADAR IMAGE CAPTURED:", url)
-                print("SAVED:", path)
-                print("BYTES:", len(body))
-                print("RADAR TIMESTAMP:", timestamp or "unknown")
-
-            except Exception as exc:
-                print("RADAR CAPTURE ERROR:", exc)
+            if "/radar/timeline/mosaic-hybrid/" in url and response.status == 200 and url not in captured:
+                try:
+                    body = response.body()
+                    match = re.search(r"ph_hybrid_mosaic_(\d{14})", url)
+                    timestamp = match.group(1) if match else None
+                    filename = f"radar_{timestamp}.png" if timestamp else "radar_latest.png"
+                    path = OUTPUT_DIR / filename
+                    path.write_bytes(body)
+                    captured.append(url)
+                    print("RADAR IMAGE CAPTURED:", url)
+                    print("SAVED:", path)
+                    print("BYTES:", len(body))
+                    print("RADAR TIMESTAMP:", timestamp or "unknown")
+                except Exception as exc:
+                    print("RADAR CAPTURE ERROR:", exc)
 
         page.on("response", handle_response)
 
@@ -185,12 +272,12 @@ def main():
         page.goto(RADAR_PAGE, wait_until="networkidle", timeout=60000)
         page.wait_for_timeout(10000)
 
-        # Inspect every frame. The radar/map may be rendered in an iframe.
         for index, frame in enumerate(page.frames):
             try:
                 state = inspect_frame(frame)
                 state["frame_index"] = index
                 frame_states.append(state)
+                script_urls.extend(state.get("scripts", []))
             except Exception as exc:
                 frame_states.append({
                     "frame_index": index,
@@ -198,20 +285,22 @@ def main():
                     "error": str(exc)
                 })
 
+        script_urls = list(dict.fromkeys(script_urls))
+        script_result = extract_map_script(page, script_urls)
+
         print("=" * 70)
         print("FRAME / MAP DISCOVERY")
         print("=" * 70)
         print(json.dumps(frame_states, indent=2))
 
-        page.screenshot(
-            path="radar_data/pagasa_radar_page.png",
-            full_page=True
-        )
-
+        page.screenshot(path="radar_data/pagasa_radar_page.png", full_page=True)
         browser.close()
 
     MAP_STATE_FILE.write_text(
-        json.dumps(frame_states, indent=2),
+        json.dumps({
+            "frames": frame_states,
+            "map_script": script_result
+        }, indent=2),
         encoding="utf-8"
     )
 
@@ -226,14 +315,12 @@ def main():
         "image_url": captured[-1] if captured else None,
         "image_file": str(images[-1]) if images else None,
         "map_state_file": str(MAP_STATE_FILE),
+        "map_script_file": str(SCRIPT_FILE),
         "frames_inspected": len(frame_states),
-        "next_phase": "identify radar map projection/georeferencing"
+        "next_phase": "derive OpenLayers projection and radar image georeferencing from map.js"
     }
 
-    STATE_FILE.write_text(
-        json.dumps(state, indent=2),
-        encoding="utf-8"
-    )
+    STATE_FILE.write_text(json.dumps(state, indent=2), encoding="utf-8")
 
     print("=" * 70)
     print("PAGASA RADAR MAP DISCOVERY")

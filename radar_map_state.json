@@ -5,7 +5,7 @@
       "url": "https://www.pagasa.dost.gov.ph/radar",
       "ol": true,
       "scripts": [
-        "https://pagasa.dost.gov.ph/themes/hiraia/assets/js/app/radar/map.js?t=195967014"
+        "https://pagasa.dost.gov.ph/themes/hiraia/assets/js/app/radar/map.js?t=1343953793"
       ]
     },
     {
@@ -16,20 +16,17 @@
     }
   ],
   "map_script": {
-    "url": "https://pagasa.dost.gov.ph/themes/hiraia/assets/js/app/radar/map.js?t=195967014",
+    "url": "https://pagasa.dost.gov.ph/themes/hiraia/assets/js/app/radar/map.js?t=1343953793",
     "status": 200,
     "bytes": 7838,
     "radarBoundaries": "{\n    rightTop:[\n        129.511990464,\n        22.322581275\n    ],\n    leftBottom:[\n        115.969111093,\n        3.80912641587\n    ]\n}",
     "images": "{\n    rainfall_estimate: [],\n    reflectivity:[\n        '/themes/hiraia/assets/images/reflectivity/0.png',\n        '/themes/hiraia/assets/images/reflectivity/1.png',\n        '/themes/hiraia/assets/images/reflectivity/2.png',\n        '/themes/hiraia/assets/images/reflectivity/3.png',\n        '/themes/hiraia/assets/images/reflectivity/4.png',\n        '/themes/hiraia/assets/images/reflectivity/5.png',\n    ]\n}"
   },
-  "captured_images": [
-    "https://api.meteopilipinas.gov.ph/tmp/d41d8cd98f00b204e9800998ecf8427e/radar/timeline/mosaic-hybrid/ph_hybrid_mosaic_202608221745003YnV.png"
-  ],
+  "captured_images": [],
   "radar_frames": [
     {
-      "url": "https://api.meteopilipinas.gov.ph/tmp/d41d8cd98f00b204e9800998ecf8427e/radar/timeline/mosaic-hybrid/ph_hybrid_mosaic_202608221745003YnV.png",
       "timestamp": "20260822174500",
-      "path": "radar_data/radar_20260822174500.png",
+      "path": "radar_data/previous_radar.png",
       "bytes": 39958,
       "analysis": {
         "image_size": [
@@ -3360,11 +3357,11 @@
         ],
         "note": "Color classes are diagnostic only. They are not dBZ or PAGASA rainfall warning thresholds."
       },
-      "source": "current_run"
+      "source": "previous_run"
     }
   ],
   "radar_tracking": {
-    "status": "insufficient_frames",
-    "message": "Need a prior distinct PAGASA radar frame. The current frame has been persisted for the next run."
+    "status": "no_current_frame",
+    "message": "PAGASA did not return a new hybrid radar image during this run."
   }
 }

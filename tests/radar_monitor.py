@@ -37,13 +37,27 @@ def lonlat_to_pixel(lon,lat,w,h):return ((lon-WEST)/(EAST-WEST)*w,(NORTH-lat)/(N
 
 def analyze(img_bytes):
     im=Image.open(io.BytesIO(img_bytes)).convert('RGBA'); w,h=im.size; tx,ty=lonlat_to_pixel(TARGET_LON,TARGET_LAT,w,h)
-    latr=25/111; lonr=25/(111*math.cos(math.radians(TARGET_LAT))); x0,y0=lonlat_to_pixel(TARGET_LON-lonr,TARGET_LAT+latr,w,h); x1,y1=lonlat_to_pixel(TARGET_LON+lonr,TARGET_LAT-latr,w,h)
-    x0,x1=max(0,int(min(x0,x1))),min(w,int(max(x0,x1))); y0,y1=max(0,int(min(y0,y1))),min(h,int(max(y0,y1))); p=im.load(); rgba=Counter(); alpha=Counter()
-    for y in range(y0,y1):
-        for x in range(x0,x1):rgba[p[x,y]]+=1;alpha[p[x,y][3]]+=1
-    target=p[min(w-1,max(0,round(tx))),min(h-1,max(0,round(ty)))]
-    out=im.copy(); d=ImageDraw.Draw(out); r=max(4,int(2.5*w/(EAST-WEST))); d.ellipse((tx-r,ty-r,tx+r,ty+r),outline=(255,0,0,255),width=3); d.line((tx-r*2,ty,tx+r*2,ty),fill=(255,0,0,255),width=2); d.line((tx,ty-r*2,tx,ty+r*2),fill=(255,0,0,255),width=2); out.save(OUTPUT_DIR/'mandaluyong_radar_localized.png')
-    return {'image_size':[w,h],'target':{'lat':TARGET_LAT,'lon':TARGET_LON},'target_pixel':{'x':round(tx,2),'y':round(ty,2)},'analysis_box_pixels':[x0,y0,x1,y1],'analysis_radius_km':25,'target_rgba':list(target),'top_rgba':[[list(c),n] for c,n in rgba.most_common(30)],'alpha_distribution':[[a,n] for a,n in alpha.most_common(20)]}
+    p=im.load(); full=Counter(); alpha=Counter(); colored=[]
+    for y in range(h):
+        for x in range(w):
+            c=p[x,y]; full[c]+=1; alpha[c[3]]+=1
+            if c[3]>10 and max(c[:3])-min(c[:3])>=25: colored.append((x,y,c))
+    # Geographic bbox of all visible/colored pixels.
+    if colored:
+        xs=[a[0] for a in colored]; ys=[a[1] for a in colored]
+        lon0=WEST+min(xs)/w*(EAST-WEST); lon1=WEST+max(xs)/w*(EAST-WEST)
+        lat1=NORTH-min(ys)/h*(NORTH-SOUTH); lat0=NORTH-max(ys)/h*(NORTH-SOUTH)
+        visible_bbox={'west':lon0,'south':lat0,'east':lon1,'north':lat1}
+    else: visible_bbox=None
+    # Nearest colored pixel to Mandaluyong, if any.
+    nearest=None
+    if colored:
+        nearest=min(colored,key=lambda a:(a[0]-tx)**2+(a[1]-ty)**2)
+        nx,ny,nc=nearest; nearest={'pixel':[nx,ny],'rgba':list(nc),'distance_pixels':round(math.hypot(nx-tx,ny-ty),2),'lon':WEST+nx/w*(EAST-WEST),'lat':NORTH-ny/h*(NORTH-SOUTH)}
+    out=im.copy(); d=ImageDraw.Draw(out); r=max(4,int(2.5*w/(EAST-WEST)))
+    d.ellipse((tx-r,ty-r,tx+r,ty+r),outline=(255,0,0,255),width=3); d.line((tx-r*2,ty,tx+r*2,ty),fill=(255,0,0,255),width=2); d.line((tx,ty-r*2,tx,ty+r*2),fill=(255,0,0,255),width=2)
+    out.save(OUTPUT_DIR/'mandaluyong_radar_localized.png')
+    return {'image_size':[w,h],'target':{'lat':TARGET_LAT,'lon':TARGET_LON},'target_pixel':{'x':round(tx,2),'y':round(ty,2)},'visible_colored_pixels':len(colored),'visible_colored_bbox':visible_bbox,'nearest_colored_pixel':nearest,'top_rgba':[[list(c),n] for c,n in full.most_common(30)],'alpha_distribution':[[a,n] for a,n in alpha.most_common(20)]}
 
 def main():
     OUTPUT_DIR.mkdir(exist_ok=True); captured=[]; latest=None; script_result={}; frame_states=[]
@@ -56,31 +70,9 @@ def main():
                 latest=resp.body(); captured.append(u); m=re.search(r'ph_hybrid_mosaic_(\d{14})',u); ts=m.group(1) if m else 'latest'; (OUTPUT_DIR/f'radar_{ts}.png').write_bytes(latest)
         page.on('response',on_response)
         page.goto(RADAR_PAGE,wait_until='networkidle',timeout=60000); page.wait_for_timeout(10000)
-
-        # Instead of looking for window.map, instrument the page before reload.
-        # PAGASA creates its OpenLayers map inside $(function(){...}); wrapping
-        # ol.Map lets us capture the real instance and its ImageStatic layer.
-        try:
-            page.reload(wait_until='domcontentloaded',timeout=60000)
-            page.wait_for_timeout(3000)
-            instrumented=page.evaluate("""
-            () => {
-              const out={map_found:false,target_element:null,view:null,layers:[],image_layers:[],events:[]};
-              const maps=[];
-              for(const key of Object.keys(window)){
-                try{const v=window[key];if(v && typeof v.getView==='function' && typeof v.getLayers==='function')maps.push(v)}catch(e){}
-              }
-              if(maps.length){
-                const m=maps[0]; out.map_found=true; out.target_element=m.getTargetElement()?.id||null;
-                const v=m.getView(); out.view={center:v.getCenter(),zoom:v.getZoom(),projection:v.getProjection()?.getCode?.(),size:m.getSize(),extent:v.calculateExtent(m.getSize())};
-                out.layers=m.getLayers().getArray().map((layer,i)=>{const z={index:i,name:layer.get('name')||null,type:layer.constructor?.name||null,visible:layer.getVisible?.()};try{const s=layer.getSource?.();z.source=s?.constructor?.name||null;z.imageExtent=s?.getImageExtent?.()||null;z.projection=s?.getProjection?.()?.getCode?.()||null;z.url=s?.getUrl?.()||null;}catch(e){z.error=String(e)}return z});
-              }
-              return out;
-            }
-            """)
-        except Exception as e: instrumented={'error':str(e)}
-        frame_states.append({'instrumented_or_live':instrumented})
-
+        # The raw radar image is the authoritative diagnostic target. We therefore
+        # analyze the complete PNG rather than repeatedly attempting to access the
+        # page's private OpenLayers map variable.
         for i,f in enumerate(page.frames):
             try: frame_states.append({'frame_index':i,'url':f.url,'ol':f.evaluate('() => !!window.ol'),'scripts':f.evaluate("() => [...document.querySelectorAll('script[src]')].map(x=>x.src).filter(x=>x.includes('/app/radar/map.js'))")})
             except Exception as e: frame_states.append({'frame_index':i,'error':str(e)})
@@ -91,6 +83,6 @@ def main():
             except Exception as e:script_result={'url':urls[0],'error':str(e)}
         page.screenshot(path=str(OUTPUT_DIR/'pagasa_radar_page.png'),full_page=True); browser.close()
     if latest is None:raise RuntimeError('No PAGASA hybrid radar image captured')
-    result={'frames':frame_states,'map_script':script_result,'captured_images':captured,'mandaluyong_analysis':analyze(latest)}
+    result={'frames':frame_states,'map_script':script_result,'captured_images':captured,'full_image_analysis':analyze(latest)}
     MAP_STATE_FILE.write_text(json.dumps(result,indent=2),encoding='utf-8'); STATE_FILE.write_text(json.dumps({'success':True,'checked_at':datetime.now(PH_TZ).isoformat(),'image_url':captured[-1],'localized_image':str(OUTPUT_DIR/'mandaluyong_radar_localized.png')},indent=2),encoding='utf-8'); print(json.dumps(result,indent=2))
 if __name__=='__main__':main()

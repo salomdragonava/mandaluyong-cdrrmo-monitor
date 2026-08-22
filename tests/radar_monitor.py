@@ -10,326 +10,110 @@ OUTPUT_DIR = Path("radar_data")
 STATE_FILE = Path("radar_state.json")
 MAP_STATE_FILE = Path("radar_map_state.json")
 SCRIPT_FILE = Path("radar_data/pagasa_radar_map.js")
-
 PH_TZ = timezone(timedelta(hours=8))
 
 
 def inspect_frame(frame):
-    """Inspect a frame for map libraries, canvases, containers and useful scripts."""
-    return frame.evaluate(
-        """
-        () => {
-            const result = {
-                url: location.href,
-                title: document.title,
-                libraries: {},
-                map_candidates: [],
-                canvases: [],
-                map_elements: [],
-                scripts: []
-            };
-
-            const checks = [
-                ['leaflet', 'L'],
-                ['mapboxgl', 'mapboxgl'],
-                ['maplibregl', 'maplibregl'],
-                ['openlayers', 'ol'],
-                ['google_maps', 'google'],
-                ['esri', 'esri'],
-                ['here', 'H']
-            ];
-
-            for (const [name, key] of checks) {
-                try {
-                    result.libraries[name] = !!window[key];
-                } catch (e) {
-                    result.libraries[name] = false;
-                }
-            }
-
-            const names = Object.keys(window);
-            for (const name of names) {
-                if (!/map|radar|layer|leaflet|ol|globe/i.test(name)) continue;
-
-                try {
-                    const value = window[name];
-                    if (!value || typeof value !== 'object') continue;
-
-                    const candidate = { name };
-
-                    if (typeof value.getCenter === 'function') {
-                        const center = value.getCenter();
-                        if (center) {
-                            candidate.center = {
-                                lat: center.lat,
-                                lng: center.lng
-                            };
-                        }
-                    }
-
-                    if (typeof value.getView === 'function') {
-                        try {
-                            const view = value.getView();
-                            if (view) {
-                                if (typeof view.getCenter === 'function') {
-                                    candidate.view_center = view.getCenter();
-                                }
-                                if (typeof view.getZoom === 'function') {
-                                    candidate.view_zoom = view.getZoom();
-                                }
-                                if (typeof view.getProjection === 'function') {
-                                    const projection = view.getProjection();
-                                    if (projection) {
-                                        candidate.projection = {
-                                            code: projection.getCode ? projection.getCode() : null,
-                                            units: projection.getUnits ? projection.getUnits() : null,
-                                            extent: projection.getExtent ? projection.getExtent() : null
-                                        };
-                                    }
-                                }
-                            }
-                        } catch (e) {}
-                    }
-
-                    if (typeof value.getBounds === 'function') {
-                        const bounds = value.getBounds();
-                        if (bounds) {
-                            candidate.bounds = {
-                                north: bounds.getNorth(),
-                                south: bounds.getSouth(),
-                                east: bounds.getEast(),
-                                west: bounds.getWest()
-                            };
-                        }
-                    }
-
-                    if (typeof value.getZoom === 'function') {
-                        candidate.zoom = value.getZoom();
-                    }
-
-                    if (Object.keys(candidate).length > 1) {
-                        result.map_candidates.push(candidate);
-                    }
-                } catch (e) {}
-            }
-
-            document.querySelectorAll('canvas').forEach((el, index) => {
-                const rect = el.getBoundingClientRect();
-                result.canvases.push({
-                    index,
-                    width: el.width,
-                    height: el.height,
-                    css_width: rect.width,
-                    css_height: rect.height,
-                    class: el.className || '',
-                    id: el.id || ''
-                });
-            });
-
-            document.querySelectorAll('[class*="map"], [class*="leaflet"], [class*="ol-"], [class*="mapbox"]').forEach((el, index) => {
-                if (index >= 100) return;
-                const rect = el.getBoundingClientRect();
-                result.map_elements.push({
-                    index,
-                    tag: el.tagName,
-                    id: el.id || '',
-                    class: typeof el.className === 'string' ? el.className : '',
-                    width: rect.width,
-                    height: rect.height
-                });
-            });
-
-            document.querySelectorAll('script[src]').forEach(script => {
-                const src = script.src;
-                if (/radar|map|weather|hiraia|meteopilipinas/i.test(src)) {
-                    result.scripts.push(src);
-                }
-            });
-
-            return result;
-        }
-        """
-    )
+    return frame.evaluate("""
+    () => {
+      const out = {url: location.href, title: document.title, libraries:{}, canvases:[], map_elements:[], scripts:[]};
+      for (const [n,k] of [['openlayers','ol'],['leaflet','L'],['mapboxgl','mapboxgl'],['maplibregl','maplibregl']]) {
+        try { out.libraries[n] = !!window[k]; } catch(e) { out.libraries[n] = false; }
+      }
+      document.querySelectorAll('canvas').forEach((e,i)=>{
+        const r=e.getBoundingClientRect(); out.canvases.push({index:i,width:e.width,height:e.height,css_width:r.width,css_height:r.height});
+      });
+      document.querySelectorAll('[class*="map"],[class*="ol-"]').forEach((e,i)=>{
+        if(i>=100)return; const r=e.getBoundingClientRect();
+        out.map_elements.push({index:i,tag:e.tagName,id:e.id||'',class:typeof e.className==='string'?e.className:'',width:r.width,height:r.height});
+      });
+      document.querySelectorAll('script[src]').forEach(e=>{if(/radar|map|meteopilipinas/i.test(e.src))out.scripts.push(e.src)});
+      return out;
+    }
+    """)
 
 
-def extract_map_script(page, urls):
-    """Download the PAGASA radar map JavaScript so its OpenLayers configuration can be inspected."""
-    for url in urls:
-        if "/app/radar/map.js" not in url:
-            continue
+def inspect_map_script(text):
+    patterns = {
+        "new_ol_Map": r"new\s+ol\.Map",
+        "ol_View": r"ol\.View",
+        "projection": r"projection",
+        "extent": r"extent",
+        "center": r"center",
+        "zoom": r"zoom",
+        "mosaic": r"mosaic",
+        "hybrid": r"hybrid",
+        "ImageStatic": r"ImageStatic",
+        "ImageLayer": r"ImageLayer",
+        "XYZ": r"XYZ",
+        "TileLayer": r"TileLayer",
+    }
+    counts = {k: len(re.findall(v,text,re.I)) for k,v in patterns.items()}
 
-        print("=" * 70)
-        print("DOWNLOADING PAGASA RADAR MAP SCRIPT")
-        print("=" * 70)
-        print(url)
+    contexts = {}
+    terms = ["new ol.Map", "ol.View", "projection", "extent", "ImageStatic", "mosaic-hybrid"]
+    for term in terms:
+        matches = list(re.finditer(re.escape(term), text, re.I))
+        contexts[term] = [text[max(0,m.start()-500):min(len(text),m.end()+1200)] for m in matches[:5]]
 
-        try:
-            response = page.request.get(url, timeout=60000)
-            print("MAP SCRIPT HTTP STATUS:", response.status)
-            text = response.text()
-            SCRIPT_FILE.write_text(text, encoding="utf-8")
+    # Extract likely geographic numeric arrays and radar URL fragments for later inspection.
+    urls = sorted(set(re.findall(r'https?[^\"\']+', text)))
+    radar_urls = [u for u in urls if re.search(r'radar|mosaic|hybrid|meteopilipinas',u,re.I)]
 
-            patterns = [
-                r"new\\s+ol\\.Map",
-                r"ol\\.View",
-                r"projection",
-                r"extent",
-                r"center",
-                r"zoom",
-                r"mosaic",
-                r"hybrid",
-                r"tile",
-                r"ImageStatic",
-                r"ImageLayer",
-                r"XYZ",
-                r"TileLayer"
-            ]
-
-            hits = {}
-            for pattern in patterns:
-                matches = list(re.finditer(pattern, text, re.IGNORECASE))
-                hits[pattern] = len(matches)
-
-            print("MAP SCRIPT PATTERN COUNTS:")
-            print(json.dumps(hits, indent=2))
-
-            # Print compact context around the most useful OpenLayers terms.
-            context_terms = [
-                "new ol.Map",
-                "ol.View",
-                "projection",
-                "extent",
-                "ImageStatic",
-                "mosaic-hybrid"
-            ]
-
-            for term in context_terms:
-                match = re.search(re.escape(term), text, re.IGNORECASE)
-                if not match:
-                    continue
-
-                start = max(0, match.start() - 700)
-                end = min(len(text), match.end() + 1200)
-                print("\n--- CONTEXT:", term, "---")
-                print(text[start:end])
-
-            return {
-                "url": url,
-                "status": response.status,
-                "bytes": len(text),
-                "pattern_counts": hits,
-                "saved_file": str(SCRIPT_FILE)
-            }
-
-        except Exception as exc:
-            print("MAP SCRIPT ERROR:", exc)
-            return {
-                "url": url,
-                "error": str(exc)
-            }
-
-    return {"error": "Radar map.js URL was not found."}
+    return {"bytes":len(text),"pattern_counts":counts,"contexts":contexts,"radar_urls":radar_urls}
 
 
 def main():
     OUTPUT_DIR.mkdir(exist_ok=True)
-
-    captured = []
-    frame_states = []
-    script_urls = []
-    script_result = None
+    captured=[]; frame_states=[]; script_urls=[]; script_result={}
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        context = browser.new_context()
-        page = context.new_page()
+        browser=p.chromium.launch(headless=True)
+        context=p.chromium.launch_persistent_context if False else None
+        page=browser.new_page()
 
-        def handle_response(response):
-            url = response.url
+        def on_response(response):
+            url=response.url
+            if "/radar/timeline/mosaic-hybrid/" not in url or response.status != 200 or url in captured:
+                return
+            try:
+                body=response.body()
+                m=re.search(r"ph_hybrid_mosaic_(\d{14})",url)
+                ts=m.group(1) if m else None
+                path=OUTPUT_DIR/(f"radar_{ts}.png" if ts else "radar_latest.png")
+                path.write_bytes(body); captured.append(url)
+                print("RADAR IMAGE:",url)
+                print("SAVED:",path,"BYTES:",len(body))
+            except Exception as e: print("RADAR CAPTURE ERROR:",e)
 
-            if "/radar/timeline/mosaic-hybrid/" in url and response.status == 200 and url not in captured:
-                try:
-                    body = response.body()
-                    match = re.search(r"ph_hybrid_mosaic_(\d{14})", url)
-                    timestamp = match.group(1) if match else None
-                    filename = f"radar_{timestamp}.png" if timestamp else "radar_latest.png"
-                    path = OUTPUT_DIR / filename
-                    path.write_bytes(body)
-                    captured.append(url)
-                    print("RADAR IMAGE CAPTURED:", url)
-                    print("SAVED:", path)
-                    print("BYTES:", len(body))
-                    print("RADAR TIMESTAMP:", timestamp or "unknown")
-                except Exception as exc:
-                    print("RADAR CAPTURE ERROR:", exc)
-
-        page.on("response", handle_response)
-
-        print("=" * 70)
-        print("OPENING PAGASA RADAR")
-        print("=" * 70)
-
-        page.goto(RADAR_PAGE, wait_until="networkidle", timeout=60000)
+        page.on("response",on_response)
+        print("OPENING",RADAR_PAGE)
+        page.goto(RADAR_PAGE,wait_until="networkidle",timeout=60000)
         page.wait_for_timeout(10000)
 
-        for index, frame in enumerate(page.frames):
+        for i,frame in enumerate(page.frames):
             try:
-                state = inspect_frame(frame)
-                state["frame_index"] = index
-                frame_states.append(state)
-                script_urls.extend(state.get("scripts", []))
-            except Exception as exc:
-                frame_states.append({
-                    "frame_index": index,
-                    "url": frame.url,
-                    "error": str(exc)
-                })
+                s=inspect_frame(frame); s["frame_index"]=i; frame_states.append(s); script_urls += s.get("scripts",[])
+            except Exception as e: frame_states.append({"frame_index":i,"url":frame.url,"error":str(e)})
+        script_urls=list(dict.fromkeys(script_urls))
 
-        script_urls = list(dict.fromkeys(script_urls))
-        script_result = extract_map_script(page, script_urls)
+        for url in script_urls:
+            if "/app/radar/map.js" not in url: continue
+            try:
+                r=page.request.get(url,timeout=60000); text=r.text(); SCRIPT_FILE.write_text(text,encoding="utf-8")
+                script_result={"url":url,"status":r.status,**inspect_map_script(text),"saved_file":str(SCRIPT_FILE)}
+                print("MAP SCRIPT STATUS:",r.status,"BYTES:",len(text))
+            except Exception as e: script_result={"url":url,"error":str(e)}
+            break
 
-        print("=" * 70)
-        print("FRAME / MAP DISCOVERY")
-        print("=" * 70)
-        print(json.dumps(frame_states, indent=2))
-
-        page.screenshot(path="radar_data/pagasa_radar_page.png", full_page=True)
+        page.screenshot(path=str(OUTPUT_DIR/"pagasa_radar_page.png"),full_page=True)
         browser.close()
 
-    MAP_STATE_FILE.write_text(
-        json.dumps({
-            "frames": frame_states,
-            "map_script": script_result
-        }, indent=2),
-        encoding="utf-8"
-    )
+    MAP_STATE_FILE.write_text(json.dumps({"frames":frame_states,"map_script":script_result},indent=2),encoding="utf-8")
+    images=sorted(OUTPUT_DIR.glob("radar_*.png"))
+    state={"success":bool(captured),"checked_at":datetime.now(PH_TZ).isoformat(),"source":RADAR_PAGE,"product":"PAGASA Radar Mosaic Hybrid Reflectivity","image_url":captured[-1] if captured else None,"image_file":str(images[-1]) if images else None,"map_state_file":str(MAP_STATE_FILE),"map_script_file":str(SCRIPT_FILE)}
+    STATE_FILE.write_text(json.dumps(state,indent=2),encoding="utf-8")
+    print(json.dumps(state,indent=2))
+    if not captured: raise RuntimeError("No PAGASA hybrid radar image was captured.")
 
-    now = datetime.now(PH_TZ)
-    images = sorted(OUTPUT_DIR.glob("radar_*.png"))
-
-    state = {
-        "success": bool(captured),
-        "checked_at": now.isoformat(),
-        "source": RADAR_PAGE,
-        "product": "PAGASA Radar Mosaic Hybrid Reflectivity",
-        "image_url": captured[-1] if captured else None,
-        "image_file": str(images[-1]) if images else None,
-        "map_state_file": str(MAP_STATE_FILE),
-        "map_script_file": str(SCRIPT_FILE),
-        "frames_inspected": len(frame_states),
-        "next_phase": "derive OpenLayers projection and radar image georeferencing from map.js"
-    }
-
-    STATE_FILE.write_text(json.dumps(state, indent=2), encoding="utf-8")
-
-    print("=" * 70)
-    print("PAGASA RADAR MAP DISCOVERY")
-    print("=" * 70)
-    print(json.dumps(state, indent=2))
-
-    if not captured:
-        raise RuntimeError("No PAGASA hybrid radar image was captured.")
-
-
-if __name__ == "__main__":
-    main()
+if __name__ == "__main__": main()

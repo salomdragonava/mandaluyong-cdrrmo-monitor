@@ -7,10 +7,9 @@ from playwright.sync_api import sync_playwright
 
 RADAR_PAGE='https://www.pagasa.dost.gov.ph/radar'
 OUTPUT_DIR=Path('radar_data'); STATE_FILE=Path('radar_state.json'); MAP_STATE_FILE=Path('radar_map_state.json')
-SCRIPT_FILE=OUTPUT_DIR/'pagasa_radar_map.js'; PH_TZ=timezone(timedelta(hours=8))
+SCRIPT_FILE=OUTPUT_DIR/'pagasa_radar_map.js'; PREVIOUS_IMAGE=OUTPUT_DIR/'previous_radar.png'; PH_TZ=timezone(timedelta(hours=8))
 TARGET_LAT,TARGET_LON=14.5794,121.0359
 WEST,SOUTH=115.969111093,3.80912641587; EAST,NORTH=129.511990464,22.322581275
-CLASS_ORDER=['cyan','blue','green','yellow','orange','red','purple']
 COLOR_CLASS_RANGES={
  'cyan':lambda r,g,b: b>180 and g>180 and r<190,
  'blue':lambda r,g,b: b>180 and g<190 and r<160,
@@ -85,38 +84,49 @@ def analyze(img_bytes, draw_target=True):
 
 def track(previous,current):
     matches=[]
+    used_current=set()
     for a in previous['components']:
-        if a['pixels']<8: continue
         best=None
-        for b in current['components']:
-            if a['class']!=b['class']: continue
+        for i,b in enumerate(current['components']):
+            if i in used_current or a['class']!=b['class']: continue
             dx=b['centroid_pixel'][0]-a['centroid_pixel'][0]; dy=b['centroid_pixel'][1]-a['centroid_pixel'][1]
             d=math.hypot(dx,dy)
-            # Allow movement of up to ~100 km between adjacent frames.
-            if d<=90 and (best is None or d<best[0]): best=(d,b)
+            if d<=90 and (best is None or d<best[0]): best=(d,i,b)
         if best:
-            d,b=best
+            d,i,b=best; used_current.add(i)
             lon1,lat1=a['centroid_lonlat']; lon2,lat2=b['centroid_lonlat']
             km=111*math.sqrt((lat2-lat1)**2+(math.cos(math.radians((lat1+lat2)/2))*(lon2-lon1))**2)
-            matches.append({'class':a['class'],'pixels_previous':a['pixels'],'pixels_current':b['pixels'],'from_lonlat':[lon1,lat1],'to_lonlat':[lon2,lat2],'pixel_displacement':round(d,1),'movement_km':round(km,1),'bearing_deg':round((math.degrees(math.atan2((lon2-lon1)*math.cos(math.radians((lat1+lat2)/2)),lat2-lat1))+360)%360,1),'distance_to_mandaluyong_km':b['distance_km']})
-    # Direction interpretation: 0=N, 90=E, 180=S, 270=W.
-    for m in matches:
-        m['toward_mandaluyong'] = None
-        # Compare whether the new cell is closer to Mandaluyong than its prior position.
-        olddist=111*math.sqrt((m['from_lonlat'][1]-TARGET_LAT)**2+(math.cos(math.radians(TARGET_LAT))*(m['from_lonlat'][0]-TARGET_LON))**2)
-        m['approaching_mandaluyong']=m['distance_to_mandaluyong_km'] < olddist-2
-        m['previous_distance_km']=round(olddist,1)
+            bearing=(math.degrees(math.atan2((lon2-lon1)*math.cos(math.radians((lat1+lat2)/2)),lat2-lat1))+360)%360
+            olddist=111*math.sqrt((lat1-TARGET_LAT)**2+(math.cos(math.radians(TARGET_LAT))*(lon1-TARGET_LON))**2)
+            matches.append({'class':a['class'],'pixels_previous':a['pixels'],'pixels_current':b['pixels'],'from_lonlat':[lon1,lat1],'to_lonlat':[lon2,lat2],'pixel_displacement':round(d,1),'movement_km':round(km,1),'bearing_deg':round(bearing,1),'distance_to_mandaluyong_km':b['distance_km'],'previous_distance_km':round(olddist,1),'approaching_mandaluyong':b['distance_km'] < olddist-2})
     return matches
 
 def main():
     OUTPUT_DIR.mkdir(exist_ok=True); frames=[]; captured=[]; script_result={}; radar_frames=[]
+
+    # The radar product normally updates every ~15 minutes. Persisting the last
+    # image locally lets the next workflow run compare two genuinely distinct
+    # timestamps without waiting inside a single GitHub Actions job.
+    previous_timestamp=None
+    if PREVIOUS_IMAGE.exists() and STATE_FILE.exists():
+        try:
+            state=json.loads(STATE_FILE.read_text(encoding='utf-8'))
+            previous_timestamp=state.get('image_timestamp')
+            body=PREVIOUS_IMAGE.read_bytes()
+            if previous_timestamp:
+                radar_frames.append({'timestamp':previous_timestamp,'path':str(PREVIOUS_IMAGE),'bytes':len(body),'analysis':analyze(body,False),'source':'previous_run'})
+        except Exception:
+            pass
+
     with sync_playwright() as p:
         browser=p.chromium.launch(headless=True); page=browser.new_page()
         def on_response(resp):
             u=resp.url
             if '/radar/timeline/mosaic-hybrid/' in u and resp.status==200 and u not in captured:
-                body=resp.body(); captured.append(u); m=re.search(r'ph_hybrid_mosaic_(\d{14})',u); ts=m.group(1) if m else str(len(captured)); path=OUTPUT_DIR/f'radar_{ts}.png'; path.write_bytes(body)
-                radar_frames.append({'url':u,'timestamp':ts,'path':str(path),'bytes':len(body),'analysis':analyze(body,False)})
+                body=resp.body(); m=re.search(r'ph_hybrid_mosaic_(\d{14})',u); ts=m.group(1) if m else str(len(captured))
+                if ts==previous_timestamp: return
+                captured.append(u); path=OUTPUT_DIR/f'radar_{ts}.png'; path.write_bytes(body)
+                radar_frames.append({'url':u,'timestamp':ts,'path':str(path),'bytes':len(body),'analysis':analyze(body,False),'source':'current_run'})
         page.on('response',on_response); page.goto(RADAR_PAGE,wait_until='networkidle',timeout=60000); page.wait_for_timeout(10000)
         for i,f in enumerate(page.frames):
             try: frames.append({'frame_index':i,'url':f.url,'ol':f.evaluate('() => !!window.ol'),'scripts':f.evaluate("() => [...document.querySelectorAll('script[src]')].map(x=>x.src).filter(x=>x.includes('/app/radar/map.js'))")})
@@ -127,13 +137,22 @@ def main():
                 r=page.request.get(urls[0]); t=r.text(); SCRIPT_FILE.write_text(t,encoding='utf-8'); script_result={'url':urls[0],'status':r.status,'bytes':len(t),'radarBoundaries':extract_assignment(t,'radarBoundaries'),'images':extract_assignment(t,'images')}
             except Exception as e: script_result={'url':urls[0],'error':str(e)}
         page.screenshot(path=str(OUTPUT_DIR/'pagasa_radar_page.png'),full_page=True); browser.close()
-    if not radar_frames: raise RuntimeError('No PAGASA hybrid radar image captured')
-    # Keep the two most recent frames; if PAGASA only emitted one during the visit,
-    # explicitly report that tracking cannot yet be calculated.
-    radar_frames=radar_frames[-2:]
-    tracking={'status':'insufficient_frames','message':'Need two distinct PAGASA radar frames to calculate movement.'}
-    if len(radar_frames)==2:
+
+    current_frames=[f for f in radar_frames if f.get('source')=='current_run']
+    if not current_frames: raise RuntimeError('No PAGASA hybrid radar image captured')
+    current=current_frames[-1]
+    # Keep only the prior persisted frame and the newest current frame for tracking.
+    radar_frames=([radar_frames[0]] if radar_frames and radar_frames[0].get('source')=='previous_run' else [])+[current]
+    if len(radar_frames)==2 and radar_frames[0]['timestamp']!=radar_frames[1]['timestamp']:
         tracking={'status':'ok','previous_timestamp':radar_frames[0]['timestamp'],'current_timestamp':radar_frames[1]['timestamp'],'matches':track(radar_frames[0]['analysis'],radar_frames[1]['analysis'])}
+    else:
+        tracking={'status':'insufficient_frames','message':'Need a prior distinct PAGASA radar frame. The current frame has been persisted for the next run.'}
+
+    # Persist the newest image for the next workflow run.
+    PREVIOUS_IMAGE.write_bytes(Path(current['path']).read_bytes())
     result={'frames':frames,'map_script':script_result,'captured_images':captured,'radar_frames':radar_frames,'radar_tracking':tracking}
-    MAP_STATE_FILE.write_text(json.dumps(result,indent=2),encoding='utf-8'); STATE_FILE.write_text(json.dumps({'success':True,'checked_at':datetime.now(PH_TZ).isoformat(),'image_url':captured[-1],'localized_image':str(OUTPUT_DIR/'mandaluyong_radar_localized.png'),'tracking_status':tracking['status']},indent=2),encoding='utf-8'); print(json.dumps(result,indent=2))
+    MAP_STATE_FILE.write_text(json.dumps(result,indent=2),encoding='utf-8')
+    STATE_FILE.write_text(json.dumps({'success':True,'checked_at':datetime.now(PH_TZ).isoformat(),'image_url':current['url'],'image_timestamp':current['timestamp'],'localized_image':str(OUTPUT_DIR/'mandaluyong_radar_localized.png'),'tracking_status':tracking['status']},indent=2),encoding='utf-8')
+    print(json.dumps(result,indent=2))
+
 if __name__=='__main__': main()

@@ -47,11 +47,38 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add pagasa_state.json
+
           if git diff --cached --quiet; then
             echo "No PAGASA state changes."
-          else
-            git commit -m "Update PAGASA monitoring state"
-            git fetch origin main
-            git rebase --autostash origin/main
-            git push origin HEAD:main
+            exit 0
           fi
+
+          git commit -m "Update PAGASA monitoring state"
+
+          # The PAGASA workflow can run while another state-monitoring workflow
+          # is updating main. Retry the fetch/rebase/push sequence so a moving
+          # remote branch does not cause a transient non-fast-forward failure.
+          for attempt in 1 2 3 4 5; do
+            echo "Push attempt ${attempt}/5"
+            git fetch origin main
+
+            if ! git rebase --autostash origin/main; then
+              echo "Rebase conflict detected. Preserve the newly generated PAGASA state."
+              git checkout --theirs -- pagasa_state.json
+              git add pagasa_state.json
+              GIT_EDITOR=true git rebase --continue
+            fi
+
+            if git push origin HEAD:main; then
+              echo "PAGASA state pushed successfully."
+              exit 0
+            fi
+
+            if [ "$attempt" -lt 5 ]; then
+              echo "Remote main moved during push; retrying..."
+              sleep 2
+            fi
+          done
+
+          echo "Failed to push PAGASA state after 5 attempts."
+          exit 1

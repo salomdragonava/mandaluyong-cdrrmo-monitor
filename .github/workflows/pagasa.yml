@@ -9,6 +9,11 @@ on:
 permissions:
   contents: write
 
+# Prevent overlapping runs from racing while updating pagasa_state.json.
+concurrency:
+  group: pagasa-monitor
+  cancel-in-progress: false
+
 jobs:
   pagasa-monitor:
     runs-on: ubuntu-latest

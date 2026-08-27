@@ -3,13 +3,9 @@ name: PAGASA Monitor
 on:
   workflow_dispatch:
 
-  schedule:
-    - cron: "17 * * * *"
-
 permissions:
   contents: read
 
-# Prevent overlapping runs from racing while updating the cached PAGASA state.
 concurrency:
   group: pagasa-monitor
   cancel-in-progress: false

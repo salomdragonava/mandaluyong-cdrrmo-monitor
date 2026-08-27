@@ -1,0 +1,222 @@
+name: Mandaluyong Weather Monitor Scheduler
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "13 * * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mandaluyong-weather-monitor
+  cancel-in-progress: false
+
+jobs:
+  flood:
+    name: Flood Monitor
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Restore flood monitoring state
+        uses: actions/cache/restore@v4
+        with:
+          path: flood_state.json
+          key: flood-state-${{ github.run_id }}
+          restore-keys: |
+            flood-state-
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Run flood monitor
+        run: python tests/check_facebook.py
+
+      - name: Send flood Telegram notification
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          if [ -s telegram_alert.txt ]; then
+            curl --fail --silent --show-error \
+              --request POST \
+              --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+              --data-urlencode "text@telegram_alert.txt" \
+              "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
+          else
+            echo "No flood notification generated."
+          fi
+
+      - name: Save flood monitoring state
+        uses: actions/cache/save@v4
+        with:
+          path: flood_state.json
+          key: flood-state-${{ github.run_id }}
+
+  pagasa:
+    name: PAGASA Monitor
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Restore PAGASA monitoring state
+        uses: actions/cache/restore@v4
+        with:
+          path: pagasa_state.json
+          key: pagasa-state-${{ github.run_id }}
+          restore-keys: |
+            pagasa-state-
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Run PAGASA monitor
+        run: python tests/check_pagasa.py
+
+      - name: Send PAGASA Telegram notification
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          if [ -s pagasa_alert.txt ]; then
+            curl --fail --silent --show-error \
+              --request POST \
+              --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+              --data-urlencode "text@pagasa_alert.txt" \
+              "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
+          else
+            echo "No PAGASA notification due."
+          fi
+
+      - name: Save PAGASA monitoring state
+        uses: actions/cache/save@v4
+        with:
+          path: pagasa_state.json
+          key: pagasa-state-${{ github.run_id }}
+
+  radar:
+    name: PAGASA Radar Monitor
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Restore radar monitoring state
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            radar_state.json
+            radar_map_state.json
+            radar_threat_state.json
+            radar_notification_state.json
+            radar_data/previous_radar.png
+          key: radar-state-${{ github.run_id }}
+          restore-keys: |
+            radar-state-
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install playwright pillow
+          python -m playwright install chromium --with-deps
+
+      - name: Fix Playwright page creation compatibility
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path("tests/radar_monitor.py")
+          s = p.read_text()
+          old = "browser=p.chromium.launch(headless=True);page=p.new_page()"
+          new = "browser=p.chromium.launch(headless=True);page=browser.new_page()"
+          if old in s:
+              s = s.replace(old, new, 1)
+              p.write_text(s)
+              print("Patched Playwright initialization")
+          else:
+              print("Playwright initialization already correct")
+          PY
+
+      - name: Fix MeteoPilipinas TLS fallback
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path("tests/radar_monitor.py")
+          s = p.read_text()
+          if "import ssl" not in s:
+              s = s.replace("import io, json, math, re, subprocess", "import io, json, math, re, subprocess, ssl", 1)
+          old = "with urlopen(req,timeout=30) as response:"
+          new = "with urlopen(req,timeout=30,context=ssl._create_unverified_context()) as response:"
+          if old in s and new not in s:
+              s = s.replace(old, new, 1)
+              p.write_text(s)
+              print("Patched targeted TLS fallback")
+          else:
+              print("TLS fallback already patched or source changed")
+          PY
+
+      - name: Capture PAGASA radar and inspect OpenLayers configuration
+        run: python tests/radar_monitor.py
+
+      - name: Calculate radar threat candidates
+        run: python tests/radar_threat.py
+
+      - name: Generate radar Telegram alert
+        run: python tests/radar_telegram.py
+
+      - name: Send radar Telegram notification
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          if [ -s radar_alert.txt ]; then
+            curl --fail --silent --show-error \
+              --request POST \
+              --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+              --data-urlencode "text@radar_alert.txt" \
+              "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
+          else
+            echo "No radar Telegram notification generated."
+          fi
+
+      - name: Save radar monitoring state
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            radar_state.json
+            radar_map_state.json
+            radar_threat_state.json
+            radar_notification_state.json
+            radar_data/previous_radar.png
+          key: radar-state-${{ github.run_id }}
+
+      - name: Upload radar diagnostics
+        uses: actions/upload-artifact@v6
+        with:
+          name: pagasa-radar-${{ github.run_number }}
+          path: |
+            radar_data/*.png
+            radar_data/pagasa_radar_map.js
+            radar_state.json
+            radar_map_state.json
+            radar_threat_state.json
+            radar_alert.txt
+          if-no-files-found: error
+          retention-days: 7

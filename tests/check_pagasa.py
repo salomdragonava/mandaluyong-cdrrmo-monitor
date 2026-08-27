@@ -1,6 +1,7 @@
 import urllib.request
 import json
 import re
+import html
 from datetime import datetime, timezone, timedelta
 
 PAGASA_URL = "https://www.pagasa.dost.gov.ph/regional-forecast/ncrprsd"
@@ -22,27 +23,56 @@ def fetch_pagasa():
         return response.read().decode("utf-8", errors="ignore")
 
 
+def clean_page_text(text):
+    # Convert the regional forecast HTML into searchable plain text while
+    # preserving the warning wording and area names.
+    text = re.sub(r"<script\b[^>]*>.*?</script>", " ", text, flags=re.I | re.S)
+    text = re.sub(r"<style\b[^>]*>.*?</style>", " ", text, flags=re.I | re.S)
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = html.unescape(text)
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
+
+
 def get_warning_level(text):
-    text_upper = text.upper()
+    """Return the latest Heavy Rainfall Warning level specifically for NCR.
 
-    # Look specifically for Heavy Rainfall Warning information.
-    if "HEAVY RAINFALL WARNING" not in text_upper:
+    The NCR page also contains warning levels for nearby provinces. The old
+    parser selected the strongest level anywhere on the page, which could
+    incorrectly report Orange for NCR when, for example, Bataan/Zambales were
+    Orange but Metro Manila was Yellow.
+    """
+    clean = clean_page_text(text)
+    upper = clean.upper()
+
+    if "HEAVY RAINFALL WARNING" not in upper:
         return "GREEN"
 
-    # Check strongest level first.
-    if re.search(r"\bRED\s+WARNING\b", text_upper):
-        return "RED"
+    # The first warning block is the latest warning displayed by PAGASA.
+    blocks = re.split(r"(?=HEAVY RAINFALL WARNING\s+NO\.)", upper)
+    warning_block = next(
+        (block for block in blocks if block.startswith("HEAVY RAINFALL WARNING")),
+        upper,
+    )
 
-    if re.search(r"\bORANGE\s+WARNING\b", text_upper):
-        return "ORANGE"
+    # Only inspect the warning-level clauses in the latest bulletin.
+    clauses = re.findall(
+        r"\b(RED|ORANGE|YELLOW)\s+WARNING\s+LEVEL\s*:\s*(.*?)(?=\s+(?:RED|ORANGE|YELLOW)\s+WARNING\s+LEVEL\s*:|\s+ASSOCIATED HAZARD\s*:|\s+MEANWHILE\b|$)",
+        warning_block,
+        flags=re.S,
+    )
 
-    if re.search(r"\bYELLOW\s+WARNING\b", text_upper):
-        return "YELLOW"
+    # Metro Manila is the authoritative geographic match for Mandaluyong.
+    for level, areas in clauses:
+        if re.search(r"\bMETRO\s+MANILA\b", areas):
+            return level
 
-    # PAGASA page explicitly says no Heavy Rainfall Warning.
-    if "NO HEAVY RAINFALL WARNING" in text_upper:
-        return "GREEN"
+    # The NCR warning bulletin may explicitly use NCR in a future format.
+    for level, areas in clauses:
+        if re.search(r"\bNCR\b|\bNATIONAL CAPITAL REGION\b", areas):
+            return level
 
+    # No NCR/Mandalyong warning was listed in the latest bulletin.
     return "GREEN"
 
 
@@ -89,7 +119,7 @@ try:
 
     interval = notification_interval(level)
 
-    print("PAGASA WARNING:", level)
+    print("PAGASA NCR WARNING:", level)
     print("Previous:", previous_level)
     print("Report interval:", interval, "hour(s)")
 
@@ -128,11 +158,11 @@ try:
 
         if level == "GREEN":
             icon = "🟢"
-            description = "No active PAGASA Heavy Rainfall Warning"
+            description = "No active PAGASA Heavy Rainfall Warning for Metro Manila"
 
         elif level == "YELLOW":
             icon = "🟡"
-            description = "Flooding is possible"
+            description = "Possible flooding in flood-prone areas"
 
         elif level == "ORANGE":
             icon = "🟠"

@@ -7,7 +7,11 @@ on:
     - cron: "7 * * * *"
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: flood-monitor
+  cancel-in-progress: false
 
 jobs:
   flood-monitor:
@@ -17,7 +21,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+
+      - name: Restore flood monitoring state
+        uses: actions/cache/restore@v4
+        with:
+          path: flood_state.json
+          key: flood-state-${{ github.run_id }}
+          restore-keys: |
+            flood-state-
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -42,18 +54,8 @@ jobs:
             echo "No flood notification generated."
           fi
 
-      - name: Save flood state
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add flood_state.json
-
-          if git diff --cached --quiet; then
-            echo "No flood state changes."
-          else
-            git commit -m "Update flood monitoring state"
-            git fetch origin main
-            git rebase --autostash origin/main
-            git push origin HEAD:main
-          fi
+      - name: Save flood monitoring state
+        uses: actions/cache/save@v4
+        with:
+          path: flood_state.json
+          key: flood-state-${{ github.run_id }}

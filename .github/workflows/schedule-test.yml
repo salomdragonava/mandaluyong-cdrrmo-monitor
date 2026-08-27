@@ -1,0 +1,16 @@
+name: GitHub Schedule Test
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Confirm scheduled trigger
+        run: echo "GitHub scheduled trigger received at $(date -u)"

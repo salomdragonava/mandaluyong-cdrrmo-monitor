@@ -3,7 +3,7 @@ name: Mandaluyong Weather Monitor Scheduler
 on:
   workflow_dispatch:
   schedule:
-    - cron: "13 * * * *"
+    - cron: "*/5 * * * *"
 
 permissions:
   contents: read
@@ -21,7 +21,6 @@ jobs:
         uses: actions/checkout@v5
         with:
           fetch-depth: 1
-
       - name: Restore flood monitoring state
         uses: actions/cache/restore@v4
         with:
@@ -29,15 +28,12 @@ jobs:
           key: flood-state-${{ github.run_id }}
           restore-keys: |
             flood-state-
-
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-
       - name: Run flood monitor
         run: python tests/check_facebook.py
-
       - name: Send flood Telegram notification
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -52,7 +48,6 @@ jobs:
           else
             echo "No flood notification generated."
           fi
-
       - name: Save flood monitoring state
         uses: actions/cache/save@v4
         with:
@@ -67,7 +62,6 @@ jobs:
         uses: actions/checkout@v5
         with:
           fetch-depth: 1
-
       - name: Restore PAGASA monitoring state
         uses: actions/cache/restore@v4
         with:
@@ -75,15 +69,12 @@ jobs:
           key: pagasa-state-${{ github.run_id }}
           restore-keys: |
             pagasa-state-
-
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-
       - name: Run PAGASA monitor
         run: python tests/check_pagasa.py
-
       - name: Send PAGASA Telegram notification
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -98,7 +89,6 @@ jobs:
           else
             echo "No PAGASA notification due."
           fi
-
       - name: Save PAGASA monitoring state
         uses: actions/cache/save@v4
         with:
@@ -113,7 +103,6 @@ jobs:
         uses: actions/checkout@v5
         with:
           fetch-depth: 1
-
       - name: Restore radar monitoring state
         uses: actions/cache/restore@v4
         with:
@@ -126,18 +115,15 @@ jobs:
           key: radar-state-${{ github.run_id }}
           restore-keys: |
             radar-state-
-
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install playwright pillow
           python -m playwright install chromium --with-deps
-
       - name: Fix Playwright page creation compatibility
         run: |
           python - <<'PY'
@@ -149,11 +135,7 @@ jobs:
           if old in s:
               s = s.replace(old, new, 1)
               p.write_text(s)
-              print("Patched Playwright initialization")
-          else:
-              print("Playwright initialization already correct")
           PY
-
       - name: Fix MeteoPilipinas TLS fallback
         run: |
           python - <<'PY'
@@ -167,20 +149,13 @@ jobs:
           if old in s and new not in s:
               s = s.replace(old, new, 1)
               p.write_text(s)
-              print("Patched targeted TLS fallback")
-          else:
-              print("TLS fallback already patched or source changed")
           PY
-
       - name: Capture PAGASA radar and inspect OpenLayers configuration
         run: python tests/radar_monitor.py
-
       - name: Calculate radar threat candidates
         run: python tests/radar_threat.py
-
       - name: Generate radar Telegram alert
         run: python tests/radar_telegram.py
-
       - name: Send radar Telegram notification
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -195,7 +170,6 @@ jobs:
           else
             echo "No radar Telegram notification generated."
           fi
-
       - name: Save radar monitoring state
         uses: actions/cache/save@v4
         with:
@@ -206,7 +180,6 @@ jobs:
             radar_notification_state.json
             radar_data/previous_radar.png
           key: radar-state-${{ github.run_id }}
-
       - name: Upload radar diagnostics
         uses: actions/upload-artifact@v6
         with:

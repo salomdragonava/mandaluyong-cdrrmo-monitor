@@ -98,8 +98,6 @@ def build_messages():
     candidates = radar_candidates(radar)
     now = datetime.now(PH_TZ)
 
-    # PAGASA remains the authoritative warning level. Local flood/radar data
-    # enrich the same message rather than generating competing alerts.
     icon = warning_icon(level)
     lines = [
         f"{icon} PAGASA NCR WEATHER STATUS",
@@ -151,13 +149,9 @@ def build_messages():
     else:
         lines.append("⚪ Radar status unavailable")
 
-    lines += ["", "No separate flood or radar notification is sent; all monitoring is consolidated here."]
     combined = "\n".join(lines)
     ALERT_FILE.write_text(combined, encoding="utf-8")
 
-    # Meaningful escalation/change only: warning level worsens, flood risk
-    # worsens at any point, escape routes become elevated, or a qualifying
-    # radar threat appears where none existed previously.
     previous_level = previous.get("pagasa_level", "UNKNOWN")
     previous_flood = previous.get("flood", {})
     previous_radar = previous.get("radar_candidate", False)

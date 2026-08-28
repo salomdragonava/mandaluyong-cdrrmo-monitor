@@ -67,8 +67,6 @@ jobs:
     if: ${{ needs.pagasa.outputs.warning_level == 'YELLOW' || needs.pagasa.outputs.warning_level == 'ORANGE' || needs.pagasa.outputs.warning_level == 'RED' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Wait 5 minutes after PAGASA
-        run: sleep 300
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
@@ -86,6 +84,9 @@ jobs:
           python-version: "3.12"
       - name: Run flood monitor
         run: python tests/check_facebook.py
+      - name: Wait 5 minutes before Flood Telegram notification
+        if: ${{ hashFiles('telegram_alert.txt') != '' }}
+        run: sleep 300
       - name: Send flood Telegram notification
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -108,12 +109,10 @@ jobs:
 
   radar:
     name: PAGASA Radar Monitor
-    needs: flood
-    if: ${{ always() && (needs.flood.result == 'success') }}
+    needs: pagasa
+    if: ${{ needs.pagasa.outputs.warning_level == 'YELLOW' || needs.pagasa.outputs.warning_level == 'ORANGE' || needs.pagasa.outputs.warning_level == 'RED' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Wait 5 minutes after Flood Monitor
-        run: sleep 300
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
@@ -171,6 +170,9 @@ jobs:
         run: python tests/radar_threat.py
       - name: Generate radar Telegram alert
         run: python tests/radar_telegram.py
+      - name: Wait 10 minutes before Radar Telegram notification
+        if: ${{ hashFiles('radar_alert.txt') != '' }}
+        run: sleep 600
       - name: Send radar Telegram notification
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}

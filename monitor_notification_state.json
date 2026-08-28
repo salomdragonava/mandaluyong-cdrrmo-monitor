@@ -1,17 +1,6 @@
 {
   "pagasa_level": "ORANGE",
   "flood": {
-    "P2": {
-      "name": "Villarica \u00d7 Nanirahan",
-      "purpose": "LOCAL",
-      "lat": 14.586289,
-      "lng": 121.023049,
-      "risk_level": "Low",
-      "risk_score": 1.2,
-      "rainfall": 2,
-      "flood_history": 0,
-      "timestamp": "2026-08-28 21:55:40"
-    },
     "P4": {
       "name": "J.P. Rizal \u00d7 Ilino Cruz",
       "purpose": "ESCAPE ROUTE",
@@ -21,29 +10,7 @@
       "risk_score": 1.2,
       "rainfall": 2,
       "flood_history": 0,
-      "timestamp": "2026-08-28 21:55:40"
-    },
-    "P5": {
-      "name": "J.P. Rizal \u00d7 Saniboy",
-      "purpose": "ESCAPE ROUTE",
-      "lat": 14.574723,
-      "lng": 121.026105,
-      "risk_level": "Low",
-      "risk_score": 2.4,
-      "rainfall": 4.1,
-      "flood_history": 0,
-      "timestamp": "2026-08-28 21:55:40"
-    },
-    "P3": {
-      "name": "J.P. Rizal \u00d7 San Pedro",
-      "purpose": "ESCAPE ROUTE",
-      "lat": 14.580411,
-      "lng": 121.020848,
-      "risk_level": "Low",
-      "risk_score": 1.2,
-      "rainfall": 2,
-      "flood_history": 0,
-      "timestamp": "2026-08-28 21:55:40"
+      "timestamp": "2026-08-28 22:03:57"
     },
     "P6": {
       "name": "J.P. Rizal \u00d7 Coronado",
@@ -54,7 +21,7 @@
       "risk_score": 1.2,
       "rainfall": 2,
       "flood_history": 0,
-      "timestamp": "2026-08-28 21:55:40"
+      "timestamp": "2026-08-28 22:03:57"
     },
     "P1": {
       "name": "Pananalig \u00d7 Villarica",
@@ -65,10 +32,43 @@
       "risk_score": 1.2,
       "rainfall": 2,
       "flood_history": 0,
-      "timestamp": "2026-08-28 21:55:40"
+      "timestamp": "2026-08-28 22:03:57"
+    },
+    "P5": {
+      "name": "J.P. Rizal \u00d7 Saniboy",
+      "purpose": "ESCAPE ROUTE",
+      "lat": 14.574723,
+      "lng": 121.026105,
+      "risk_level": "Low",
+      "risk_score": 1.2,
+      "rainfall": 2,
+      "flood_history": 0,
+      "timestamp": "2026-08-28 22:03:57"
+    },
+    "P2": {
+      "name": "Villarica \u00d7 Nanirahan",
+      "purpose": "LOCAL",
+      "lat": 14.586289,
+      "lng": 121.023049,
+      "risk_level": "Low",
+      "risk_score": 1.2,
+      "rainfall": 2,
+      "flood_history": 0,
+      "timestamp": "2026-08-28 22:03:57"
+    },
+    "P3": {
+      "name": "J.P. Rizal \u00d7 San Pedro",
+      "purpose": "ESCAPE ROUTE",
+      "lat": 14.580411,
+      "lng": 121.020848,
+      "risk_level": "Low",
+      "risk_score": 1.2,
+      "rainfall": 2,
+      "flood_history": 0,
+      "timestamp": "2026-08-28 22:03:57"
     }
   },
   "radar_candidate": false,
   "escape_elevated": false,
-  "last_checked": "2026-08-29T05:56:18.134707+08:00"
+  "last_checked": "2026-08-29T06:05:09.695280+08:00"
 }

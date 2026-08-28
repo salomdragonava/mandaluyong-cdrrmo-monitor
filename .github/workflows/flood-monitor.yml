@@ -36,21 +36,6 @@ jobs:
       - name: Run flood monitor
         run: python tests/check_facebook.py
 
-      - name: Send flood Telegram notification
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: |
-          if [ -s telegram_alert.txt ]; then
-            curl --fail --silent --show-error \
-              --request POST \
-              --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
-              --data-urlencode "text@telegram_alert.txt" \
-              "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
-          else
-            echo "No flood notification generated."
-          fi
-
       - name: Save flood monitoring state
         uses: actions/cache/save@v4
         with:

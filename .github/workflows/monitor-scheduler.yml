@@ -67,6 +67,8 @@ jobs:
     if: ${{ needs.pagasa.outputs.warning_level == 'YELLOW' || needs.pagasa.outputs.warning_level == 'ORANGE' || needs.pagasa.outputs.warning_level == 'RED' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Wait 5 minutes after PAGASA
+        run: sleep 300
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
@@ -106,10 +108,12 @@ jobs:
 
   radar:
     name: PAGASA Radar Monitor
-    needs: pagasa
-    if: ${{ needs.pagasa.outputs.warning_level == 'YELLOW' || needs.pagasa.outputs.warning_level == 'ORANGE' || needs.pagasa.outputs.warning_level == 'RED' }}
+    needs: flood
+    if: ${{ always() && (needs.flood.result == 'success') }}
     runs-on: ubuntu-latest
     steps:
+      - name: Wait 5 minutes after Flood Monitor
+        run: sleep 300
       - name: Checkout repository
         uses: actions/checkout@v5
         with:

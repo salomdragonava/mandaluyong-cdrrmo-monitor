@@ -61,6 +61,40 @@ jobs:
           python -m pip install playwright pillow
           python -m playwright install chromium --with-deps
 
+      - name: Fix Playwright page creation compatibility
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path("tests/radar_monitor.py")
+          s = p.read_text()
+          old = "browser=p.chromium.launch(headless=True);page=p.new_page()"
+          new = "browser=p.chromium.launch(headless=True);page=browser.new_page()"
+          if old in s:
+              s = s.replace(old, new, 1)
+              p.write_text(s)
+              print("Patched Playwright initialization")
+          else:
+              print("Playwright initialization already correct")
+          PY
+
+      - name: Fix MeteoPilipinas TLS fallback
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path("tests/radar_monitor.py")
+          s = p.read_text()
+          if "import ssl" not in s:
+              s = s.replace("import io, json, math, re, subprocess", "import io, json, math, re, subprocess, ssl", 1)
+          old = "with urlopen(req,timeout=30) as response:"
+          new = "with urlopen(req,timeout=30,context=ssl._create_unverified_context()) as response:"
+          if old in s and new not in s:
+              s = s.replace(old, new, 1)
+              p.write_text(s)
+              print("Patched targeted TLS fallback")
+          else:
+              print("TLS fallback already patched or source changed")
+          PY
+
       - name: Run radar check
         run: |
           python tests/radar_monitor.py

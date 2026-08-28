@@ -29,21 +29,6 @@ jobs:
       - name: Run flood monitor
         run: python tests/check_facebook.py
 
-      - name: Send Telegram status
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: |
-          if [ -s telegram_alert.txt ]; then
-            curl --fail --silent --show-error \
-              --request POST \
-              --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
-              --data-urlencode "text@telegram_alert.txt" \
-              "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
-          else
-            echo "No Telegram message generated."
-          fi
-
       - name: Save monitoring state
         run: |
           git config user.name "github-actions[bot]"
@@ -53,7 +38,21 @@ jobs:
 
           if git diff --cached --quiet; then
             echo "No state changes to save."
-          else
-            git commit -m "Update flood monitoring state"
-            git push origin main
+            exit 0
           fi
+
+          git commit -m "Update flood monitoring state"
+
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            if git rebase --autostash origin/main; then
+              if git push origin HEAD:main; then
+                exit 0
+              fi
+            fi
+            git rebase --abort 2>/dev/null || true
+            echo "Push attempt $attempt failed; refreshing remote state."
+            sleep 2
+          done
+
+          exit 1

@@ -1,10 +1,80 @@
 {
   "status": "ok",
-  "previous_timestamp": "20260830064500",
-  "current_timestamp": "20260830074500",
-  "match_count": 141,
-  "threat_candidate_count": 0,
-  "top_threats": [],
-  "alert_recommendation": "NO_THREAT_CANDIDATE",
+  "previous_timestamp": "20260830074500",
+  "current_timestamp": "20260830084500",
+  "match_count": 261,
+  "threat_candidate_count": 3,
+  "top_threats": [
+    {
+      "previous_class": "cyan",
+      "current_class": "cyan",
+      "pixels_previous": 46,
+      "pixels_current": 23,
+      "from_lonlat": [
+        120.9683,
+        15.5887
+      ],
+      "to_lonlat": [
+        121.2304,
+        15.1146
+      ],
+      "movement_km": 59.6,
+      "bearing_deg": 151.9,
+      "previous_distance_km": 112.3,
+      "distance_to_mandaluyong_km": 63.0,
+      "distance_change_km": -49.3,
+      "approaching_mandaluyong": true,
+      "threat_score": 44.3,
+      "trend": "approaching",
+      "threat_candidate": true
+    },
+    {
+      "previous_class": "cyan",
+      "current_class": "cyan",
+      "pixels_previous": 433,
+      "pixels_current": 13,
+      "from_lonlat": [
+        121.1661,
+        15.643
+      ],
+      "to_lonlat": [
+        121.4159,
+        15.1039
+      ],
+      "movement_km": 65.5,
+      "bearing_deg": 155.9,
+      "previous_distance_km": 118.9,
+      "distance_to_mandaluyong_km": 71.1,
+      "distance_change_km": -47.8,
+      "approaching_mandaluyong": true,
+      "threat_score": 41.1,
+      "trend": "approaching",
+      "threat_candidate": true
+    },
+    {
+      "previous_class": "green",
+      "current_class": "cyan",
+      "pixels_previous": 12,
+      "pixels_current": 10,
+      "from_lonlat": [
+        121.0455,
+        15.5877
+      ],
+      "to_lonlat": [
+        121.3252,
+        15.3837
+      ],
+      "movement_km": 37.5,
+      "bearing_deg": 127.1,
+      "previous_distance_km": 111.9,
+      "distance_to_mandaluyong_km": 94.5,
+      "distance_change_km": -17.4,
+      "approaching_mandaluyong": true,
+      "threat_score": 31.7,
+      "trend": "approaching",
+      "threat_candidate": true
+    }
+  ],
+  "alert_recommendation": "MONITOR",
   "note": "Diagnostic ranking only. Color classes are not assigned PAGASA dBZ or rainfall-warning thresholds."
 }

@@ -1,122 +1,53 @@
 {
   "status": "ok",
-  "previous_timestamp": "20260830144500",
-  "current_timestamp": "20260830154500",
-  "match_count": 88,
-  "threat_candidate_count": 5,
+  "previous_timestamp": "20260830154500",
+  "current_timestamp": "20260830164500",
+  "match_count": 86,
+  "threat_candidate_count": 2,
   "top_threats": [
+    {
+      "previous_class": "green",
+      "current_class": "green",
+      "pixels_previous": 12,
+      "pixels_current": 8,
+      "from_lonlat": [
+        121.3785,
+        14.4337
+      ],
+      "to_lonlat": [
+        121.2502,
+        14.3949
+      ],
+      "movement_km": 14.4,
+      "bearing_deg": 252.7,
+      "previous_distance_km": 40.2,
+      "distance_to_mandaluyong_km": 30.8,
+      "distance_change_km": -9.4,
+      "approaching_mandaluyong": true,
+      "threat_score": 62.0,
+      "trend": "approaching",
+      "threat_candidate": true
+    },
     {
       "previous_class": "blue",
       "current_class": "blue",
-      "pixels_previous": 11,
-      "pixels_current": 11,
-      "from_lonlat": [
-        121.2342,
-        14.2372
-      ],
-      "to_lonlat": [
-        121.2981,
-        14.3762
-      ],
-      "movement_km": 16.9,
-      "bearing_deg": 24.0,
-      "previous_distance_km": 43.5,
-      "distance_to_mandaluyong_km": 36.1,
-      "distance_change_km": -7.4,
-      "approaching_mandaluyong": true,
-      "threat_score": 57.2,
-      "trend": "approaching",
-      "threat_candidate": true
-    },
-    {
-      "previous_class": "cyan",
-      "current_class": "blue",
-      "pixels_previous": 9,
+      "pixels_previous": 15,
       "pixels_current": 8,
       "from_lonlat": [
-        121.6489,
-        14.2878
+        121.697,
+        15.2512
       ],
       "to_lonlat": [
-        121.3829,
-        14.3833
+        121.8128,
+        14.8617
       ],
-      "movement_km": 30.5,
-      "bearing_deg": 290.3,
-      "previous_distance_km": 73.4,
-      "distance_to_mandaluyong_km": 43.2,
-      "distance_change_km": -30.2,
+      "movement_km": 45.0,
+      "bearing_deg": 164.0,
+      "previous_distance_km": 103.0,
+      "distance_to_mandaluyong_km": 89.1,
+      "distance_change_km": -13.9,
       "approaching_mandaluyong": true,
-      "threat_score": 56.7,
-      "trend": "approaching",
-      "threat_candidate": true
-    },
-    {
-      "previous_class": "green",
-      "current_class": "blue",
-      "pixels_previous": 126,
-      "pixels_current": 126,
-      "from_lonlat": [
-        122.133,
-        15.0171
-      ],
-      "to_lonlat": [
-        121.4858,
-        15.3519
-      ],
-      "movement_km": 78.7,
-      "bearing_deg": 298.2,
-      "previous_distance_km": 127.5,
-      "distance_to_mandaluyong_km": 98.4,
-      "distance_change_km": -29.1,
-      "approaching_mandaluyong": true,
-      "threat_score": 34.6,
-      "trend": "approaching",
-      "threat_candidate": true
-    },
-    {
-      "previous_class": "cyan",
-      "current_class": "cyan",
-      "pixels_previous": 138,
-      "pixels_current": 248,
-      "from_lonlat": [
-        122.0547,
-        14.82
-      ],
-      "to_lonlat": [
-        121.8515,
-        14.9687
-      ],
-      "movement_km": 27.3,
-      "bearing_deg": 307.1,
-      "previous_distance_km": 112.7,
-      "distance_to_mandaluyong_km": 97.7,
-      "distance_change_km": -15.0,
-      "approaching_mandaluyong": true,
-      "threat_score": 30.4,
-      "trend": "approaching",
-      "threat_candidate": true
-    },
-    {
-      "previous_class": "cyan",
-      "current_class": "cyan",
-      "pixels_previous": 19,
-      "pixels_current": 19,
-      "from_lonlat": [
-        121.7559,
-        15.1591
-      ],
-      "to_lonlat": [
-        121.6511,
-        15.1801
-      ],
-      "movement_km": 11.5,
-      "bearing_deg": 281.7,
-      "previous_distance_km": 100.6,
-      "distance_to_mandaluyong_km": 93.9,
-      "distance_change_km": -6.7,
-      "approaching_mandaluyong": true,
-      "threat_score": 25.6,
+      "threat_score": 38.4,
       "trend": "approaching",
       "threat_candidate": true
     }

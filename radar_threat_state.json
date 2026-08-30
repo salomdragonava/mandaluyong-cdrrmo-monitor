@@ -1,76 +1,30 @@
 {
   "status": "ok",
-  "previous_timestamp": "20260830214500",
-  "current_timestamp": "20260830224500",
-  "match_count": 88,
-  "threat_candidate_count": 3,
+  "previous_timestamp": "20260830224500",
+  "current_timestamp": "20260830234500",
+  "match_count": 69,
+  "threat_candidate_count": 1,
   "top_threats": [
     {
-      "previous_class": "blue",
-      "current_class": "cyan",
-      "pixels_previous": 11,
-      "pixels_current": 8,
-      "from_lonlat": [
-        121.898,
-        14.23
-      ],
-      "to_lonlat": [
-        121.5522,
-        14.1955
-      ],
-      "movement_km": 37.4,
-      "bearing_deg": 264.1,
-      "previous_distance_km": 100.4,
-      "distance_to_mandaluyong_km": 69.9,
-      "distance_change_km": -30.5,
-      "approaching_mandaluyong": true,
-      "threat_score": 41.5,
-      "trend": "approaching",
-      "threat_candidate": true
-    },
-    {
       "previous_class": "cyan",
       "current_class": "cyan",
-      "pixels_previous": 17,
-      "pixels_current": 18,
+      "pixels_previous": 27,
+      "pixels_current": 28,
       "from_lonlat": [
-        121.9056,
-        14.1865
+        121.7059,
+        14.2952
       ],
       "to_lonlat": [
-        121.7241,
-        14.2044
+        121.6011,
+        14.2947
       ],
-      "movement_km": 19.6,
-      "bearing_deg": 275.8,
-      "previous_distance_km": 103.1,
-      "distance_to_mandaluyong_km": 84.8,
-      "distance_change_km": -18.3,
+      "movement_km": 11.3,
+      "bearing_deg": 269.7,
+      "previous_distance_km": 78.6,
+      "distance_to_mandaluyong_km": 68.4,
+      "distance_change_km": -10.2,
       "approaching_mandaluyong": true,
-      "threat_score": 35.3,
-      "trend": "approaching",
-      "threat_candidate": true
-    },
-    {
-      "previous_class": "cyan",
-      "current_class": "cyan",
-      "pixels_previous": 12,
-      "pixels_current": 12,
-      "from_lonlat": [
-        121.8919,
-        14.2653
-      ],
-      "to_lonlat": [
-        121.8443,
-        14.2775
-      ],
-      "movement_km": 5.3,
-      "bearing_deg": 284.8,
-      "previous_distance_km": 98.3,
-      "distance_to_mandaluyong_km": 93.1,
-      "distance_change_km": -5.2,
-      "approaching_mandaluyong": true,
-      "threat_score": 21.2,
+      "threat_score": 35.6,
       "trend": "approaching",
       "threat_candidate": true
     }

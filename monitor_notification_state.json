@@ -1,28 +1,6 @@
 {
   "pagasa_level": "GREEN",
   "flood": {
-    "P5": {
-      "name": "J.P. Rizal \u00d7 Saniboy",
-      "purpose": "ESCAPE ROUTE",
-      "lat": 14.574723,
-      "lng": 121.026105,
-      "risk_level": "Low",
-      "risk_score": 0.5,
-      "rainfall": 0.9,
-      "flood_history": 0,
-      "timestamp": "2026-08-31 06:04:07"
-    },
-    "P2": {
-      "name": "Villarica \u00d7 Nanirahan",
-      "purpose": "LOCAL",
-      "lat": 14.586289,
-      "lng": 121.023049,
-      "risk_level": "Low",
-      "risk_score": 0.5,
-      "rainfall": 0.9,
-      "flood_history": 0,
-      "timestamp": "2026-08-31 06:04:07"
-    },
     "P3": {
       "name": "J.P. Rizal \u00d7 San Pedro",
       "purpose": "ESCAPE ROUTE",
@@ -32,18 +10,18 @@
       "risk_score": 0.5,
       "rainfall": 0.9,
       "flood_history": 0,
-      "timestamp": "2026-08-31 06:04:07"
+      "timestamp": "2026-08-31 07:03:20"
     },
-    "P6": {
-      "name": "J.P. Rizal \u00d7 Coronado",
+    "P5": {
+      "name": "J.P. Rizal \u00d7 Saniboy",
       "purpose": "ESCAPE ROUTE",
-      "lat": 14.570609,
-      "lng": 121.030969,
+      "lat": 14.574723,
+      "lng": 121.026105,
       "risk_level": "Low",
       "risk_score": 0.5,
       "rainfall": 0.9,
       "flood_history": 0,
-      "timestamp": "2026-08-31 06:04:07"
+      "timestamp": "2026-08-31 07:03:21"
     },
     "P4": {
       "name": "J.P. Rizal \u00d7 Ilino Cruz",
@@ -54,7 +32,29 @@
       "risk_score": 0.5,
       "rainfall": 0.9,
       "flood_history": 0,
-      "timestamp": "2026-08-31 06:04:07"
+      "timestamp": "2026-08-31 07:03:21"
+    },
+    "P6": {
+      "name": "J.P. Rizal \u00d7 Coronado",
+      "purpose": "ESCAPE ROUTE",
+      "lat": 14.570609,
+      "lng": 121.030969,
+      "risk_level": "Low",
+      "risk_score": 0.5,
+      "rainfall": 0.9,
+      "flood_history": 0,
+      "timestamp": "2026-08-31 07:03:21"
+    },
+    "P2": {
+      "name": "Villarica \u00d7 Nanirahan",
+      "purpose": "LOCAL",
+      "lat": 14.586289,
+      "lng": 121.023049,
+      "risk_level": "Low",
+      "risk_score": 0.5,
+      "rainfall": 0.9,
+      "flood_history": 0,
+      "timestamp": "2026-08-31 07:03:21"
     },
     "P1": {
       "name": "Pananalig \u00d7 Villarica",
@@ -65,10 +65,10 @@
       "risk_score": 0.5,
       "rainfall": 0.9,
       "flood_history": 0,
-      "timestamp": "2026-08-31 06:04:07"
+      "timestamp": "2026-08-31 07:03:21"
     }
   },
   "radar_candidate": false,
   "escape_elevated": false,
-  "last_checked": "2026-08-31T14:04:57.692829+08:00"
+  "last_checked": "2026-08-31T15:03:58.957446+08:00"
 }

@@ -1,260 +1,53 @@
 {
   "status": "ok",
-  "previous_timestamp": "20260901114500",
-  "current_timestamp": "20260901124500",
-  "match_count": 62,
-  "threat_candidate_count": 16,
+  "previous_timestamp": "20260901124500",
+  "current_timestamp": "20260901134500",
+  "match_count": 50,
+  "threat_candidate_count": 10,
   "top_threats": [
     {
       "previous_class": "blue",
-      "current_class": "purple",
+      "current_class": "blue",
       "pixels_previous": 11,
-      "pixels_current": 9,
-      "from_lonlat": [
-        119.9149,
-        14.6154
-      ],
-      "to_lonlat": [
-        120.5218,
-        14.8667
-      ],
-      "movement_km": 70.9,
-      "bearing_deg": 66.8,
-      "previous_distance_km": 120.5,
-      "distance_to_mandaluyong_km": 63.8,
-      "distance_change_km": -56.7,
-      "approaching_mandaluyong": true,
-      "threat_score": 84.5,
-      "trend": "approaching",
-      "threat_candidate": true
-    },
-    {
-      "previous_class": "purple",
-      "current_class": "purple",
-      "pixels_previous": 12,
-      "pixels_current": 9,
-      "from_lonlat": [
-        119.8738,
-        14.6153
-      ],
-      "to_lonlat": [
-        120.3964,
-        14.9435
-      ],
-      "movement_km": 66.9,
-      "bearing_deg": 57.0,
-      "previous_distance_km": 124.9,
-      "distance_to_mandaluyong_km": 79.7,
-      "distance_change_km": -45.2,
-      "approaching_mandaluyong": true,
-      "threat_score": 78.1,
-      "trend": "approaching",
-      "threat_candidate": true
-    },
-    {
-      "previous_class": "blue",
-      "current_class": "purple",
-      "pixels_previous": 18,
-      "pixels_current": 13,
-      "from_lonlat": [
-        120.8832,
-        15.4352
-      ],
-      "to_lonlat": [
-        120.945,
-        15.3636
-      ],
-      "movement_km": 10.3,
-      "bearing_deg": 140.2,
-      "previous_distance_km": 96.4,
-      "distance_to_mandaluyong_km": 87.6,
-      "distance_change_km": -8.8,
-      "approaching_mandaluyong": true,
-      "threat_score": 67.7,
-      "trend": "approaching",
-      "threat_candidate": true
-    },
-    {
-      "previous_class": "blue",
-      "current_class": "blue",
-      "pixels_previous": 9,
-      "pixels_current": 10,
-      "from_lonlat": [
-        121.0573,
-        14.0899
-      ],
-      "to_lonlat": [
-        121.1672,
-        14.242
-      ],
-      "movement_km": 20.6,
-      "bearing_deg": 35.0,
-      "previous_distance_km": 54.4,
-      "distance_to_mandaluyong_km": 40.0,
-      "distance_change_km": -14.4,
-      "approaching_mandaluyong": true,
-      "threat_score": 58.0,
-      "trend": "approaching",
-      "threat_candidate": true
-    },
-    {
-      "previous_class": "blue",
-      "current_class": "blue",
-      "pixels_previous": 32,
-      "pixels_current": 31,
-      "from_lonlat": [
-        121.1635,
-        15.2895
-      ],
-      "to_lonlat": [
-        120.9965,
-        15.1411
-      ],
-      "movement_km": 24.3,
-      "bearing_deg": 227.4,
-      "previous_distance_km": 80.0,
-      "distance_to_mandaluyong_km": 62.5,
-      "distance_change_km": -17.5,
-      "approaching_mandaluyong": true,
-      "threat_score": 49.0,
-      "trend": "approaching",
-      "threat_candidate": true
-    },
-    {
-      "previous_class": "green",
-      "current_class": "green",
-      "pixels_previous": 9,
       "pixels_current": 8,
       "from_lonlat": [
-        121.4822,
-        14.0353
+        120.6633,
+        14.613
       ],
       "to_lonlat": [
-        121.4261,
-        14.1523
+        121.1074,
+        14.5893
       ],
-      "movement_km": 14.3,
-      "bearing_deg": 335.1,
-      "previous_distance_km": 77.1,
-      "distance_to_mandaluyong_km": 63.3,
-      "distance_change_km": -13.8,
+      "movement_km": 47.8,
+      "bearing_deg": 93.2,
+      "previous_distance_km": 40.2,
+      "distance_to_mandaluyong_km": 7.8,
+      "distance_change_km": -32.4,
       "approaching_mandaluyong": true,
-      "threat_score": 48.9,
-      "trend": "approaching",
-      "threat_candidate": true
-    },
-    {
-      "previous_class": "cyan",
-      "current_class": "cyan",
-      "pixels_previous": 108,
-      "pixels_current": 67,
-      "from_lonlat": [
-        120.5937,
-        14.7698
-      ],
-      "to_lonlat": [
-        120.6657,
-        14.6749
-      ],
-      "movement_km": 13.1,
-      "bearing_deg": 143.7,
-      "previous_distance_km": 52.0,
-      "distance_to_mandaluyong_km": 41.2,
-      "distance_change_km": -10.8,
-      "approaching_mandaluyong": true,
-      "threat_score": 47.8,
-      "trend": "approaching",
-      "threat_candidate": true
-    },
-    {
-      "previous_class": "blue",
-      "current_class": "cyan",
-      "pixels_previous": 9,
-      "pixels_current": 9,
-      "from_lonlat": [
-        121.2815,
-        15.4323
-      ],
-      "to_lonlat": [
-        121.0233,
-        15.1
-      ],
-      "movement_km": 46.1,
-      "bearing_deg": 216.9,
-      "previous_distance_km": 98.3,
-      "distance_to_mandaluyong_km": 57.8,
-      "distance_change_km": -40.5,
-      "approaching_mandaluyong": true,
-      "threat_score": 46.4,
-      "trend": "approaching",
-      "threat_candidate": true
-    },
-    {
-      "previous_class": "cyan",
-      "current_class": "cyan",
-      "pixels_previous": 70,
-      "pixels_current": 75,
-      "from_lonlat": [
-        120.4601,
-        15.0062
-      ],
-      "to_lonlat": [
-        120.587,
-        14.9069
-      ],
-      "movement_km": 17.5,
-      "bearing_deg": 129.0,
-      "previous_distance_km": 77.9,
-      "distance_to_mandaluyong_km": 60.4,
-      "distance_change_km": -17.5,
-      "approaching_mandaluyong": true,
-      "threat_score": 43.5,
+      "threat_score": 64.0,
       "trend": "approaching",
       "threat_candidate": true
     },
     {
       "previous_class": "blue",
       "current_class": "blue",
-      "pixels_previous": 20,
-      "pixels_current": 18,
+      "pixels_previous": 33,
+      "pixels_current": 51,
       "from_lonlat": [
-        120.6301,
-        15.6581
+        120.7687,
+        14.735
       ],
       "to_lonlat": [
-        120.4487,
-        15.0926
+        120.8796,
+        14.3601
       ],
-      "movement_km": 65.7,
-      "bearing_deg": 197.2,
-      "previous_distance_km": 127.4,
-      "distance_to_mandaluyong_km": 85.0,
-      "distance_change_km": -42.4,
+      "movement_km": 43.3,
+      "bearing_deg": 164.0,
+      "previous_distance_km": 33.5,
+      "distance_to_mandaluyong_km": 29.6,
+      "distance_change_km": -3.9,
       "approaching_mandaluyong": true,
-      "threat_score": 40.0,
-      "trend": "approaching",
-      "threat_candidate": true
-    },
-    {
-      "previous_class": "blue",
-      "current_class": "blue",
-      "pixels_previous": 12,
-      "pixels_current": 15,
-      "from_lonlat": [
-        120.1647,
-        14.9719
-      ],
-      "to_lonlat": [
-        120.1966,
-        14.8357
-      ],
-      "movement_km": 15.5,
-      "bearing_deg": 167.2,
-      "previous_distance_km": 103.2,
-      "distance_to_mandaluyong_km": 94.5,
-      "distance_change_km": -8.7,
-      "approaching_mandaluyong": true,
-      "threat_score": 32.8,
+      "threat_score": 62.2,
       "trend": "approaching",
       "threat_candidate": true
     },
@@ -262,114 +55,183 @@
       "previous_class": "blue",
       "current_class": "blue",
       "pixels_previous": 10,
-      "pixels_current": 10,
+      "pixels_current": 9,
       "from_lonlat": [
-        120.8193,
-        15.4156
+        121.1672,
+        14.242
       ],
       "to_lonlat": [
-        120.903,
-        15.3691
+        121.162,
+        14.3602
       ],
-      "movement_km": 10.3,
-      "bearing_deg": 120.0,
-      "previous_distance_km": 95.7,
-      "distance_to_mandaluyong_km": 88.8,
-      "distance_change_km": -6.9,
+      "movement_km": 13.1,
+      "bearing_deg": 357.6,
+      "previous_distance_km": 40.0,
+      "distance_to_mandaluyong_km": 27.9,
+      "distance_change_km": -12.1,
       "approaching_mandaluyong": true,
-      "threat_score": 31.2,
+      "threat_score": 57.7,
+      "trend": "approaching",
+      "threat_candidate": true
+    },
+    {
+      "previous_class": "green",
+      "current_class": "green",
+      "pixels_previous": 8,
+      "pixels_current": 8,
+      "from_lonlat": [
+        120.4768,
+        14.8866
+      ],
+      "to_lonlat": [
+        120.7821,
+        15.0262
+      ],
+      "movement_km": 36.2,
+      "bearing_deg": 64.7,
+      "previous_distance_km": 69.1,
+      "distance_to_mandaluyong_km": 56.6,
+      "distance_change_km": -12.5,
+      "approaching_mandaluyong": true,
+      "threat_score": 55.9,
       "trend": "approaching",
       "threat_candidate": true
     },
     {
       "previous_class": "cyan",
       "current_class": "cyan",
-      "pixels_previous": 22,
-      "pixels_current": 32,
+      "pixels_previous": 12,
+      "pixels_current": 13,
       "from_lonlat": [
-        120.522,
-        15.208
+        120.5863,
+        14.787
       ],
       "to_lonlat": [
-        120.6041,
-        15.1857
+        120.7112,
+        14.513
       ],
-      "movement_km": 9.1,
-      "bearing_deg": 105.7,
-      "previous_distance_km": 89.0,
-      "distance_to_mandaluyong_km": 81.7,
-      "distance_change_km": -7.3,
+      "movement_km": 33.2,
+      "bearing_deg": 156.2,
+      "previous_distance_km": 53.5,
+      "distance_to_mandaluyong_km": 35.7,
+      "distance_change_km": -17.8,
       "approaching_mandaluyong": true,
-      "threat_score": 28.6,
+      "threat_score": 55.2,
+      "trend": "approaching",
+      "threat_candidate": true
+    },
+    {
+      "previous_class": "cyan",
+      "current_class": "cyan",
+      "pixels_previous": 8,
+      "pixels_current": 8,
+      "from_lonlat": [
+        121.4908,
+        14.3068
+      ],
+      "to_lonlat": [
+        121.3298,
+        14.2238
+      ],
+      "movement_km": 19.6,
+      "bearing_deg": 242.0,
+      "previous_distance_km": 57.5,
+      "distance_to_mandaluyong_km": 50.5,
+      "distance_change_km": -7.0,
+      "approaching_mandaluyong": true,
+      "threat_score": 49.0,
+      "trend": "approaching",
+      "threat_candidate": true
+    },
+    {
+      "previous_class": "cyan",
+      "current_class": "cyan",
+      "pixels_previous": 18,
+      "pixels_current": 21,
+      "from_lonlat": [
+        120.7445,
+        14.908
+      ],
+      "to_lonlat": [
+        120.7211,
+        14.7945
+      ],
+      "movement_km": 12.8,
+      "bearing_deg": 191.3,
+      "previous_distance_km": 48.1,
+      "distance_to_mandaluyong_km": 41.4,
+      "distance_change_km": -6.7,
+      "approaching_mandaluyong": true,
+      "threat_score": 47.5,
+      "trend": "approaching",
+      "threat_candidate": true
+    },
+    {
+      "previous_class": "green",
+      "current_class": "green",
+      "pixels_previous": 17,
+      "pixels_current": 10,
+      "from_lonlat": [
+        121.4644,
+        15.5625
+      ],
+      "to_lonlat": [
+        121.3265,
+        15.2681
+      ],
+      "movement_km": 35.9,
+      "bearing_deg": 204.3,
+      "previous_distance_km": 118.4,
+      "distance_to_mandaluyong_km": 82.6,
+      "distance_change_km": -35.8,
+      "approaching_mandaluyong": true,
+      "threat_score": 45.5,
       "trend": "approaching",
       "threat_candidate": true
     },
     {
       "previous_class": "blue",
       "current_class": "blue",
-      "pixels_previous": 11,
-      "pixels_current": 11,
+      "pixels_previous": 15,
+      "pixels_current": 13,
       "from_lonlat": [
-        120.4387,
-        15.228
+        120.1966,
+        14.8357
       ],
       "to_lonlat": [
-        120.4122,
-        15.1748
+        120.2097,
+        14.5324
       ],
-      "movement_km": 6.6,
-      "bearing_deg": 205.7,
-      "previous_distance_km": 96.4,
-      "distance_to_mandaluyong_km": 94.1,
-      "distance_change_km": -2.3,
-      "approaching_mandaluyong": true,
-      "threat_score": 26.3,
-      "trend": "approaching",
-      "threat_candidate": true
-    },
-    {
-      "previous_class": "cyan",
-      "current_class": "cyan",
-      "pixels_previous": 20,
-      "pixels_current": 27,
-      "from_lonlat": [
-        120.2006,
-        14.5829
-      ],
-      "to_lonlat": [
-        120.2429,
-        14.592
-      ],
-      "movement_km": 4.7,
-      "bearing_deg": 77.5,
-      "previous_distance_km": 89.7,
-      "distance_to_mandaluyong_km": 85.2,
-      "distance_change_km": -4.5,
-      "approaching_mandaluyong": true,
-      "threat_score": 23.9,
-      "trend": "approaching",
-      "threat_candidate": true
-    },
-    {
-      "previous_class": "cyan",
-      "current_class": "cyan",
-      "pixels_previous": 24,
-      "pixels_current": 18,
-      "from_lonlat": [
-        120.4093,
-        15.174
-      ],
-      "to_lonlat": [
-        120.4288,
-        15.1207
-      ],
-      "movement_km": 6.3,
-      "bearing_deg": 160.5,
-      "previous_distance_km": 94.3,
-      "distance_to_mandaluyong_km": 88.7,
+      "movement_km": 33.7,
+      "bearing_deg": 177.6,
+      "previous_distance_km": 94.5,
+      "distance_to_mandaluyong_km": 88.9,
       "distance_change_km": -5.6,
       "approaching_mandaluyong": true,
-      "threat_score": 23.7,
+      "threat_score": 38.4,
+      "trend": "approaching",
+      "threat_candidate": true
+    },
+    {
+      "previous_class": "cyan",
+      "current_class": "cyan",
+      "pixels_previous": 16,
+      "pixels_current": 15,
+      "from_lonlat": [
+        120.705,
+        15.1117
+      ],
+      "to_lonlat": [
+        120.7746,
+        15.0661
+      ],
+      "movement_km": 9.0,
+      "bearing_deg": 124.2,
+      "previous_distance_km": 69.0,
+      "distance_to_mandaluyong_km": 60.9,
+      "distance_change_km": -8.1,
+      "approaching_mandaluyong": true,
+      "threat_score": 36.9,
       "trend": "approaching",
       "threat_candidate": true
     }

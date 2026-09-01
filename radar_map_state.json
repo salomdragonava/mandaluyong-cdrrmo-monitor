@@ -1,10 +1,10 @@
 {
   "frames": [
     {
-      "url": "https://api.meteopilipinas.gov.ph/tmp/d41d8cd98f00b204e9800998ecf8427e/radar/timeline/mosaic-hybrid/ph_hybrid_mosaic_20260901154500uPwN.png",
-      "timestamp": "20260901154500",
-      "path": "radar_data/radar_20260901154500.png",
-      "bytes": 26332,
+      "url": "https://api.meteopilipinas.gov.ph/tmp/d41d8cd98f00b204e9800998ecf8427e/radar/timeline/mosaic-hybrid/ph_hybrid_mosaic_20260901164500AVsb.png",
+      "timestamp": "20260901164500",
+      "path": "radar_data/radar_20260901164500.png",
+      "bytes": 21115,
       "analysis": {
         "image_size": [
           1020,
@@ -19,1146 +19,795 @@
           "y": 582.62
         },
         "color_class_counts": {
-          "green": 494,
-          "blue": 1227,
-          "cyan": 3941,
-          "yellow": 91,
-          "orange": 86,
-          "red": 83,
-          "purple": 77
+          "blue": 713,
+          "cyan": 2241,
+          "green": 266,
+          "red": 36,
+          "yellow": 53,
+          "orange": 29,
+          "purple": 25
         },
-        "components_count": 87,
+        "components_count": 60,
         "components": [
           {
             "class": "cyan",
-            "pixels": 1187,
+            "pixels": 1422,
             "centroid_pixel": [
-              446.8,
-              490.6
+              446.9,
+              490.7
             ],
             "centroid_lonlat": [
-              121.9017,
-              15.802
+              121.9033,
+              15.8014
             ],
-            "distance_km": 164.5
+            "distance_km": 164.6
           },
           {
             "class": "cyan",
-            "pixels": 1262,
+            "pixels": 9,
             "centroid_pixel": [
-              534.5,
-              601.2
+              330.6,
+              555.3
             ],
             "centroid_lonlat": [
-              123.0652,
-              14.333
+              120.358,
+              14.942
             ],
-            "distance_km": 219.7
+            "distance_km": 83.2
+          },
+          {
+            "class": "cyan",
+            "pixels": 61,
+            "centroid_pixel": [
+              347.5,
+              570.0
+            ],
+            "centroid_lonlat": [
+              120.5829,
+              14.7477
+            ],
+            "distance_km": 52.1
           },
           {
             "class": "cyan",
             "pixels": 38,
             "centroid_pixel": [
-              505.8,
-              548.4
+              339.9,
+              536.1
             ],
             "centroid_lonlat": [
-              122.6846,
-              15.0339
+              120.482,
+              15.1972
             ],
-            "distance_km": 184.2
+            "distance_km": 90.8
           },
           {
             "class": "cyan",
-            "pixels": 16,
+            "pixels": 8,
             "centroid_pixel": [
-              491.8,
-              616.7
+              358.9,
+              554.4
             ],
             "centroid_lonlat": [
-              122.4991,
-              14.1266
+              120.734,
+              14.9547
             ],
-            "distance_km": 165.0
+            "distance_km": 52.8
           },
           {
             "class": "cyan",
-            "pixels": 53,
+            "pixels": 8,
             "centroid_pixel": [
-              555.6,
-              633.2
+              337.5,
+              532.2
             ],
             "centroid_lonlat": [
-              123.3458,
-              13.9065
+              120.4502,
+              15.2488
             ],
-            "distance_km": 259.1
+            "distance_km": 97.4
           },
           {
             "class": "cyan",
-            "pixels": 91,
+            "pixels": 50,
             "centroid_pixel": [
-              558.5,
-              644.5
+              415.2,
+              479.1
             ],
             "centroid_lonlat": [
-              123.384,
-              13.7576
+              121.4824,
+              15.9546
             ],
-            "distance_km": 268.2
+            "distance_km": 160.0
           },
           {
             "class": "cyan",
-            "pixels": 72,
+            "pixels": 17,
             "centroid_pixel": [
-              340.2,
-              553.4
+              459.5,
+              862.7
             ],
             "centroid_lonlat": [
-              120.4856,
-              14.9673
+              122.0697,
+              10.8569
             ],
-            "distance_km": 73.1
+            "distance_km": 427.9
           },
           {
             "class": "cyan",
-            "pixels": 56,
+            "pixels": 11,
             "centroid_pixel": [
-              745.0,
-              1131.9
+              339.7,
+              542.5
             ],
             "centroid_lonlat": [
-              125.8612,
-              7.2786
+              120.4798,
+              15.1132
             ],
-            "distance_km": 962.0
+            "distance_km": 84.1
           },
           {
             "class": "cyan",
-            "pixels": 64,
+            "pixels": 20,
             "centroid_pixel": [
-              348.9,
-              569.3
+              352.5,
+              548.9
             ],
             "centroid_lonlat": [
-              120.6019,
-              14.7568
+              120.6494,
+              15.0282
             ],
-            "distance_km": 50.6
+            "distance_km": 64.9
           },
           {
             "class": "cyan",
-            "pixels": 21,
+            "pixels": 15,
             "centroid_pixel": [
-              486.4,
-              654.2
+              595.9,
+              913.6
             ],
             "centroid_lonlat": [
-              122.4276,
-              13.6282
+              123.8806,
+              10.1805
             ],
-            "distance_km": 183.0
+            "distance_km": 576.0
+          },
+          {
+            "class": "cyan",
+            "pixels": 12,
+            "centroid_pixel": [
+              354.7,
+              559.0
+            ],
+            "centroid_lonlat": [
+              120.6781,
+              14.8933
+            ],
+            "distance_km": 51.9
           },
           {
             "class": "cyan",
             "pixels": 37,
             "centroid_pixel": [
-              532.6,
-              627.4
+              340.6,
+              553.4
             ],
             "centroid_lonlat": [
-              123.0409,
-              13.9841
+              120.4913,
+              14.9683
             ],
-            "distance_km": 225.3
+            "distance_km": 72.7
           },
           {
             "class": "cyan",
-            "pixels": 73,
+            "pixels": 65,
             "centroid_pixel": [
-              409.5,
-              482.0
+              362.7,
+              557.3
             ],
             "centroid_lonlat": [
-              121.4065,
-              15.9168
+              120.7847,
+              14.9154
             ],
-            "distance_km": 153.7
+            "distance_km": 46.0
           },
           {
             "class": "cyan",
-            "pixels": 16,
+            "pixels": 11,
             "centroid_pixel": [
-              565.1,
-              612.1
+              319.0,
+              546.0
             ],
             "centroid_lonlat": [
-              123.4725,
-              14.1881
+              120.2046,
+              15.0661
             ],
-            "distance_km": 265.3
+            "distance_km": 104.4
           },
           {
             "class": "cyan",
-            "pixels": 136,
+            "pixels": 19,
             "centroid_pixel": [
-              501.4,
-              640.9
+              440.7,
+              463.1
             ],
             "centroid_lonlat": [
-              122.6261,
-              13.8047
+              121.8209,
+              16.1678
             ],
-            "distance_km": 191.3
-          },
-          {
-            "class": "cyan",
-            "pixels": 29,
-            "centroid_pixel": [
-              332.4,
-              577.8
-            ],
-            "centroid_lonlat": [
-              120.3827,
-              14.644
-            ],
-            "distance_km": 70.5
-          },
-          {
-            "class": "cyan",
-            "pixels": 24,
-            "centroid_pixel": [
-              391.0,
-              482.0
-            ],
-            "centroid_lonlat": [
-              121.1611,
-              15.9172
-            ],
-            "distance_km": 149.1
-          },
-          {
-            "class": "cyan",
-            "pixels": 13,
-            "centroid_pixel": [
-              574.1,
-              636.6
-            ],
-            "centroid_lonlat": [
-              123.5913,
-              13.8617
-            ],
-            "distance_km": 285.8
-          },
-          {
-            "class": "cyan",
-            "pixels": 14,
-            "centroid_pixel": [
-              524.7,
-              639.2
-            ],
-            "centroid_lonlat": [
-              122.9359,
-              13.8272
-            ],
-            "distance_km": 220.5
-          },
-          {
-            "class": "cyan",
-            "pixels": 10,
-            "centroid_pixel": [
-              507.7,
-              584.2
-            ],
-            "centroid_lonlat": [
-              122.71,
-              14.5584
-            ],
-            "distance_km": 179.9
-          },
-          {
-            "class": "cyan",
-            "pixels": 9,
-            "centroid_pixel": [
-              334.4,
-              537.1
-            ],
-            "centroid_lonlat": [
-              120.4096,
-              15.1842
-            ],
-            "distance_km": 95.0
+            "distance_km": 195.4
           },
           {
             "class": "cyan",
             "pixels": 12,
             "centroid_pixel": [
-              456.5,
-              674.2
+              433.8,
+              470.3
             ],
             "centroid_lonlat": [
-              122.0302,
-              13.3627
+              121.7282,
+              16.0717
             ],
-            "distance_km": 172.2
+            "distance_km": 181.6
           },
           {
             "class": "cyan",
-            "pixels": 15,
+            "pixels": 44,
             "centroid_pixel": [
-              433.7,
-              469.9
+              745.6,
+              1132.1
             ],
             "centroid_lonlat": [
-              121.7279,
-              16.0779
+              125.8689,
+              7.2764
             ],
-            "distance_km": 182.2
+            "distance_km": 962.6
           },
           {
             "class": "cyan",
-            "pixels": 46,
+            "pixels": 8,
             "centroid_pixel": [
-              521.9,
-              629.5
+              336.9,
+              525.9
             ],
             "centroid_lonlat": [
-              122.899,
-              13.9563
+              120.4419,
+              15.3335
+            ],
+            "distance_km": 105.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 11,
+            "centroid_pixel": [
+              468.1,
+              864.9
+            ],
+            "centroid_lonlat": [
+              122.1841,
+              10.8276
+            ],
+            "distance_km": 434.3
+          },
+          {
+            "class": "cyan",
+            "pixels": 9,
+            "centroid_pixel": [
+              473.1,
+              882.3
+            ],
+            "centroid_lonlat": [
+              122.2508,
+              10.5961
+            ],
+            "distance_km": 461.0
+          },
+          {
+            "class": "cyan",
+            "pixels": 8,
+            "centroid_pixel": [
+              347.1,
+              552.9
+            ],
+            "centroid_lonlat": [
+              120.578,
+              14.9747
+            ],
+            "distance_km": 65.9
+          },
+          {
+            "class": "cyan",
+            "pixels": 10,
+            "centroid_pixel": [
+              362.7,
+              535.5
+            ],
+            "centroid_lonlat": [
+              120.7848,
+              15.2056
+            ],
+            "distance_km": 74.6
+          },
+          {
+            "class": "cyan",
+            "pixels": 25,
+            "centroid_pixel": [
+              457.8,
+              459.4
+            ],
+            "centroid_lonlat": [
+              122.048,
+              16.2165
             ],
             "distance_km": 211.8
           },
           {
             "class": "cyan",
-            "pixels": 8,
+            "pixels": 23,
             "centroid_pixel": [
-              569.5,
-              634.0
+              316.4,
+              529.9
             ],
             "centroid_lonlat": [
-              123.5306,
-              13.8965
+              120.1705,
+              15.2799
             ],
-            "distance_km": 278.5
+            "distance_km": 121.2
           },
           {
             "class": "cyan",
-            "pixels": 43,
+            "pixels": 17,
             "centroid_pixel": [
-              547.1,
-              625.8
+              327.1,
+              565.6
             ],
             "centroid_lonlat": [
-              123.2327,
-              14.0056
+              120.3124,
+              14.8049
             ],
-            "distance_km": 244.4
+            "distance_km": 81.7
           },
           {
             "class": "cyan",
-            "pixels": 9,
+            "pixels": 12,
             "centroid_pixel": [
-              469.4,
-              458.4
+              413.5,
+              486.0
             ],
             "centroid_lonlat": [
-              122.2021,
-              16.2297
+              121.4593,
+              15.8635
             ],
-            "distance_km": 221.9
-          },
-          {
-            "class": "cyan",
-            "pixels": 16,
-            "centroid_pixel": [
-              327.3,
-              564.2
-            ],
-            "centroid_lonlat": [
-              120.3149,
-              14.8243
-            ],
-            "distance_km": 82.1
-          },
-          {
-            "class": "cyan",
-            "pixels": 22,
-            "centroid_pixel": [
-              448.4,
-              517.2
-            ],
-            "centroid_lonlat": [
-              121.9228,
-              15.4485
-            ],
-            "distance_km": 135.6
-          },
-          {
-            "class": "cyan",
-            "pixels": 8,
-            "centroid_pixel": [
-              459.4,
-              678.6
-            ],
-            "centroid_lonlat": [
-              122.0684,
-              13.3034
-            ],
-            "distance_km": 179.9
-          },
-          {
-            "class": "cyan",
-            "pixels": 21,
-            "centroid_pixel": [
-              489.9,
-              610.1
-            ],
-            "centroid_lonlat": [
-              122.4731,
-              14.2142
-            ],
-            "distance_km": 159.6
+            "distance_km": 149.6
           },
           {
             "class": "cyan",
             "pixels": 13,
             "centroid_pixel": [
-              348.1,
-              539.1
+              370.5,
+              557.5
             ],
             "centroid_lonlat": [
-              120.5906,
-              15.1581
+              120.8879,
+              14.9127
             ],
-            "distance_km": 80.1
-          },
-          {
-            "class": "cyan",
-            "pixels": 18,
-            "centroid_pixel": [
-              364.5,
-              559.6
-            ],
-            "centroid_lonlat": [
-              120.8087,
-              14.8859
-            ],
-            "distance_km": 41.9
+            "distance_km": 40.3
           },
           {
             "class": "cyan",
             "pixels": 10,
             "centroid_pixel": [
-              361.0,
-              569.1
+              427.4,
+              473.0
             ],
             "centroid_lonlat": [
-              120.7622,
-              14.759
+              121.6438,
+              16.0362
             ],
-            "distance_km": 35.5
-          },
-          {
-            "class": "cyan",
-            "pixels": 11,
-            "centroid_pixel": [
-              464.2,
-              483.7
-            ],
-            "centroid_lonlat": [
-              122.1322,
-              15.8937
-            ],
-            "distance_km": 187.5
+            "distance_km": 174.4
           },
           {
             "class": "cyan",
             "pixels": 9,
             "centroid_pixel": [
-              340.4,
-              534.6
+              326.6,
+              525.9
             ],
             "centroid_lonlat": [
-              120.4893,
-              15.2182
+              120.3049,
+              15.3333
             ],
-            "distance_km": 92.1
+            "distance_km": 114.8
           },
           {
             "class": "cyan",
             "pixels": 9,
             "centroid_pixel": [
-              462.3,
-              682.0
+              386.3,
+              478.8
             ],
             "centroid_lonlat": [
-              122.1077,
-              13.2586
+              121.0986,
+              15.9595
             ],
-            "distance_km": 186.4
-          },
-          {
-            "class": "cyan",
-            "pixels": 8,
-            "centroid_pixel": [
-              512.1,
-              572.6
-            ],
-            "centroid_lonlat": [
-              122.7688,
-              14.7122
-            ],
-            "distance_km": 186.7
-          },
-          {
-            "class": "cyan",
-            "pixels": 9,
-            "centroid_pixel": [
-              427.1,
-              472.8
-            ],
-            "centroid_lonlat": [
-              121.64,
-              16.0392
-            ],
-            "distance_km": 174.6
-          },
-          {
-            "class": "cyan",
-            "pixels": 9,
-            "centroid_pixel": [
-              455.6,
-              688.1
-            ],
-            "centroid_lonlat": [
-              122.0177,
-              13.1773
-            ],
-            "distance_km": 188.0
-          },
-          {
-            "class": "blue",
-            "pixels": 58,
-            "centroid_pixel": [
-              320.4,
-              516.6
-            ],
-            "centroid_lonlat": [
-              120.2238,
-              15.4572
-            ],
-            "distance_km": 130.8
-          },
-          {
-            "class": "blue",
-            "pixels": 46,
-            "centroid_pixel": [
-              435.3,
-              506.3
-            ],
-            "centroid_lonlat": [
-              121.7491,
-              15.5942
-            ],
-            "distance_km": 136.2
+            "distance_km": 153.3
           },
           {
             "class": "blue",
             "pixels": 8,
             "centroid_pixel": [
-              436.8,
-              467.9
+              400.1,
+              531.9
             ],
             "centroid_lonlat": [
-              121.768,
-              16.1044
+              121.2817,
+              15.2538
             ],
-            "distance_km": 186.6
-          },
-          {
-            "class": "blue",
-            "pixels": 8,
-            "centroid_pixel": [
-              572.8,
-              638.6
-            ],
-            "centroid_lonlat": [
-              123.5737,
-              13.835
-            ],
-            "distance_km": 284.9
-          },
-          {
-            "class": "blue",
-            "pixels": 20,
-            "centroid_pixel": [
-              381.7,
-              539.6
-            ],
-            "centroid_lonlat": [
-              121.0371,
-              15.1511
-            ],
-            "distance_km": 63.5
-          },
-          {
-            "class": "blue",
-            "pixels": 9,
-            "centroid_pixel": [
-              554.7,
-              647.0
-            ],
-            "centroid_lonlat": [
-              123.3336,
-              13.7237
-            ],
-            "distance_km": 264.5
-          },
-          {
-            "class": "blue",
-            "pixels": 8,
-            "centroid_pixel": [
-              517.1,
-              626.2
-            ],
-            "centroid_lonlat": [
-              122.8352,
-              13.9995
-            ],
-            "distance_km": 203.7
-          },
-          {
-            "class": "blue",
-            "pixels": 8,
-            "centroid_pixel": [
-              510.4,
-              583.6
-            ],
-            "centroid_lonlat": [
-              122.7455,
-              14.566
-            ],
-            "distance_km": 183.7
-          },
-          {
-            "class": "blue",
-            "pixels": 23,
-            "centroid_pixel": [
-              376.1,
-              533.1
-            ],
-            "centroid_lonlat": [
-              120.9631,
-              15.2377
-            ],
-            "distance_km": 73.5
-          },
-          {
-            "class": "blue",
-            "pixels": 10,
-            "centroid_pixel": [
-              410.5,
-              511.0
-            ],
-            "centroid_lonlat": [
-              121.4195,
-              15.5312
-            ],
-            "distance_km": 113.4
-          },
-          {
-            "class": "blue",
-            "pixels": 96,
-            "centroid_pixel": [
-              442.2,
-              479.6
-            ],
-            "centroid_lonlat": [
-              121.8399,
-              15.9485
-            ],
-            "distance_km": 174.8
-          },
-          {
-            "class": "blue",
-            "pixels": 15,
-            "centroid_pixel": [
-              314.2,
-              503.3
-            ],
-            "centroid_lonlat": [
-              120.1408,
-              15.634
-            ],
-            "distance_km": 151.5
-          },
-          {
-            "class": "blue",
-            "pixels": 8,
-            "centroid_pixel": [
-              379.4,
-              549.4
-            ],
-            "centroid_lonlat": [
-              121.0062,
-              15.0212
-            ],
-            "distance_km": 49.1
-          },
-          {
-            "class": "blue",
-            "pixels": 14,
-            "centroid_pixel": [
-              522.6,
-              619.4
-            ],
-            "centroid_lonlat": [
-              122.9084,
-              14.0911
-            ],
-            "distance_km": 208.3
-          },
-          {
-            "class": "blue",
-            "pixels": 26,
-            "centroid_pixel": [
-              444.0,
-              688.3
-            ],
-            "centroid_lonlat": [
-              121.8648,
-              13.1752
-            ],
-            "distance_km": 179.5
-          },
-          {
-            "class": "blue",
-            "pixels": 14,
-            "centroid_pixel": [
-              374.0,
-              546.6
-            ],
-            "centroid_lonlat": [
-              120.9348,
-              15.0575
-            ],
-            "distance_km": 54.2
-          },
-          {
-            "class": "blue",
-            "pixels": 9,
-            "centroid_pixel": [
-              383.9,
-              546.2
-            ],
-            "centroid_lonlat": [
-              121.0661,
-              15.0631
-            ],
-            "distance_km": 53.8
-          },
-          {
-            "class": "blue",
-            "pixels": 15,
-            "centroid_pixel": [
-              390.3,
-              525.3
-            ],
-            "centroid_lonlat": [
-              121.1508,
-              15.3416
-            ],
-            "distance_km": 85.5
-          },
-          {
-            "class": "blue",
-            "pixels": 10,
-            "centroid_pixel": [
-              392.8,
-              532.5
-            ],
-            "centroid_lonlat": [
-              121.1844,
-              15.2455
-            ],
-            "distance_km": 75.6
-          },
-          {
-            "class": "blue",
-            "pixels": 12,
-            "centroid_pixel": [
-              313.0,
-              525.3
-            ],
-            "centroid_lonlat": [
-              120.1249,
-              15.3407
-            ],
-            "distance_km": 129.3
-          },
-          {
-            "class": "blue",
-            "pixels": 20,
-            "centroid_pixel": [
-              449.6,
-              683.2
-            ],
-            "centroid_lonlat": [
-              121.9386,
-              13.242
-            ],
-            "distance_km": 177.3
-          },
-          {
-            "class": "blue",
-            "pixels": 9,
-            "centroid_pixel": [
-              374.4,
-              539.1
-            ],
-            "centroid_lonlat": [
-              120.9407,
-              15.1576
-            ],
-            "distance_km": 65.0
-          },
-          {
-            "class": "blue",
-            "pixels": 14,
-            "centroid_pixel": [
-              409.6,
-              723.9
-            ],
-            "centroid_lonlat": [
-              121.4071,
-              12.7023
-            ],
-            "distance_km": 212.1
-          },
-          {
-            "class": "blue",
-            "pixels": 12,
-            "centroid_pixel": [
-              308.0,
-              502.7
-            ],
-            "centroid_lonlat": [
-              120.0585,
-              15.642
-            ],
-            "distance_km": 157.9
-          },
-          {
-            "class": "blue",
-            "pixels": 23,
-            "centroid_pixel": [
-              318.7,
-              483.3
-            ],
-            "centroid_lonlat": [
-              120.2,
-              15.8987
-            ],
-            "distance_km": 171.8
-          },
-          {
-            "class": "blue",
-            "pixels": 11,
-            "centroid_pixel": [
-              368.4,
-              534.0
-            ],
-            "centroid_lonlat": [
-              120.86,
-              15.2255
-            ],
-            "distance_km": 74.2
-          },
-          {
-            "class": "blue",
-            "pixels": 14,
-            "centroid_pixel": [
-              379.1,
-              544.1
-            ],
-            "centroid_lonlat": [
-              121.0022,
-              15.0917
-            ],
-            "distance_km": 57.0
-          },
-          {
-            "class": "blue",
-            "pixels": 8,
-            "centroid_pixel": [
-              331.4,
-              525.0
-            ],
-            "centroid_lonlat": [
-              120.3689,
-              15.3451
-            ],
-            "distance_km": 111.2
-          },
-          {
-            "class": "blue",
-            "pixels": 9,
-            "centroid_pixel": [
-              360.8,
-              570.4
-            ],
-            "centroid_lonlat": [
-              120.7593,
-              14.7412
-            ],
-            "distance_km": 34.7
+            "distance_km": 79.4
           },
           {
             "class": "blue",
             "pixels": 17,
             "centroid_pixel": [
-              414.3,
-              534.3
+              370.3,
+              548.5
             ],
             "centroid_lonlat": [
-              121.4698,
-              15.2216
+              120.8856,
+              15.0332
             ],
-            "distance_km": 85.2
+            "distance_km": 52.9
           },
           {
             "class": "blue",
-            "pixels": 8,
+            "pixels": 11,
             "centroid_pixel": [
-              371.0,
-              513.6
+              459.1,
+              463.0
             ],
             "centroid_lonlat": [
-              120.895,
-              15.4963
+              122.0646,
+              16.1692
             ],
-            "distance_km": 102.9
+            "distance_km": 208.2
           },
           {
             "class": "blue",
-            "pixels": 8,
+            "pixels": 29,
             "centroid_pixel": [
-              338.5,
-              534.4
+              435.2,
+              507.7
             ],
             "centroid_lonlat": [
-              120.4635,
-              15.2206
+              121.7475,
+              15.5748
             ],
-            "distance_km": 94.1
+            "distance_km": 134.4
           },
           {
             "class": "blue",
-            "pixels": 8,
+            "pixels": 11,
             "centroid_pixel": [
-              516.1,
-              632.0
+              376.5,
+              545.9
             ],
             "centroid_lonlat": [
-              122.8219,
-              13.9231
+              120.9686,
+              15.0673
             ],
-            "distance_km": 205.2
+            "distance_km": 54.6
           },
           {
             "class": "blue",
-            "pixels": 8,
+            "pixels": 14,
             "centroid_pixel": [
-              493.5,
-              509.0
+              393.0,
+              528.0
             ],
             "centroid_lonlat": [
-              122.5215,
-              15.5578
+              121.1871,
+              15.3053
             ],
-            "distance_km": 193.0
+            "distance_km": 82.2
           },
           {
             "class": "blue",
-            "pixels": 8,
-            "centroid_pixel": [
-              327.5,
-              535.5
-            ],
-            "centroid_lonlat": [
-              120.3174,
-              15.2056
-            ],
-            "distance_km": 103.9
-          },
-          {
-            "class": "green",
-            "pixels": 25,
-            "centroid_pixel": [
-              406.0,
-              504.6
-            ],
-            "centroid_lonlat": [
-              121.3592,
-              15.6163
-            ],
-            "distance_km": 120.2
-          },
-          {
-            "class": "green",
-            "pixels": 13,
-            "centroid_pixel": [
-              428.5,
-              615.2
-            ],
-            "centroid_lonlat": [
-              121.659,
-              14.146
-            ],
-            "distance_km": 82.4
-          },
-          {
-            "class": "green",
-            "pixels": 8,
-            "centroid_pixel": [
-              287.1,
-              484.4
-            ],
-            "centroid_lonlat": [
-              119.7814,
-              15.8851
-            ],
-            "distance_km": 197.9
-          },
-          {
-            "class": "green",
-            "pixels": 9,
-            "centroid_pixel": [
-              408.8,
-              511.7
-            ],
-            "centroid_lonlat": [
-              121.3966,
-              15.5224
-            ],
-            "distance_km": 111.6
-          },
-          {
-            "class": "green",
-            "pixels": 9,
-            "centroid_pixel": [
-              433.9,
-              524.0
-            ],
-            "centroid_lonlat": [
-              121.73,
-              15.3584
-            ],
-            "distance_km": 114.2
-          },
-          {
-            "class": "green",
-            "pixels": 16,
-            "centroid_pixel": [
-              403.4,
-              482.4
-            ],
-            "centroid_lonlat": [
-              121.3257,
-              15.9116
-            ],
-            "distance_km": 151.1
-          },
-          {
-            "class": "green",
-            "pixels": 9,
-            "centroid_pixel": [
-              408.2,
-              542.7
-            ],
-            "centroid_lonlat": [
-              121.3892,
-              15.1104
-            ],
-            "distance_km": 70.1
-          },
-          {
-            "class": "green",
-            "pixels": 8,
-            "centroid_pixel": [
-              276.2,
-              474.9
-            ],
-            "centroid_lonlat": [
-              119.637,
-              16.0113
-            ],
-            "distance_km": 218.7
-          },
-          {
-            "class": "green",
-            "pixels": 8,
-            "centroid_pixel": [
-              320.5,
-              515.2
-            ],
-            "centroid_lonlat": [
-              120.2245,
-              15.4747
-            ],
-            "distance_km": 132.2
-          },
-          {
-            "class": "green",
-            "pixels": 16,
-            "centroid_pixel": [
-              296.9,
-              482.5
-            ],
-            "centroid_lonlat": [
-              119.9116,
-              15.91
-            ],
-            "distance_km": 190.8
-          },
-          {
-            "class": "green",
             "pixels": 10,
             "centroid_pixel": [
-              429.1,
-              476.9
+              332.5,
+              514.6
             ],
             "centroid_lonlat": [
-              121.6664,
-              15.9844
+              120.3838,
+              15.4834
             ],
-            "distance_km": 170.0
+            "distance_km": 122.4
+          },
+          {
+            "class": "blue",
+            "pixels": 30,
+            "centroid_pixel": [
+              338.2,
+              531.2
+            ],
+            "centroid_lonlat": [
+              120.4595,
+              15.2623
+            ],
+            "distance_km": 97.9
+          },
+          {
+            "class": "blue",
+            "pixels": 29,
+            "centroid_pixel": [
+              325.9,
+              517.9
+            ],
+            "centroid_lonlat": [
+              120.2961,
+              15.4391
+            ],
+            "distance_km": 124.2
+          },
+          {
+            "class": "blue",
+            "pixels": 10,
+            "centroid_pixel": [
+              327.8,
+              527.8
+            ],
+            "centroid_lonlat": [
+              120.3214,
+              15.3079
+            ],
+            "distance_km": 111.5
+          },
+          {
+            "class": "blue",
+            "pixels": 9,
+            "centroid_pixel": [
+              395.0,
+              566.0
+            ],
+            "centroid_lonlat": [
+              121.2137,
+              14.8002
+            ],
+            "distance_km": 31.1
+          },
+          {
+            "class": "blue",
+            "pixels": 8,
+            "centroid_pixel": [
+              451.8,
+              547.0
+            ],
+            "centroid_lonlat": [
+              121.9671,
+              15.0528
+            ],
+            "distance_km": 113.0
+          },
+          {
+            "class": "blue",
+            "pixels": 21,
+            "centroid_pixel": [
+              422.9,
+              480.4
+            ],
+            "centroid_lonlat": [
+              121.5842,
+              15.9375
+            ],
+            "distance_km": 161.8
+          },
+          {
+            "class": "blue",
+            "pixels": 24,
+            "centroid_pixel": [
+              433.7,
+              530.5
+            ],
+            "centroid_lonlat": [
+              121.7276,
+              15.2721
+            ],
+            "distance_km": 106.9
+          },
+          {
+            "class": "blue",
+            "pixels": 12,
+            "centroid_pixel": [
+              337.3,
+              542.0
+            ],
+            "centroid_lonlat": [
+              120.448,
+              15.1192
+            ],
+            "distance_km": 87.1
+          },
+          {
+            "class": "blue",
+            "pixels": 10,
+            "centroid_pixel": [
+              371.3,
+              562.8
+            ],
+            "centroid_lonlat": [
+              120.899,
+              14.8428
+            ],
+            "distance_km": 32.7
+          },
+          {
+            "class": "blue",
+            "pixels": 9,
+            "centroid_pixel": [
+              333.0,
+              520.9
+            ],
+            "centroid_lonlat": [
+              120.3905,
+              15.3998
+            ],
+            "distance_km": 114.5
+          },
+          {
+            "class": "blue",
+            "pixels": 13,
+            "centroid_pixel": [
+              322.0,
+              462.6
+            ],
+            "centroid_lonlat": [
+              120.2444,
+              16.1743
+            ],
+            "distance_km": 196.4
+          },
+          {
+            "class": "blue",
+            "pixels": 12,
+            "centroid_pixel": [
+              440.2,
+              490.3
+            ],
+            "centroid_lonlat": [
+              121.8145,
+              15.8059
+            ],
+            "distance_km": 159.8
+          },
+          {
+            "class": "blue",
+            "pixels": 8,
+            "centroid_pixel": [
+              377.6,
+              541.6
+            ],
+            "centroid_lonlat": [
+              120.983,
+              15.1242
+            ],
+            "distance_km": 60.7
+          },
+          {
+            "class": "blue",
+            "pixels": 9,
+            "centroid_pixel": [
+              357.2,
+              558.0
+            ],
+            "centroid_lonlat": [
+              120.7121,
+              14.9066
+            ],
+            "distance_km": 50.3
+          },
+          {
+            "class": "blue",
+            "pixels": 8,
+            "centroid_pixel": [
+              384.8,
+              550.1
+            ],
+            "centroid_lonlat": [
+              121.0776,
+              15.0112
+            ],
+            "distance_km": 48.1
+          },
+          {
+            "class": "blue",
+            "pixels": 20,
+            "centroid_pixel": [
+              448.6,
+              497.6
+            ],
+            "centroid_lonlat": [
+              121.926,
+              15.7093
+            ],
+            "distance_km": 157.7
+          },
+          {
+            "class": "blue",
+            "pixels": 11,
+            "centroid_pixel": [
+              332.3,
+              541.2
+            ],
+            "centroid_lonlat": [
+              120.3808,
+              15.1301
+            ],
+            "distance_km": 93.2
+          },
+          {
+            "class": "blue",
+            "pixels": 8,
+            "centroid_pixel": [
+              364.8,
+              561.5
+            ],
+            "centroid_lonlat": [
+              120.812,
+              14.8601
+            ],
+            "distance_km": 39.4
           },
           {
             "class": "green",
-            "pixels": 9,
-            "centroid_pixel": [
-              432.6,
-              505.3
-            ],
-            "centroid_lonlat": [
-              121.7123,
-              15.6065
-            ],
-            "distance_km": 135.2
-          },
-          {
-            "class": "purple",
             "pixels": 8,
             "centroid_pixel": [
-              531.4,
-              627.6
+              327.4,
+              460.9
             ],
             "centroid_lonlat": [
-              123.0244,
-              13.9812
+              120.3158,
+              16.1974
             ],
-            "distance_km": 223.7
+            "distance_km": 195.5
+          },
+          {
+            "class": "green",
+            "pixels": 15,
+            "centroid_pixel": [
+              330.9,
+              543.3
+            ],
+            "centroid_lonlat": [
+              120.3621,
+              15.1024
+            ],
+            "distance_km": 92.8
+          },
+          {
+            "class": "green",
+            "pixels": 8,
+            "centroid_pixel": [
+              311.9,
+              500.2
+            ],
+            "centroid_lonlat": [
+              120.11,
+              15.6741
+            ],
+            "distance_km": 157.0
+          },
+          {
+            "class": "green",
+            "pixels": 20,
+            "centroid_pixel": [
+              433.2,
+              505.4
+            ],
+            "centroid_lonlat": [
+              121.7215,
+              15.6056
+            ],
+            "distance_km": 135.6
           }
         ],
         "note": "Color classes are diagnostic only. They are not dBZ or PAGASA rainfall warning thresholds."
@@ -1167,796 +816,776 @@
     }
   ],
   "captured_images": [
-    "https://api.meteopilipinas.gov.ph/tmp/d41d8cd98f00b204e9800998ecf8427e/radar/timeline/mosaic-hybrid/ph_hybrid_mosaic_20260901154500uPwN.png"
+    "https://api.meteopilipinas.gov.ph/tmp/d41d8cd98f00b204e9800998ecf8427e/radar/timeline/mosaic-hybrid/ph_hybrid_mosaic_20260901164500AVsb.png"
   ],
   "resource_urls": [
-    "https://api.meteopilipinas.gov.ph/tmp/d41d8cd98f00b204e9800998ecf8427e/radar/timeline/mosaic-hybrid/ph_hybrid_mosaic_20260901154500uPwN.png"
+    "https://api.meteopilipinas.gov.ph/tmp/d41d8cd98f00b204e9800998ecf8427e/radar/timeline/mosaic-hybrid/ph_hybrid_mosaic_20260901164500AVsb.png"
   ],
   "radar_tracking": {
     "status": "ok",
-    "previous_timestamp": "20260901144500",
-    "current_timestamp": "20260901154500",
-    "matches_count": 39,
-    "approaching_matches_count": 17,
+    "previous_timestamp": "20260901154500",
+    "current_timestamp": "20260901164500",
+    "matches_count": 38,
+    "approaching_matches_count": 11,
     "matches": [
       {
         "previous_class": "cyan",
         "current_class": "cyan",
-        "pixels_previous": 1370,
-        "pixels_current": 1187,
-        "from_lonlat": [
-          121.8957,
-          15.794
-        ],
-        "to_lonlat": [
-          121.9017,
-          15.802
-        ],
-        "movement_km": 1.1,
-        "bearing_deg": 35.8,
-        "previous_distance_km": 163.4,
-        "distance_to_mandaluyong_km": 164.5,
-        "distance_change_km": 1.1,
-        "approaching_mandaluyong": false
-      },
-      {
-        "previous_class": "cyan",
-        "current_class": "cyan",
-        "pixels_previous": 66,
-        "pixels_current": 56,
-        "from_lonlat": [
-          125.868,
-          7.2628
-        ],
-        "to_lonlat": [
-          125.8612,
-          7.2786
-        ],
-        "movement_km": 1.9,
-        "bearing_deg": 336.9,
-        "previous_distance_km": 963.9,
-        "distance_to_mandaluyong_km": 962.0,
-        "distance_change_km": -1.9,
-        "approaching_mandaluyong": false
-      },
-      {
-        "previous_class": "green",
-        "current_class": "green",
         "pixels_previous": 9,
         "pixels_current": 10,
         "from_lonlat": [
-          121.6444,
-          15.9639
+          121.64,
+          16.0392
         ],
         "to_lonlat": [
-          121.6664,
-          15.9844
+          121.6438,
+          16.0362
         ],
-        "movement_km": 3.3,
-        "bearing_deg": 45.9,
-        "previous_distance_km": 167.0,
-        "distance_to_mandaluyong_km": 170.0,
-        "distance_change_km": 3.0,
+        "movement_km": 0.5,
+        "bearing_deg": 129.4,
+        "previous_distance_km": 174.6,
+        "distance_to_mandaluyong_km": 174.4,
+        "distance_change_km": -0.2,
         "approaching_mandaluyong": false
       },
       {
         "previous_class": "cyan",
         "current_class": "cyan",
-        "pixels_previous": 12,
-        "pixels_current": 9,
+        "pixels_previous": 64,
+        "pixels_current": 61,
         "from_lonlat": [
-          121.6485,
-          16.0396
+          120.6019,
+          14.7568
         ],
         "to_lonlat": [
-          121.64,
-          16.0392
+          120.5829,
+          14.7477
         ],
-        "movement_km": 0.9,
-        "bearing_deg": 267.2,
-        "previous_distance_km": 174.9,
-        "distance_to_mandaluyong_km": 174.6,
-        "distance_change_km": -0.3,
+        "movement_km": 2.3,
+        "bearing_deg": 243.7,
+        "previous_distance_km": 50.6,
+        "distance_to_mandaluyong_km": 52.1,
+        "distance_change_km": 1.5,
         "approaching_mandaluyong": false
       },
       {
-        "previous_class": "blue",
-        "current_class": "blue",
-        "pixels_previous": 10,
-        "pixels_current": 8,
+        "previous_class": "cyan",
+        "current_class": "cyan",
+        "pixels_previous": 16,
+        "pixels_current": 17,
         "from_lonlat": [
-          121.7434,
-          16.0987
+          120.3149,
+          14.8243
         ],
         "to_lonlat": [
-          121.768,
-          16.1044
+          120.3124,
+          14.8049
         ],
-        "movement_km": 2.7,
-        "bearing_deg": 76.4,
-        "previous_distance_km": 185.0,
-        "distance_to_mandaluyong_km": 186.6,
-        "distance_change_km": 1.6,
+        "movement_km": 2.2,
+        "bearing_deg": 187.1,
+        "previous_distance_km": 82.1,
+        "distance_to_mandaluyong_km": 81.7,
+        "distance_change_km": -0.4,
+        "approaching_mandaluyong": false
+      },
+      {
+        "previous_class": "cyan",
+        "current_class": "cyan",
+        "pixels_previous": 1187,
+        "pixels_current": 1422,
+        "from_lonlat": [
+          121.9017,
+          15.802
+        ],
+        "to_lonlat": [
+          121.9033,
+          15.8014
+        ],
+        "movement_km": 0.2,
+        "bearing_deg": 111.3,
+        "previous_distance_km": 164.5,
+        "distance_to_mandaluyong_km": 164.6,
+        "distance_change_km": 0.1,
+        "approaching_mandaluyong": false
+      },
+      {
+        "previous_class": "cyan",
+        "current_class": "cyan",
+        "pixels_previous": 15,
+        "pixels_current": 12,
+        "from_lonlat": [
+          121.7279,
+          16.0779
+        ],
+        "to_lonlat": [
+          121.7282,
+          16.0717
+        ],
+        "movement_km": 0.7,
+        "bearing_deg": 177.3,
+        "previous_distance_km": 182.2,
+        "distance_to_mandaluyong_km": 181.6,
+        "distance_change_km": -0.6,
         "approaching_mandaluyong": false
       },
       {
         "previous_class": "cyan",
         "current_class": "cyan",
         "pixels_previous": 56,
-        "pixels_current": 64,
+        "pixels_current": 44,
         "from_lonlat": [
-          120.5581,
-          14.74
+          125.8612,
+          7.2786
         ],
         "to_lonlat": [
-          120.6019,
-          14.7568
+          125.8689,
+          7.2764
         ],
-        "movement_km": 5.1,
-        "bearing_deg": 68.4,
-        "previous_distance_km": 54.3,
-        "distance_to_mandaluyong_km": 50.6,
-        "distance_change_km": -3.7,
+        "movement_km": 0.9,
+        "bearing_deg": 106.1,
+        "previous_distance_km": 962.0,
+        "distance_to_mandaluyong_km": 962.6,
+        "distance_change_km": 0.6,
+        "approaching_mandaluyong": false
+      },
+      {
+        "previous_class": "blue",
+        "current_class": "blue",
+        "pixels_previous": 15,
+        "pixels_current": 14,
+        "from_lonlat": [
+          121.1508,
+          15.3416
+        ],
+        "to_lonlat": [
+          121.1871,
+          15.3053
+        ],
+        "movement_km": 5.6,
+        "bearing_deg": 136.0,
+        "previous_distance_km": 85.5,
+        "distance_to_mandaluyong_km": 82.2,
+        "distance_change_km": -3.3,
         "approaching_mandaluyong": true
       },
       {
         "previous_class": "cyan",
         "current_class": "cyan",
-        "pixels_previous": 25,
-        "pixels_current": 16,
+        "pixels_previous": 9,
+        "pixels_current": 8,
         "from_lonlat": [
-          120.3066,
-          14.8284
+          120.4893,
+          15.2182
         ],
         "to_lonlat": [
-          120.3149,
-          14.8243
+          120.4502,
+          15.2488
         ],
-        "movement_km": 1.0,
-        "bearing_deg": 117.1,
-        "previous_distance_km": 83.1,
-        "distance_to_mandaluyong_km": 82.1,
+        "movement_km": 5.4,
+        "bearing_deg": 309.0,
+        "previous_distance_km": 92.1,
+        "distance_to_mandaluyong_km": 97.4,
+        "distance_change_km": 5.3,
+        "approaching_mandaluyong": false
+      },
+      {
+        "previous_class": "blue",
+        "current_class": "blue",
+        "pixels_previous": 8,
+        "pixels_current": 8,
+        "from_lonlat": [
+          121.0062,
+          15.0212
+        ],
+        "to_lonlat": [
+          121.0776,
+          15.0112
+        ],
+        "movement_km": 7.7,
+        "bearing_deg": 98.3,
+        "previous_distance_km": 49.1,
+        "distance_to_mandaluyong_km": 48.1,
         "distance_change_km": -1.0,
         "approaching_mandaluyong": false
       },
       {
-        "previous_class": "cyan",
-        "current_class": "cyan",
-        "pixels_previous": 19,
-        "pixels_current": 22,
-        "from_lonlat": [
-          122.004,
-          15.4305
-        ],
-        "to_lonlat": [
-          121.9228,
-          15.4485
-        ],
-        "movement_km": 8.9,
-        "bearing_deg": 283.0,
-        "previous_distance_km": 140.5,
-        "distance_to_mandaluyong_km": 135.6,
-        "distance_change_km": -4.9,
-        "approaching_mandaluyong": true
-      },
-      {
-        "previous_class": "green",
-        "current_class": "green",
+        "previous_class": "blue",
+        "current_class": "blue",
         "pixels_previous": 9,
-        "pixels_current": 9,
+        "pixels_current": 8,
         "from_lonlat": [
-          121.4674,
-          15.4308
+          120.9407,
+          15.1576
         ],
         "to_lonlat": [
-          121.3966,
-          15.5224
+          120.983,
+          15.1242
         ],
-        "movement_km": 12.7,
-        "bearing_deg": 323.3,
-        "previous_distance_km": 105.3,
-        "distance_to_mandaluyong_km": 111.6,
-        "distance_change_km": 6.3,
-        "approaching_mandaluyong": false
-      },
-      {
-        "previous_class": "cyan",
-        "current_class": "cyan",
-        "pixels_previous": 37,
-        "pixels_current": 24,
-        "from_lonlat": [
-          121.1135,
-          15.9094
-        ],
-        "to_lonlat": [
-          121.1611,
-          15.9172
-        ],
-        "movement_km": 5.2,
-        "bearing_deg": 80.3,
-        "previous_distance_km": 147.9,
-        "distance_to_mandaluyong_km": 149.1,
-        "distance_change_km": 1.2,
-        "approaching_mandaluyong": false
-      },
-      {
-        "previous_class": "cyan",
-        "current_class": "cyan",
-        "pixels_previous": 18,
-        "pixels_current": 29,
-        "from_lonlat": [
-          120.3632,
-          14.6851
-        ],
-        "to_lonlat": [
-          120.3827,
-          14.644
-        ],
-        "movement_km": 5.0,
-        "bearing_deg": 155.3,
-        "previous_distance_km": 73.2,
-        "distance_to_mandaluyong_km": 70.5,
-        "distance_change_km": -2.7,
+        "movement_km": 5.9,
+        "bearing_deg": 129.3,
+        "previous_distance_km": 65.0,
+        "distance_to_mandaluyong_km": 60.7,
+        "distance_change_km": -4.3,
         "approaching_mandaluyong": true
       },
       {
-        "previous_class": "cyan",
-        "current_class": "cyan",
-        "pixels_previous": 18,
-        "pixels_current": 15,
+        "previous_class": "blue",
+        "current_class": "blue",
+        "pixels_previous": 14,
+        "pixels_current": 11,
         "from_lonlat": [
-          121.8185,
-          16.1603
+          120.9348,
+          15.0575
         ],
         "to_lonlat": [
-          121.7279,
-          16.0779
+          120.9686,
+          15.0673
         ],
-        "movement_km": 13.3,
-        "bearing_deg": 226.6,
-        "previous_distance_km": 194.6,
-        "distance_to_mandaluyong_km": 182.2,
-        "distance_change_km": -12.4,
-        "approaching_mandaluyong": true
-      },
-      {
-        "previous_class": "cyan",
-        "current_class": "cyan",
-        "pixels_previous": 13,
-        "pixels_current": 13,
-        "from_lonlat": [
-          120.561,
-          14.9986
-        ],
-        "to_lonlat": [
-          120.5906,
-          15.1581
-        ],
-        "movement_km": 18.0,
-        "bearing_deg": 10.2,
-        "previous_distance_km": 69.0,
-        "distance_to_mandaluyong_km": 80.1,
-        "distance_change_km": 11.1,
+        "movement_km": 3.8,
+        "bearing_deg": 73.3,
+        "previous_distance_km": 54.2,
+        "distance_to_mandaluyong_km": 54.6,
+        "distance_change_km": 0.4,
         "approaching_mandaluyong": false
       },
       {
         "previous_class": "blue",
         "current_class": "blue",
-        "pixels_previous": 12,
-        "pixels_current": 8,
+        "pixels_previous": 8,
+        "pixels_current": 9,
         "from_lonlat": [
-          120.3705,
-          15.4338
-        ],
-        "to_lonlat": [
           120.3689,
           15.3451
         ],
-        "movement_km": 9.8,
-        "bearing_deg": 181.0,
-        "previous_distance_km": 118.8,
-        "distance_to_mandaluyong_km": 111.2,
-        "distance_change_km": -7.6,
-        "approaching_mandaluyong": true
-      },
-      {
-        "previous_class": "cyan",
-        "current_class": "cyan",
-        "pixels_previous": 14,
-        "pixels_current": 10,
-        "from_lonlat": [
-          122.8117,
-          14.5173
-        ],
         "to_lonlat": [
-          122.71,
-          14.5584
+          120.3905,
+          15.3998
         ],
-        "movement_km": 11.8,
-        "bearing_deg": 292.7,
-        "previous_distance_km": 190.9,
-        "distance_to_mandaluyong_km": 179.9,
-        "distance_change_km": -11.0,
-        "approaching_mandaluyong": true
-      },
-      {
-        "previous_class": "blue",
-        "current_class": "blue",
-        "pixels_previous": 14,
-        "pixels_current": 12,
-        "from_lonlat": [
-          120.2899,
-          15.4116
-        ],
-        "to_lonlat": [
-          120.1249,
-          15.3407
-        ],
-        "movement_km": 19.3,
-        "bearing_deg": 246.0,
-        "previous_distance_km": 122.3,
-        "distance_to_mandaluyong_km": 129.3,
-        "distance_change_km": 7.0,
+        "movement_km": 6.5,
+        "bearing_deg": 20.8,
+        "previous_distance_km": 111.2,
+        "distance_to_mandaluyong_km": 114.5,
+        "distance_change_km": 3.3,
         "approaching_mandaluyong": false
-      },
-      {
-        "previous_class": "green",
-        "current_class": "green",
-        "pixels_previous": 27,
-        "pixels_current": 25,
-        "from_lonlat": [
-          121.2397,
-          15.7798
-        ],
-        "to_lonlat": [
-          121.3592,
-          15.6163
-        ],
-        "movement_km": 22.2,
-        "bearing_deg": 144.9,
-        "previous_distance_km": 135.0,
-        "distance_to_mandaluyong_km": 120.2,
-        "distance_change_km": -14.8,
-        "approaching_mandaluyong": true
-      },
-      {
-        "previous_class": "green",
-        "current_class": "green",
-        "pixels_previous": 11,
-        "pixels_current": 13,
-        "from_lonlat": [
-          121.4877,
-          14.2203
-        ],
-        "to_lonlat": [
-          121.659,
-          14.146
-        ],
-        "movement_km": 20.2,
-        "bearing_deg": 114.1,
-        "previous_distance_km": 62.8,
-        "distance_to_mandaluyong_km": 82.4,
-        "distance_change_km": 19.6,
-        "approaching_mandaluyong": false
-      },
-      {
-        "previous_class": "blue",
-        "current_class": "green",
-        "pixels_previous": 8,
-        "pixels_current": 8,
-        "from_lonlat": [
-          120.2544,
-          15.5163
-        ],
-        "to_lonlat": [
-          120.2245,
-          15.4747
-        ],
-        "movement_km": 5.6,
-        "bearing_deg": 214.7,
-        "previous_distance_km": 133.7,
-        "distance_to_mandaluyong_km": 132.2,
-        "distance_change_km": -1.5,
-        "approaching_mandaluyong": false
-      },
-      {
-        "previous_class": "blue",
-        "current_class": "blue",
-        "pixels_previous": 39,
-        "pixels_current": 20,
-        "from_lonlat": [
-          120.9862,
-          15.0664
-        ],
-        "to_lonlat": [
-          121.0371,
-          15.1511
-        ],
-        "movement_km": 10.9,
-        "bearing_deg": 30.1,
-        "previous_distance_km": 54.3,
-        "distance_to_mandaluyong_km": 63.5,
-        "distance_change_km": 9.2,
-        "approaching_mandaluyong": false
-      },
-      {
-        "previous_class": "cyan",
-        "current_class": "cyan",
-        "pixels_previous": 8,
-        "pixels_current": 10,
-        "from_lonlat": [
-          120.583,
-          14.6408
-        ],
-        "to_lonlat": [
-          120.7622,
-          14.759
-        ],
-        "movement_km": 23.3,
-        "bearing_deg": 55.7,
-        "previous_distance_km": 49.1,
-        "distance_to_mandaluyong_km": 35.5,
-        "distance_change_km": -13.6,
-        "approaching_mandaluyong": true
-      },
-      {
-        "previous_class": "blue",
-        "current_class": "blue",
-        "pixels_previous": 13,
-        "pixels_current": 8,
-        "from_lonlat": [
-          121.0462,
-          15.5506
-        ],
-        "to_lonlat": [
-          120.895,
-          15.4963
-        ],
-        "movement_km": 17.3,
-        "bearing_deg": 249.6,
-        "previous_distance_km": 107.8,
-        "distance_to_mandaluyong_km": 102.9,
-        "distance_change_km": -4.9,
-        "approaching_mandaluyong": true
-      },
-      {
-        "previous_class": "green",
-        "current_class": "green",
-        "pixels_previous": 9,
-        "pixels_current": 9,
-        "from_lonlat": [
-          121.5603,
-          15.8236
-        ],
-        "to_lonlat": [
-          121.7123,
-          15.6065
-        ],
-        "movement_km": 29.1,
-        "bearing_deg": 146.0,
-        "previous_distance_km": 149.2,
-        "distance_to_mandaluyong_km": 135.2,
-        "distance_change_km": -14.0,
-        "approaching_mandaluyong": true
-      },
-      {
-        "previous_class": "green",
-        "current_class": "green",
-        "pixels_previous": 12,
-        "pixels_current": 8,
-        "from_lonlat": [
-          119.6237,
-          15.7859
-        ],
-        "to_lonlat": [
-          119.7814,
-          15.8851
-        ],
-        "movement_km": 20.1,
-        "bearing_deg": 56.8,
-        "previous_distance_km": 202.4,
-        "distance_to_mandaluyong_km": 197.9,
-        "distance_change_km": -4.5,
-        "approaching_mandaluyong": true
-      },
-      {
-        "previous_class": "green",
-        "current_class": "blue",
-        "pixels_previous": 27,
-        "pixels_current": 46,
-        "from_lonlat": [
-          121.7364,
-          15.6065
-        ],
-        "to_lonlat": [
-          121.7491,
-          15.5942
-        ],
-        "movement_km": 1.9,
-        "bearing_deg": 135.2,
-        "previous_distance_km": 136.6,
-        "distance_to_mandaluyong_km": 136.2,
-        "distance_change_km": -0.4,
-        "approaching_mandaluyong": false
-      },
-      {
-        "previous_class": "green",
-        "current_class": "green",
-        "pixels_previous": 9,
-        "pixels_current": 16,
-        "from_lonlat": [
-          121.4866,
-          15.8
-        ],
-        "to_lonlat": [
-          121.3257,
-          15.9116
-        ],
-        "movement_km": 21.2,
-        "bearing_deg": 305.8,
-        "previous_distance_km": 143.9,
-        "distance_to_mandaluyong_km": 151.1,
-        "distance_change_km": 7.2,
-        "approaching_mandaluyong": false
-      },
-      {
-        "previous_class": "cyan",
-        "current_class": "blue",
-        "pixels_previous": 8,
-        "pixels_current": 14,
-        "from_lonlat": [
-          120.9747,
-          15.1558
-        ],
-        "to_lonlat": [
-          121.0022,
-          15.0917
-        ],
-        "movement_km": 7.7,
-        "bearing_deg": 157.5,
-        "previous_distance_km": 64.3,
-        "distance_to_mandaluyong_km": 57.0,
-        "distance_change_km": -7.3,
-        "approaching_mandaluyong": true
-      },
-      {
-        "previous_class": "cyan",
-        "current_class": "green",
-        "pixels_previous": 11,
-        "pixels_current": 9,
-        "from_lonlat": [
-          121.9282,
-          15.4237
-        ],
-        "to_lonlat": [
-          121.73,
-          15.3584
-        ],
-        "movement_km": 22.4,
-        "bearing_deg": 251.1,
-        "previous_distance_km": 134.1,
-        "distance_to_mandaluyong_km": 114.2,
-        "distance_change_km": -19.9,
-        "approaching_mandaluyong": true
-      },
-      {
-        "previous_class": "cyan",
-        "current_class": "cyan",
-        "pixels_previous": 20,
-        "pixels_current": 37,
-        "from_lonlat": [
-          122.9636,
-          14.2713
-        ],
-        "to_lonlat": [
-          123.0409,
-          13.9841
-        ],
-        "movement_km": 32.9,
-        "bearing_deg": 165.4,
-        "previous_distance_km": 209.9,
-        "distance_to_mandaluyong_km": 225.3,
-        "distance_change_km": 15.4,
-        "approaching_mandaluyong": false
-      },
-      {
-        "previous_class": "cyan",
-        "current_class": "blue",
-        "pixels_previous": 11,
-        "pixels_current": 8,
-        "from_lonlat": [
-          120.3772,
-          14.9537
-        ],
-        "to_lonlat": [
-          120.3174,
-          15.2056
-        ],
-        "movement_km": 28.7,
-        "bearing_deg": 347.1,
-        "previous_distance_km": 82.1,
-        "distance_to_mandaluyong_km": 103.9,
-        "distance_change_km": 21.8,
-        "approaching_mandaluyong": false
-      },
-      {
-        "previous_class": "cyan",
-        "current_class": "blue",
-        "pixels_previous": 14,
-        "pixels_current": 9,
-        "from_lonlat": [
-          120.5242,
-          14.8173
-        ],
-        "to_lonlat": [
-          120.7593,
-          14.7412
-        ],
-        "movement_km": 26.6,
-        "bearing_deg": 108.5,
-        "previous_distance_km": 61.0,
-        "distance_to_mandaluyong_km": 34.7,
-        "distance_change_km": -26.3,
-        "approaching_mandaluyong": true
       },
       {
         "previous_class": "blue",
         "current_class": "blue",
         "pixels_previous": 10,
-        "pixels_current": 10,
+        "pixels_current": 8,
         "from_lonlat": [
-          121.0411,
-          15.7452
-        ],
-        "to_lonlat": [
           121.1844,
           15.2455
         ],
-        "movement_km": 57.5,
-        "bearing_deg": 164.6,
-        "previous_distance_km": 129.4,
-        "distance_to_mandaluyong_km": 75.6,
-        "distance_change_km": -53.8,
+        "to_lonlat": [
+          121.2817,
+          15.2538
+        ],
+        "movement_km": 10.5,
+        "bearing_deg": 84.9,
+        "previous_distance_km": 75.6,
+        "distance_to_mandaluyong_km": 79.4,
+        "distance_change_km": 3.8,
+        "approaching_mandaluyong": false
+      },
+      {
+        "previous_class": "blue",
+        "current_class": "blue",
+        "pixels_previous": 8,
+        "pixels_current": 10,
+        "from_lonlat": [
+          120.3174,
+          15.2056
+        ],
+        "to_lonlat": [
+          120.3214,
+          15.3079
+        ],
+        "movement_km": 11.4,
+        "bearing_deg": 2.2,
+        "previous_distance_km": 103.9,
+        "distance_to_mandaluyong_km": 111.5,
+        "distance_change_km": 7.6,
+        "approaching_mandaluyong": false
+      },
+      {
+        "previous_class": "blue",
+        "current_class": "blue",
+        "pixels_previous": 9,
+        "pixels_current": 8,
+        "from_lonlat": [
+          120.7593,
+          14.7412
+        ],
+        "to_lonlat": [
+          120.812,
+          14.8601
+        ],
+        "movement_km": 14.4,
+        "bearing_deg": 23.2,
+        "previous_distance_km": 34.7,
+        "distance_to_mandaluyong_km": 39.4,
+        "distance_change_km": 4.7,
+        "approaching_mandaluyong": false
+      },
+      {
+        "previous_class": "cyan",
+        "current_class": "cyan",
+        "pixels_previous": 72,
+        "pixels_current": 37,
+        "from_lonlat": [
+          120.4856,
+          14.9673
+        ],
+        "to_lonlat": [
+          120.4913,
+          14.9683
+        ],
+        "movement_km": 0.6,
+        "bearing_deg": 79.7,
+        "previous_distance_km": 73.1,
+        "distance_to_mandaluyong_km": 72.7,
+        "distance_change_km": -0.4,
+        "approaching_mandaluyong": false
+      },
+      {
+        "previous_class": "blue",
+        "current_class": "blue",
+        "pixels_previous": 14,
+        "pixels_current": 17,
+        "from_lonlat": [
+          121.0022,
+          15.0917
+        ],
+        "to_lonlat": [
+          120.8856,
+          15.0332
+        ],
+        "movement_km": 14.1,
+        "bearing_deg": 242.5,
+        "previous_distance_km": 57.0,
+        "distance_to_mandaluyong_km": 52.9,
+        "distance_change_km": -4.1,
         "approaching_mandaluyong": true
       },
       {
         "previous_class": "cyan",
         "current_class": "cyan",
-        "pixels_previous": 14,
-        "pixels_current": 11,
-        "from_lonlat": [
-          122.0729,
-          15.385
-        ],
-        "to_lonlat": [
-          122.1322,
-          15.8937
-        ],
-        "movement_km": 56.8,
-        "bearing_deg": 6.4,
-        "previous_distance_km": 142.9,
-        "distance_to_mandaluyong_km": 187.5,
-        "distance_change_km": 44.6,
-        "approaching_mandaluyong": false
-      },
-      {
-        "previous_class": "blue",
-        "current_class": "green",
         "pixels_previous": 9,
-        "pixels_current": 9,
-        "from_lonlat": [
-          121.4807,
-          14.6437
-        ],
-        "to_lonlat": [
-          121.3892,
-          15.1104
-        ],
-        "movement_km": 52.7,
-        "bearing_deg": 349.3,
-        "previous_distance_km": 48.3,
-        "distance_to_mandaluyong_km": 70.1,
-        "distance_change_km": 21.8,
-        "approaching_mandaluyong": false
-      },
-      {
-        "previous_class": "blue",
-        "current_class": "blue",
-        "pixels_previous": 9,
-        "pixels_current": 17,
-        "from_lonlat": [
-          121.2948,
-          15.7409
-        ],
-        "to_lonlat": [
-          121.4698,
-          15.2216
-        ],
-        "movement_km": 60.6,
-        "bearing_deg": 162.0,
-        "previous_distance_km": 131.9,
-        "distance_to_mandaluyong_km": 85.2,
-        "distance_change_km": -46.7,
-        "approaching_mandaluyong": true
-      },
-      {
-        "previous_class": "blue",
-        "current_class": "blue",
-        "pixels_previous": 9,
-        "pixels_current": 11,
-        "from_lonlat": [
-          121.0691,
-          15.9004
-        ],
-        "to_lonlat": [
-          120.86,
-          15.2255
-        ],
-        "movement_km": 78.2,
-        "bearing_deg": 196.6,
-        "previous_distance_km": 146.7,
-        "distance_to_mandaluyong_km": 74.2,
-        "distance_change_km": -72.5,
-        "approaching_mandaluyong": true
-      },
-      {
-        "previous_class": "blue",
-        "current_class": "green",
-        "pixels_previous": 12,
         "pixels_current": 8,
         "from_lonlat": [
-          119.4079,
-          15.57
+          120.4096,
+          15.1842
         ],
         "to_lonlat": [
-          119.637,
-          16.0113
+          120.4419,
+          15.3335
         ],
-        "movement_km": 54.8,
-        "bearing_deg": 26.5,
-        "previous_distance_km": 206.6,
-        "distance_to_mandaluyong_km": 218.7,
-        "distance_change_km": 12.1,
+        "movement_km": 16.9,
+        "bearing_deg": 11.8,
+        "previous_distance_km": 95.0,
+        "distance_to_mandaluyong_km": 105.3,
+        "distance_change_km": 10.3,
         "approaching_mandaluyong": false
       },
       {
-        "previous_class": "cyan",
+        "previous_class": "blue",
         "current_class": "blue",
-        "pixels_previous": 20,
-        "pixels_current": 96,
+        "pixels_previous": 8,
+        "pixels_current": 12,
         "from_lonlat": [
-          121.4639,
-          15.9406
-        ],
-        "to_lonlat": [
-          121.8399,
-          15.9485
-        ],
-        "movement_km": 40.1,
-        "bearing_deg": 88.7,
-        "previous_distance_km": 157.9,
-        "distance_to_mandaluyong_km": 174.8,
-        "distance_change_km": 16.9,
-        "approaching_mandaluyong": false
-      },
-      {
-        "previous_class": "cyan",
-        "current_class": "blue",
-        "pixels_previous": 36,
-        "pixels_current": 8,
-        "from_lonlat": [
-          120.2437,
-          14.5765
-        ],
-        "to_lonlat": [
           120.4635,
           15.2206
         ],
-        "movement_km": 75.3,
-        "bearing_deg": 18.3,
-        "previous_distance_km": 85.1,
-        "distance_to_mandaluyong_km": 94.1,
-        "distance_change_km": 9.0,
+        "to_lonlat": [
+          120.448,
+          15.1192
+        ],
+        "movement_km": 11.4,
+        "bearing_deg": 188.4,
+        "previous_distance_km": 94.1,
+        "distance_to_mandaluyong_km": 87.1,
+        "distance_change_km": -7.0,
+        "approaching_mandaluyong": true
+      },
+      {
+        "previous_class": "green",
+        "current_class": "green",
+        "pixels_previous": 9,
+        "pixels_current": 20,
+        "from_lonlat": [
+          121.7123,
+          15.6065
+        ],
+        "to_lonlat": [
+          121.7215,
+          15.6056
+        ],
+        "movement_km": 1.0,
+        "bearing_deg": 95.8,
+        "previous_distance_km": 135.2,
+        "distance_to_mandaluyong_km": 135.6,
+        "distance_change_km": 0.4,
+        "approaching_mandaluyong": false
+      },
+      {
+        "previous_class": "cyan",
+        "current_class": "cyan",
+        "pixels_previous": 13,
+        "pixels_current": 20,
+        "from_lonlat": [
+          120.5906,
+          15.1581
+        ],
+        "to_lonlat": [
+          120.6494,
+          15.0282
+        ],
+        "movement_km": 15.7,
+        "bearing_deg": 156.4,
+        "previous_distance_km": 80.1,
+        "distance_to_mandaluyong_km": 64.9,
+        "distance_change_km": -15.2,
+        "approaching_mandaluyong": true
+      },
+      {
+        "previous_class": "green",
+        "current_class": "green",
+        "pixels_previous": 8,
+        "pixels_current": 8,
+        "from_lonlat": [
+          120.2245,
+          15.4747
+        ],
+        "to_lonlat": [
+          120.11,
+          15.6741
+        ],
+        "movement_km": 25.3,
+        "bearing_deg": 331.1,
+        "previous_distance_km": 132.2,
+        "distance_to_mandaluyong_km": 157.0,
+        "distance_change_km": 24.8,
+        "approaching_mandaluyong": false
+      },
+      {
+        "previous_class": "blue",
+        "current_class": "blue",
+        "pixels_previous": 58,
+        "pixels_current": 29,
+        "from_lonlat": [
+          120.2238,
+          15.4572
+        ],
+        "to_lonlat": [
+          120.2961,
+          15.4391
+        ],
+        "movement_km": 8.0,
+        "bearing_deg": 104.6,
+        "previous_distance_km": 130.8,
+        "distance_to_mandaluyong_km": 124.2,
+        "distance_change_km": -6.6,
+        "approaching_mandaluyong": true
+      },
+      {
+        "previous_class": "blue",
+        "current_class": "cyan",
+        "pixels_previous": 11,
+        "pixels_current": 10,
+        "from_lonlat": [
+          120.86,
+          15.2255
+        ],
+        "to_lonlat": [
+          120.7848,
+          15.2056
+        ],
+        "movement_km": 8.4,
+        "bearing_deg": 254.7,
+        "previous_distance_km": 74.2,
+        "distance_to_mandaluyong_km": 74.6,
+        "distance_change_km": 0.4,
+        "approaching_mandaluyong": false
+      },
+      {
+        "previous_class": "blue",
+        "current_class": "blue",
+        "pixels_previous": 17,
+        "pixels_current": 24,
+        "from_lonlat": [
+          121.4698,
+          15.2216
+        ],
+        "to_lonlat": [
+          121.7276,
+          15.2721
+        ],
+        "movement_km": 28.2,
+        "bearing_deg": 78.5,
+        "previous_distance_km": 85.2,
+        "distance_to_mandaluyong_km": 106.9,
+        "distance_change_km": 21.7,
+        "approaching_mandaluyong": false
+      },
+      {
+        "previous_class": "blue",
+        "current_class": "blue",
+        "pixels_previous": 8,
+        "pixels_current": 11,
+        "from_lonlat": [
+          121.768,
+          16.1044
+        ],
+        "to_lonlat": [
+          122.0646,
+          16.1692
+        ],
+        "movement_km": 32.4,
+        "bearing_deg": 77.2,
+        "previous_distance_km": 186.7,
+        "distance_to_mandaluyong_km": 208.2,
+        "distance_change_km": 21.5,
+        "approaching_mandaluyong": false
+      },
+      {
+        "previous_class": "blue",
+        "current_class": "blue",
+        "pixels_previous": 23,
+        "pixels_current": 13,
+        "from_lonlat": [
+          120.2,
+          15.8987
+        ],
+        "to_lonlat": [
+          120.2444,
+          16.1743
+        ],
+        "movement_km": 31.0,
+        "bearing_deg": 8.8,
+        "previous_distance_km": 171.8,
+        "distance_to_mandaluyong_km": 196.4,
+        "distance_change_km": 24.6,
+        "approaching_mandaluyong": false
+      },
+      {
+        "previous_class": "green",
+        "current_class": "blue",
+        "pixels_previous": 10,
+        "pixels_current": 12,
+        "from_lonlat": [
+          121.6664,
+          15.9844
+        ],
+        "to_lonlat": [
+          121.8145,
+          15.8059
+        ],
+        "movement_km": 25.3,
+        "bearing_deg": 141.4,
+        "previous_distance_km": 170.0,
+        "distance_to_mandaluyong_km": 159.8,
+        "distance_change_km": -10.2,
+        "approaching_mandaluyong": true
+      },
+      {
+        "previous_class": "cyan",
+        "current_class": "blue",
+        "pixels_previous": 22,
+        "pixels_current": 20,
+        "from_lonlat": [
+          121.9228,
+          15.4485
+        ],
+        "to_lonlat": [
+          121.926,
+          15.7093
+        ],
+        "movement_km": 29.0,
+        "bearing_deg": 0.7,
+        "previous_distance_km": 135.6,
+        "distance_to_mandaluyong_km": 157.7,
+        "distance_change_km": 22.1,
+        "approaching_mandaluyong": false
+      },
+      {
+        "previous_class": "green",
+        "current_class": "blue",
+        "pixels_previous": 16,
+        "pixels_current": 21,
+        "from_lonlat": [
+          121.3257,
+          15.9116
+        ],
+        "to_lonlat": [
+          121.5842,
+          15.9375
+        ],
+        "movement_km": 27.7,
+        "bearing_deg": 84.1,
+        "previous_distance_km": 151.1,
+        "distance_to_mandaluyong_km": 161.8,
+        "distance_change_km": 10.7,
+        "approaching_mandaluyong": false
+      },
+      {
+        "previous_class": "green",
+        "current_class": "blue",
+        "pixels_previous": 9,
+        "pixels_current": 8,
+        "from_lonlat": [
+          121.73,
+          15.3584
+        ],
+        "to_lonlat": [
+          121.9671,
+          15.0528
+        ],
+        "movement_km": 42.4,
+        "bearing_deg": 143.2,
+        "previous_distance_km": 114.2,
+        "distance_to_mandaluyong_km": 113.0,
+        "distance_change_km": -1.2,
+        "approaching_mandaluyong": false
+      },
+      {
+        "previous_class": "cyan",
+        "current_class": "cyan",
+        "pixels_previous": 29,
+        "pixels_current": 38,
+        "from_lonlat": [
+          120.3827,
+          14.644
+        ],
+        "to_lonlat": [
+          120.482,
+          15.1972
+        ],
+        "movement_km": 62.3,
+        "bearing_deg": 9.8,
+        "previous_distance_km": 70.5,
+        "distance_to_mandaluyong_km": 90.8,
+        "distance_change_km": 20.3,
+        "approaching_mandaluyong": false
+      },
+      {
+        "previous_class": "blue",
+        "current_class": "cyan",
+        "pixels_previous": 12,
+        "pixels_current": 9,
+        "from_lonlat": [
+          120.0585,
+          15.642
+        ],
+        "to_lonlat": [
+          120.3049,
+          15.3333
+        ],
+        "movement_km": 43.2,
+        "bearing_deg": 142.4,
+        "previous_distance_km": 157.9,
+        "distance_to_mandaluyong_km": 114.8,
+        "distance_change_km": -43.1,
+        "approaching_mandaluyong": true
+      },
+      {
+        "previous_class": "blue",
+        "current_class": "blue",
+        "pixels_previous": 8,
+        "pixels_current": 10,
+        "from_lonlat": [
+          120.895,
+          15.4963
+        ],
+        "to_lonlat": [
+          120.899,
+          14.8428
+        ],
+        "movement_km": 72.5,
+        "bearing_deg": 179.7,
+        "previous_distance_km": 102.9,
+        "distance_to_mandaluyong_km": 32.7,
+        "distance_change_km": -70.2,
+        "approaching_mandaluyong": true
+      },
+      {
+        "previous_class": "cyan",
+        "current_class": "cyan",
+        "pixels_previous": 24,
+        "pixels_current": 19,
+        "from_lonlat": [
+          121.1611,
+          15.9172
+        ],
+        "to_lonlat": [
+          121.8209,
+          16.1678
+        ],
+        "movement_km": 75.7,
+        "bearing_deg": 68.4,
+        "previous_distance_km": 149.1,
+        "distance_to_mandaluyong_km": 195.4,
+        "distance_change_km": 46.3,
+        "approaching_mandaluyong": false
+      },
+      {
+        "previous_class": "green",
+        "current_class": "cyan",
+        "pixels_previous": 9,
+        "pixels_current": 8,
+        "from_lonlat": [
+          121.3892,
+          15.1104
+        ],
+        "to_lonlat": [
+          120.734,
+          14.9547
+        ],
+        "movement_km": 72.3,
+        "bearing_deg": 256.2,
+        "previous_distance_km": 70.1,
+        "distance_to_mandaluyong_km": 52.8,
+        "distance_change_km": -17.3,
+        "approaching_mandaluyong": true
+      },
+      {
+        "previous_class": "green",
+        "current_class": "cyan",
+        "pixels_previous": 16,
+        "pixels_current": 23,
+        "from_lonlat": [
+          119.9116,
+          15.91
+        ],
+        "to_lonlat": [
+          120.1705,
+          15.2799
+        ],
+        "movement_km": 75.2,
+        "bearing_deg": 158.4,
+        "previous_distance_km": 190.8,
+        "distance_to_mandaluyong_km": 121.2,
+        "distance_change_km": -69.6,
+        "approaching_mandaluyong": true
+      },
+      {
+        "previous_class": "cyan",
+        "current_class": "cyan",
+        "pixels_previous": 73,
+        "pixels_current": 25,
+        "from_lonlat": [
+          121.4065,
+          15.9168
+        ],
+        "to_lonlat": [
+          122.048,
+          16.2165
+        ],
+        "movement_km": 76.1,
+        "bearing_deg": 64.1,
+        "previous_distance_km": 153.7,
+        "distance_to_mandaluyong_km": 211.8,
+        "distance_change_km": 58.1,
         "approaching_mandaluyong": false
       }
     ],

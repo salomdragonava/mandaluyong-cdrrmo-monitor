@@ -6,8 +6,10 @@ from pathlib import Path
 STATE_FILE = Path("assessment_history.json")
 OUTPUT_FILE = Path("assessment_state.json")
 LOG_FILE = Path("assessment_log.json")
+ALERT_FILE = Path("assessment_alert.txt")
 
 POINTS = ["P1", "P2", "P3", "P4", "P5", "P6"]
+UNKNOWN_RADAR = {"UNKNOWN", "UNAVAILABLE", "NONE", "NULL", ""}
 
 
 def parse_ts(value):
@@ -15,8 +17,6 @@ def parse_ts(value):
 
 
 def level_score(value):
-    if value is None:
-        return 0.0
     try:
         return float(value)
     except (TypeError, ValueError):
@@ -55,7 +55,7 @@ def load_current_snapshot():
                 pass
         rain_values.append(points[point]["rainfall_mm"])
 
-    latest_ts = max(timestamps).isoformat() if timestamps else None
+    latest_ts = max(timestamps).strftime("%Y-%m-%d %H:%M:%S") if timestamps else None
     warning = str(pagasa.get("level") or pagasa.get("warning_level") or "UNKNOWN").upper()
     radar_status = str(radar.get("status") or radar.get("radar_status") or "UNKNOWN").upper()
     flood_status = "NORMAL"
@@ -76,35 +76,33 @@ def assess(history):
     if not history:
         return {"risk": "UNKNOWN", "score": 0, "confidence": 0.2, "signals": ["No history"]}
 
-    now = datetime.fromisoformat(history[-1]["timestamp"])
+    now = datetime.strptime(history[-1]["timestamp"], "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone(timedelta(hours=8)))
     cutoff = now - timedelta(days=3)
-    rows = [r for r in history if datetime.fromisoformat(r["timestamp"]) >= cutoff]
-    if len(rows) < 3:
-        confidence = 0.45
-    else:
-        confidence = 0.75
+    rows = []
+    for row in history:
+        try:
+            ts = datetime.strptime(row["timestamp"], "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone(timedelta(hours=8)))
+            if ts >= cutoff:
+                rows.append(row)
+        except (KeyError, TypeError, ValueError):
+            continue
 
+    confidence = 0.75 if len(rows) >= 3 else 0.45
     score = 0.0
     signals = []
 
     rainfall = [r["rainfall_mm"] for r in rows]
     if rainfall:
         max_rain = max(rainfall)
-        recent_rain = rainfall[-1]
-        rain_total_proxy = sum(rainfall)
         if max_rain >= 10:
-            score += 35
-            signals.append("high rainfall pulse")
+            score += 35; signals.append("high rainfall pulse")
         elif max_rain >= 5:
-            score += 20
-            signals.append("moderate rainfall pulse")
+            score += 20; signals.append("moderate rainfall pulse")
         elif max_rain >= 2:
-            score += 8
-        if recent_rain > 0.0 and len(rainfall) >= 3:
-            trend = rainfall[-1] - rainfall[-3]
-            if trend > 1.0:
-                score += 10
-                signals.append("rainfall increasing")
+            score += 8; signals.append("rainfall pulse")
+
+        if len(rainfall) >= 3 and rainfall[-1] - rainfall[-3] > 1.0:
+            score += 10; signals.append("rainfall increasing")
 
     latest = rows[-1]
     point_scores = [level_score(v["risk_score"]) for v in latest["points"].values()]
@@ -113,64 +111,48 @@ def assess(history):
         high_count = sum(v >= 2.0 for v in point_scores)
         medium_count = sum(v >= 1.0 for v in point_scores)
         if max_point >= 3.0:
-            score += 40
-            signals.append("high monitoring-point level")
+            score += 40; signals.append("high monitoring-point level")
         elif max_point >= 2.0:
-            score += 25
-            signals.append("elevated monitoring-point level")
+            score += 25; signals.append("elevated monitoring-point level")
         elif max_point >= 1.0:
-            score += 10
+            score += 10; signals.append("monitoring-point pressure")
         if high_count >= 2:
-            score += 15
-            signals.append("multi-point escalation")
+            score += 15; signals.append("multi-point escalation")
         elif medium_count >= 3:
-            score += 8
-            signals.append("multi-point pressure")
+            score += 8; signals.append("multi-point pressure")
 
-    # Persistence / accumulation: repeated increases over consecutive observations.
     rising_steps = 0
     for prev, cur in zip(rows, rows[1:]):
-        prev_avg = sum(v["risk_score"] for v in prev["points"].values()) / len(POINTS)
-        cur_avg = sum(v["risk_score"] for v in cur["points"].values()) / len(POINTS)
+        prev_avg = sum(level_score(v["risk_score"]) for v in prev["points"].values()) / len(POINTS)
+        cur_avg = sum(level_score(v["risk_score"]) for v in cur["points"].values()) / len(POINTS)
         if cur_avg > prev_avg + 0.15:
             rising_steps += 1
     if rising_steps >= 3:
-        score += 25
-        signals.append("persistent water-level rise")
+        score += 25; signals.append("persistent water-level rise")
     elif rising_steps == 2:
-        score += 12
-        signals.append("repeated water-level rise")
+        score += 12; signals.append("repeated water-level rise")
 
-    # Recovery is a strong negative signal: rise followed by a fall across most points.
     if len(rows) >= 3:
-        mid = rows[-2]
-        rises = 0
-        recoveries = 0
+        rises = recoveries = 0
         for p in POINTS:
-            a = rows[-3]["points"][p]["risk_score"]
-            b = mid["points"][p]["risk_score"]
-            c = latest["points"][p]["risk_score"]
+            a = level_score(rows[-3]["points"][p]["risk_score"])
+            b = level_score(rows[-2]["points"][p]["risk_score"])
+            c = level_score(rows[-1]["points"][p]["risk_score"])
             if b > a + 0.15:
                 rises += 1
                 if c < b - 0.15:
                     recoveries += 1
         if rises >= 2 and recoveries >= max(2, math.ceil(rises * 0.6)):
-            score -= 18
-            signals.append("pulse-and-recovery pattern")
+            score -= 18; signals.append("pulse-and-recovery pattern")
 
     if latest["pagasa_warning"] == "YELLOW":
-        score += 10
-        signals.append("PAGASA yellow")
+        score += 10; signals.append("PAGASA yellow")
     elif latest["pagasa_warning"] == "ORANGE":
-        score += 20
-        signals.append("PAGASA orange")
+        score += 20; signals.append("PAGASA orange")
     elif latest["pagasa_warning"] == "RED":
-        score += 30
-        signals.append("PAGASA red")
+        score += 30; signals.append("PAGASA red")
 
-    # Radar unavailable increases uncertainty, not flood probability.
-    radar_unknown = latest["radar_status"] in {"UNKNOWN", "UNAVAILABLE", "NONE", "NULL", ""}
-    if radar_unknown:
+    if latest["radar_status"] in UNKNOWN_RADAR:
         confidence -= 0.15
         signals.append("radar unavailable; uncertainty elevated")
 
@@ -191,10 +173,34 @@ def assess(history):
         "confidence": round(confidence, 2),
         "window": "latest 3 days",
         "signals": signals,
-        "interpretation": (
-            "Persistent accumulation and multi-point escalation are the key predictors; isolated rainfall pulses that recover should not trigger a flood prediction."
-        ),
+        "interpretation": "Persistent accumulation and multi-point escalation are the key predictors; isolated rainfall pulses that recover should not trigger a flood prediction."
     }
+
+
+def build_alert(output):
+    p = output["prediction"]
+    c = output["current_snapshot"]
+    risk = p["risk"]
+    icon = {"HIGH": "🔴", "WATCH": "🟠", "LOW-MODERATE": "🟡", "LOW": "🟢", "UNKNOWN": "⚪"}.get(risk, "⚪")
+    signals = ", ".join(p["signals"]) if p["signals"] else "No significant precursor signals"
+    return f"""{icon} MANDALUYONG FLOOD ASSESSMENT
+
+Prediction: {risk}
+Risk score: {p['score']}/100
+Confidence: {p['confidence']:.0%}
+Window: latest 3 days
+
+Current flood status: {c['flood_status']}
+PAGASA: {c['pagasa_warning']}
+Radar: {c['radar_status']}
+
+Signals:
+{signals}
+
+Assessment: {p['interpretation']}
+
+This is a precursor assessment, not a guarantee of flooding. A sudden localized rainfall event can change the risk rapidly.
+"""
 
 
 def main():
@@ -207,8 +213,6 @@ def main():
         history[-1] = current
     else:
         history.append(current)
-
-    # Retain enough data to support the rolling 3-day window plus gaps.
     history = history[-5000:]
     STATE_FILE.write_text(json.dumps(history, ensure_ascii=False, indent=2), encoding="utf-8")
 
@@ -221,7 +225,7 @@ def main():
         "current_snapshot": current,
         "data_quality": {
             "history_rows": len(history),
-            "radar_available": current["radar_status"] not in {"UNKNOWN", "UNAVAILABLE", "NONE", "NULL", ""},
+            "radar_available": current["radar_status"] not in UNKNOWN_RADAR,
         },
     }
     OUTPUT_FILE.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -229,7 +233,7 @@ def main():
     log = load_json(LOG_FILE, {})
     log["latest_monitor_run"] = output
     LOG_FILE.write_text(json.dumps(log, ensure_ascii=False, indent=2), encoding="utf-8")
-
+    ALERT_FILE.write_text(build_alert(output), encoding="utf-8")
     print(json.dumps(output, ensure_ascii=False, indent=2))
 
 

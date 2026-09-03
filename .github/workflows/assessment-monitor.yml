@@ -1,0 +1,43 @@
+name: Mandaluyong 3-Day Flood Assessment
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/30 * * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mandaluyong-assessment-monitor
+  cancel-in-progress: false
+
+jobs:
+  assess:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository history
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Run rolling 3-day assessment
+        run: python tests/assessment_monitor.py
+
+      - name: Commit assessment state
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assessment_history.json assessment_state.json assessment_log.json
+          if git diff --cached --quiet; then
+            echo 'No assessment state changes to commit.'
+          else
+            git commit -m 'Update 3-day flood assessment state'
+            git push
+          fi

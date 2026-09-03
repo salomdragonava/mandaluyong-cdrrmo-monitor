@@ -31,7 +31,7 @@
   },
   "latest_monitor_run": {
     "schema_version": 3,
-    "generated_at": "2026-09-03 16:06:40",
+    "generated_at": "2026-09-03 17:05:27",
     "model": "3-day flood precursor assessment",
     "prediction": {
       "risk": "LOW-MODERATE",
@@ -48,49 +48,49 @@
       "interpretation": "The validated precursor pattern is accumulation/persistence first, followed by renewed rainfall or warning forcing. Sustained multi-point pressure is more important than a single rainfall pulse; isolated pulses that recover should not trigger an imminent prediction.",
       "data_quality": {
         "distinct_days": 3,
-        "rows_in_window": 12,
+        "rows_in_window": 13,
         "radar_available": false
       }
     },
     "current_snapshot": {
-      "timestamp": "2026-09-03 16:06:40",
-      "rainfall_mm": 1.6,
+      "timestamp": "2026-09-03 17:05:27",
+      "rainfall_mm": 1.5,
       "points": {
         "P1": {
           "risk_level": "Low",
           "risk_score": 0.9,
           "rainfall_mm": 1.5,
-          "timestamp": "2026-09-03 16:06:39"
+          "timestamp": "2026-09-03 17:05:27"
         },
         "P2": {
           "risk_level": "Low",
           "risk_score": 0.9,
           "rainfall_mm": 1.5,
-          "timestamp": "2026-09-03 16:06:39"
+          "timestamp": "2026-09-03 17:05:27"
         },
         "P3": {
           "risk_level": "Low",
           "risk_score": 0.9,
           "rainfall_mm": 1.5,
-          "timestamp": "2026-09-03 16:06:40"
+          "timestamp": "2026-09-03 17:05:27"
         },
         "P4": {
           "risk_level": "Low",
           "risk_score": 0.9,
-          "rainfall_mm": 1.6,
-          "timestamp": "2026-09-03 16:06:40"
+          "rainfall_mm": 1.5,
+          "timestamp": "2026-09-03 17:05:27"
         },
         "P5": {
           "risk_level": "Low",
           "risk_score": 0.9,
           "rainfall_mm": 1.5,
-          "timestamp": "2026-09-03 16:06:39"
+          "timestamp": "2026-09-03 17:05:27"
         },
         "P6": {
           "risk_level": "Low",
           "risk_score": 0.9,
           "rainfall_mm": 1.5,
-          "timestamp": "2026-09-03 16:06:39"
+          "timestamp": "2026-09-03 17:05:27"
         }
       },
       "pagasa_warning": "GREEN",
@@ -99,7 +99,7 @@
     },
     "data_quality": {
       "distinct_days": 3,
-      "rows_in_window": 12,
+      "rows_in_window": 13,
       "radar_available": false
     }
   }

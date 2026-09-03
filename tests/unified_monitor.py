@@ -32,6 +32,8 @@ def build_messages():
     pred=assess.get('prediction',{})
     if pred:
         icon={'HIGH':'🔴','WATCH':'🟠','LOW-MODERATE':'🟡','LOW':'🟢','UNKNOWN':'⚪'}.get(pred.get('risk'),'⚪'); lines+=['',f'{icon} 3-DAY FLOOD ASSESSMENT',f'Prediction: {pred.get("risk","UNKNOWN")}',f'Risk score: {pred.get("score",0)}/100',f'Confidence: {pred.get("confidence",0):.0%}',f'Imminent window: {"YES" if pred.get("imminent") else "NO"}',f'Window: {pred.get("window","latest 3 days")}']; sig=', '.join(pred.get('signals',[])) or 'No significant precursor signals'; lines+=['',f'Signals: {sig}',f'Assessment: {pred.get("interpretation","")}']
+    alert_text='\n'.join(lines)
+    ALERT_FILE.write_text(alert_text,encoding='utf-8')
     previous_level=previous.get('pagasa_level','UNKNOWN'); previous_flood=previous.get('flood',{}); previous_radar=previous.get('radar_candidate',False); previous_imminent=previous.get('imminent',False); escalations=[]; order={'UNKNOWN':0,'GREEN':1,'YELLOW':2,'ORANGE':3,'RED':4}
     if order.get(level,0)>order.get(previous_level,0) and previous_level!='UNKNOWN':escalations.append(f'PAGASA warning level increased: {previous_level} → {level}')
     for pid,name,_ in POINTS:
@@ -42,5 +44,5 @@ def build_messages():
     if pred.get('imminent') and not previous_imminent:escalations.append('Flood precursor entered IMMINENT window: sustained multi-point pressure plus forcing')
     ESCALATION_FILE.unlink(missing_ok=True)
     if escalations:ESCALATION_FILE.write_text('🚨 MANDALUYONG MONITOR ESCALATION\n\n'+'\n'.join(f'• {x}' for x in escalations)+f'\n\nChecked: {now.strftime("%Y-%m-%d %I:%M %p")}',encoding='utf-8')
-    MONITOR_STATE.write_text(json.dumps({'pagasa_level':level,'flood':flood,'radar_candidate':bool(candidates),'escape_elevated':bool(elevated_escape),'imminent':bool(pred.get('imminent')),'last_checked':now.isoformat()},indent=2),encoding='utf-8');print('\n'.join(lines))
+    MONITOR_STATE.write_text(json.dumps({'pagasa_level':level,'flood':flood,'radar_candidate':bool(candidates),'escape_elevated':bool(elevated_escape),'imminent':bool(pred.get('imminent')),'last_checked':now.isoformat()},indent=2),encoding='utf-8');print(alert_text)
 if __name__=='__main__':build_messages()

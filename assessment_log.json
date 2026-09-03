@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "purpose": "Historical input log for the 3-day Mandaluyong flood precursor assessment monitor",
+  "timezone": "Asia/Manila",
+  "created_at": "2026-09-03T18:31:00+08:00",
+  "observations": [
+    {
+      "date": "2026-09-02",
+      "summary": "Low rainfall most of the day; evening pulse reached 1.3 mm, with P2 0.8 and P1 0.5, then levels eased.",
+      "peak_rainfall_mm": 1.3,
+      "peak_point_score": 0.8,
+      "flood_status": "NORMAL",
+      "pagasa_warning": "GREEN",
+      "radar": "UNAVAILABLE_FROM_2026-09-02_16:07"
+    },
+    {
+      "date": "2026-09-03",
+      "summary": "Overnight pulses included 1.2 mm, 1.9 mm and 1.6 mm; P5 reached 1.1 and P2 0.9, but values returned low and stayed stable through 16:07.",
+      "peak_rainfall_mm": 1.9,
+      "peak_point_score": 1.1,
+      "flood_status": "NORMAL",
+      "pagasa_warning": "GREEN",
+      "radar": "UNAVAILABLE"
+    }
+  ],
+  "assessment": {
+    "as_of": "2026-09-03 16:07",
+    "risk": "LOW",
+    "confidence": 0.9,
+    "reason": "No sustained accumulation or multi-point escalation is present in the supplied latest 3-day sequence. Current behavior is pulse-and-recovery rather than persistent rise."
+  }
+}

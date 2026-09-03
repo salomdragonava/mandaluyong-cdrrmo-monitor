@@ -1,17 +1,6 @@
 {
   "pagasa_level": "GREEN",
   "flood": {
-    "P2": {
-      "name": "Villarica \u00d7 Nanirahan",
-      "purpose": "LOCAL",
-      "lat": 14.586289,
-      "lng": 121.023049,
-      "risk_level": "Low",
-      "risk_score": 0.2,
-      "rainfall": 0.4,
-      "flood_history": 0,
-      "timestamp": "2026-09-03 06:09:14"
-    },
     "P1": {
       "name": "Pananalig \u00d7 Villarica",
       "purpose": "LOCAL",
@@ -21,18 +10,7 @@
       "risk_score": 0.2,
       "rainfall": 0.4,
       "flood_history": 0,
-      "timestamp": "2026-09-03 06:09:14"
-    },
-    "P5": {
-      "name": "J.P. Rizal \u00d7 Saniboy",
-      "purpose": "ESCAPE ROUTE",
-      "lat": 14.574723,
-      "lng": 121.026105,
-      "risk_level": "Low",
-      "risk_score": 0.2,
-      "rainfall": 0.4,
-      "flood_history": 0,
-      "timestamp": "2026-09-03 06:09:14"
+      "timestamp": "2026-09-03 07:06:56"
     },
     "P6": {
       "name": "J.P. Rizal \u00d7 Coronado",
@@ -43,7 +21,7 @@
       "risk_score": 0.2,
       "rainfall": 0.4,
       "flood_history": 0,
-      "timestamp": "2026-09-03 06:09:14"
+      "timestamp": "2026-09-03 07:06:56"
     },
     "P3": {
       "name": "J.P. Rizal \u00d7 San Pedro",
@@ -54,7 +32,7 @@
       "risk_score": 0.2,
       "rainfall": 0.4,
       "flood_history": 0,
-      "timestamp": "2026-09-03 06:09:14"
+      "timestamp": "2026-09-03 07:06:56"
     },
     "P4": {
       "name": "J.P. Rizal \u00d7 Ilino Cruz",
@@ -65,10 +43,32 @@
       "risk_score": 0.2,
       "rainfall": 0.4,
       "flood_history": 0,
-      "timestamp": "2026-09-03 06:09:14"
+      "timestamp": "2026-09-03 07:06:56"
+    },
+    "P2": {
+      "name": "Villarica \u00d7 Nanirahan",
+      "purpose": "LOCAL",
+      "lat": 14.586289,
+      "lng": 121.023049,
+      "risk_level": "Low",
+      "risk_score": 0.2,
+      "rainfall": 0.4,
+      "flood_history": 0,
+      "timestamp": "2026-09-03 07:06:56"
+    },
+    "P5": {
+      "name": "J.P. Rizal \u00d7 Saniboy",
+      "purpose": "ESCAPE ROUTE",
+      "lat": 14.574723,
+      "lng": 121.026105,
+      "risk_level": "Low",
+      "risk_score": 0.2,
+      "rainfall": 0.4,
+      "flood_history": 0,
+      "timestamp": "2026-09-03 07:06:56"
     }
   },
   "radar_candidate": false,
   "escape_elevated": false,
-  "last_checked": "2026-09-03T14:09:52.540876+08:00"
+  "last_checked": "2026-09-03T15:07:59.361052+08:00"
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-09-03 12:07:59",
+  "generated_at": "2026-09-03 12:15:15",
   "model": "3-day flood precursor assessment",
   "prediction": {
     "risk": "LOW",
@@ -16,49 +16,49 @@
     "interpretation": "The validated precursor pattern is accumulation/persistence first, followed by renewed rainfall or warning forcing. Sustained multi-point pressure is more important than a single rainfall pulse; isolated pulses that recover should not trigger an imminent prediction.",
     "data_quality": {
       "distinct_days": 3,
-      "rows_in_window": 7,
+      "rows_in_window": 8,
       "radar_available": false
     }
   },
   "current_snapshot": {
-    "timestamp": "2026-09-03 12:07:59",
+    "timestamp": "2026-09-03 12:15:15",
     "rainfall_mm": 0.4,
     "points": {
       "P1": {
         "risk_level": "Low",
         "risk_score": 0.2,
         "rainfall_mm": 0.4,
-        "timestamp": "2026-09-03 12:07:59"
+        "timestamp": "2026-09-03 12:15:15"
       },
       "P2": {
         "risk_level": "Low",
         "risk_score": 0.3,
         "rainfall_mm": 0.4,
-        "timestamp": "2026-09-03 12:07:59"
+        "timestamp": "2026-09-03 12:15:15"
       },
       "P3": {
         "risk_level": "Low",
-        "risk_score": 0.2,
+        "risk_score": 0.3,
         "rainfall_mm": 0.4,
-        "timestamp": "2026-09-03 12:07:59"
+        "timestamp": "2026-09-03 12:15:15"
       },
       "P4": {
         "risk_level": "Low",
         "risk_score": 0.2,
         "rainfall_mm": 0.4,
-        "timestamp": "2026-09-03 12:07:59"
+        "timestamp": "2026-09-03 12:15:15"
       },
       "P5": {
         "risk_level": "Low",
         "risk_score": 0.2,
         "rainfall_mm": 0.4,
-        "timestamp": "2026-09-03 12:07:59"
+        "timestamp": "2026-09-03 12:15:15"
       },
       "P6": {
         "risk_level": "Low",
         "risk_score": 0.2,
         "rainfall_mm": 0.4,
-        "timestamp": "2026-09-03 12:07:59"
+        "timestamp": "2026-09-03 12:15:15"
       }
     },
     "pagasa_warning": "GREEN",
@@ -67,7 +67,7 @@
   },
   "data_quality": {
     "distinct_days": 3,
-    "rows_in_window": 7,
+    "rows_in_window": 8,
     "radar_available": false
   }
 }

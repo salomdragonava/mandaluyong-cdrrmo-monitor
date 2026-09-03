@@ -58,28 +58,40 @@ jobs:
           python tests/radar_threat.py
       - name: Run 3-day flood assessment
         run: python tests/assessment_monitor.py
+      - name: Verify generated alerts
+        run: |
+          test -s combined_alert.txt || { echo "combined_alert.txt was not generated"; exit 1; }
+          test -s assessment_alert.txt || { echo "assessment_alert.txt was not generated"; exit 1; }
       - name: Build unified PAGASA-style status
         run: python tests/unified_monitor.py
+      - name: Verify unified alert
+        run: |
+          test -s combined_alert.txt || { echo "combined_alert.txt is missing or empty"; exit 1; }
+          echo "Unified alert generated successfully."
       - name: Send single scheduled status notification
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        shell: bash
         run: |
+          TELEGRAM_TEXT="$(<combined_alert.txt)"
           curl --fail --silent --show-error \
             --request POST \
             --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
-            --data-urlencode "text@combined_alert.txt" \
+            --data-urlencode "text=${TELEGRAM_TEXT}" \
             "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
       - name: Send escalation notification only when needed
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        shell: bash
         run: |
           if [ -s escalation_alert.txt ]; then
+            TELEGRAM_TEXT="$(<escalation_alert.txt)"
             curl --fail --silent --show-error \
               --request POST \
               --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
-              --data-urlencode "text@escalation_alert.txt" \
+              --data-urlencode "text=${TELEGRAM_TEXT}" \
               "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
           else
             echo "No meaningful escalation detected."

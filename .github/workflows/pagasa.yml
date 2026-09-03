@@ -58,15 +58,15 @@ jobs:
           python tests/radar_threat.py
       - name: Run 3-day flood assessment
         run: python tests/assessment_monitor.py
-      - name: Verify generated alerts
+      - name: Verify assessment alert
         run: |
-          test -s combined_alert.txt || { echo "combined_alert.txt was not generated"; exit 1; }
           test -s assessment_alert.txt || { echo "assessment_alert.txt was not generated"; exit 1; }
+          echo "Assessment alert generated successfully."
       - name: Build unified PAGASA-style status
         run: python tests/unified_monitor.py
       - name: Verify unified alert
         run: |
-          test -s combined_alert.txt || { echo "combined_alert.txt is missing or empty"; exit 1; }
+          test -s combined_alert.txt || { echo "combined_alert.txt was not generated"; exit 1; }
           echo "Unified alert generated successfully."
       - name: Send single scheduled status notification
         env:

@@ -1,5 +1,5 @@
 {
-  "pagasa_level": "ORANGE",
+  "pagasa_level": "YELLOW",
   "flood": {
     "P5": {
       "name": "J.P. Rizal \u00d7 Saniboy",
@@ -7,43 +7,10 @@
       "lat": 14.574723,
       "lng": 121.026105,
       "risk_level": "Low",
-      "risk_score": 0.7,
-      "rainfall": 1.2,
+      "risk_score": 0.3,
+      "rainfall": 0.5,
       "flood_history": 0,
-      "timestamp": "2026-09-04 17:05:37"
-    },
-    "P4": {
-      "name": "J.P. Rizal \u00d7 Ilino Cruz",
-      "purpose": "ESCAPE ROUTE",
-      "lat": 14.576385,
-      "lng": 121.024315,
-      "risk_level": "Low",
-      "risk_score": 0.7,
-      "rainfall": 1.2,
-      "flood_history": 0,
-      "timestamp": "2026-09-04 17:05:37"
-    },
-    "P2": {
-      "name": "Villarica \u00d7 Nanirahan",
-      "purpose": "LOCAL",
-      "lat": 14.586289,
-      "lng": 121.023049,
-      "risk_level": "Low",
-      "risk_score": 0.7,
-      "rainfall": 1.2,
-      "flood_history": 0,
-      "timestamp": "2026-09-04 17:05:37"
-    },
-    "P6": {
-      "name": "J.P. Rizal \u00d7 Coronado",
-      "purpose": "ESCAPE ROUTE",
-      "lat": 14.570609,
-      "lng": 121.030969,
-      "risk_level": "Low",
-      "risk_score": 0.7,
-      "rainfall": 1.2,
-      "flood_history": 0,
-      "timestamp": "2026-09-04 17:05:37"
+      "timestamp": "2026-09-04 18:06:33"
     },
     "P3": {
       "name": "J.P. Rizal \u00d7 San Pedro",
@@ -51,10 +18,32 @@
       "lat": 14.580411,
       "lng": 121.020848,
       "risk_level": "Low",
-      "risk_score": 0.7,
-      "rainfall": 1.2,
+      "risk_score": 0.3,
+      "rainfall": 0.5,
       "flood_history": 0,
-      "timestamp": "2026-09-04 17:05:37"
+      "timestamp": "2026-09-04 18:06:33"
+    },
+    "P2": {
+      "name": "Villarica \u00d7 Nanirahan",
+      "purpose": "LOCAL",
+      "lat": 14.586289,
+      "lng": 121.023049,
+      "risk_level": "Low",
+      "risk_score": 0.3,
+      "rainfall": 0.5,
+      "flood_history": 0,
+      "timestamp": "2026-09-04 18:06:33"
+    },
+    "P6": {
+      "name": "J.P. Rizal \u00d7 Coronado",
+      "purpose": "ESCAPE ROUTE",
+      "lat": 14.570609,
+      "lng": 121.030969,
+      "risk_level": "Low",
+      "risk_score": 0.3,
+      "rainfall": 0.5,
+      "flood_history": 0,
+      "timestamp": "2026-09-04 18:06:33"
     },
     "P1": {
       "name": "Pananalig \u00d7 Villarica",
@@ -62,14 +51,25 @@
       "lat": 14.58662,
       "lng": 121.023037,
       "risk_level": "Low",
-      "risk_score": 0.7,
-      "rainfall": 1.2,
+      "risk_score": 0.3,
+      "rainfall": 0.5,
       "flood_history": 0,
-      "timestamp": "2026-09-04 17:05:37"
+      "timestamp": "2026-09-04 18:06:33"
+    },
+    "P4": {
+      "name": "J.P. Rizal \u00d7 Ilino Cruz",
+      "purpose": "ESCAPE ROUTE",
+      "lat": 14.576385,
+      "lng": 121.024315,
+      "risk_level": "Low",
+      "risk_score": 0.3,
+      "rainfall": 0.5,
+      "flood_history": 0,
+      "timestamp": "2026-09-04 18:06:33"
     }
   },
   "radar_candidate": false,
   "escape_elevated": false,
   "imminent": false,
-  "last_checked": "2026-09-05T01:06:15.482413+08:00"
+  "last_checked": "2026-09-05T02:07:18.119570+08:00"
 }

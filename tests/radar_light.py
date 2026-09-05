@@ -14,6 +14,7 @@ from radar_monitor import analyze, track, MAX_MOVEMENT_KM_PER_FRAME, OUTPUT_DIR,
 
 RADAR_PAGE = 'https://www.pagasa.dost.gov.ph/radar'
 PANAHON_BASE = 'https://panahon.gov.ph'
+PANAHON_RADAR_PAGE = 'https://panahon.gov.ph/?req=radar.rain-rate&trg=iframe'
 TIMELINE_API = f'{PANAHON_BASE}/api/v1/radar/timeline?sublayer=mosaic-qpe'
 PH_TZ = timezone(timedelta(hours=8))
 MOSAIC_RE = re.compile(r'ph_hybrid_mosaic_(\d{14})')
@@ -179,7 +180,8 @@ def persist_current(captured, previous_timestamp, previous_body, discovered_urls
         'captured_images': [captured['url']], 'resource_urls': discovered_urls,
         'radar_tracking': tracking,
         'collector': {'mode': 'PANaHON_API_first', 'timeline_endpoint': TIMELINE_API,
-                      'browser_fallback': True, 'source_checked_at': datetime.now(PH_TZ).isoformat(),
+                      'browser_fallback': True, 'browser_page': PANAHON_RADAR_PAGE,
+                      'source_checked_at': datetime.now(PH_TZ).isoformat(),
                       'download_diagnostics': diagnostics},
     }, indent=2), encoding='utf-8')
     STATE_FILE.write_text(json.dumps({'success': True, 'checked_at': datetime.now(PH_TZ).isoformat(),
@@ -195,28 +197,64 @@ def browser_fallback(previous_timestamp):
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
-            page.on('response', lambda r: urls.append(r.url) if '/radar/timeline/mosaic-hybrid/' in r.url and r.status == 200 else None)
+
+            def capture_response(response):
+                u = response.url
+                if response.status != 200:
+                    return
+                if re.search(r'(radar|mosaic|reflectivity|rain[-_ ]?rate)', u, re.I):
+                    urls.append(u)
+
+            page.on('response', capture_response)
             try:
-                page.goto(RADAR_PAGE, wait_until='domcontentloaded', timeout=30000)
-                page.wait_for_timeout(10000)
+                page.goto(PANAHON_RADAR_PAGE, wait_until='domcontentloaded', timeout=30000)
+                page.wait_for_timeout(12000)
             except Exception as exc:
-                diagnostics.append({'method': 'browser_discovery', 'stage': 'page_goto', 'error': repr(exc)})
+                diagnostics.append({'method': 'browser_discovery', 'stage': 'page_goto', 'url': PANAHON_RADAR_PAGE, 'error': repr(exc)})
+
             try:
-                urls.extend(page.evaluate("""() => performance.getEntriesByType('resource').map(e => e.name).filter(u => /radar\\/timeline\\/mosaic-hybrid/i.test(u))"""))
+                urls.extend(page.evaluate("""() => performance.getEntriesByType('resource').map(e => e.name).filter(u => /(radar|mosaic|reflectivity|rain[-_ ]?rate)/i.test(u))"""))
             except Exception as exc:
                 diagnostics.append({'method': 'browser_discovery', 'stage': 'performance_resources', 'error': repr(exc)})
+
+            try:
+                urls.extend(page.evaluate("""() => [...document.images].map(i => i.currentSrc || i.src).filter(Boolean)"""))
+            except Exception as exc:
+                diagnostics.append({'method': 'browser_discovery', 'stage': 'image_sources', 'error': repr(exc)})
+
+            try:
+                diagnostics.append({'method': 'browser_discovery', 'stage': 'page_state', 'url': page.url, 'frames': [f.url for f in page.frames], 'candidate_count': len(urls)})
+            except Exception:
+                pass
             browser.close()
     except Exception as exc:
         diagnostics.append({'method': 'browser_discovery', 'stage': 'browser_start', 'error': repr(exc)})
 
-    candidates = sorted({(timestamp_from_value(u), u) for u in urls if timestamp_from_value(u)}, reverse=True)
-    for ts, url in candidates:
+    candidates = []
+    for url in dict.fromkeys(urls):
+        ts = timestamp_from_value(url)
+        if ts:
+            candidates.append((ts, url))
+
+    for ts, url in sorted(candidates, reverse=True):
         if ts == previous_timestamp:
             continue
-        body, diag = download_frame({'timestamp': ts, 'url': url}, referer=RADAR_PAGE, method='browser_fallback')
+        body, diag = download_frame({'timestamp': ts, 'url': url}, referer=PANAHON_RADAR_PAGE, method='browser_fallback')
         diagnostics.append(diag)
         if body is not None:
             return {'timestamp': ts, 'url': url, 'body': body, 'method': 'browser_fallback'}, urls, diagnostics
+
+    # Some current PANaHON image URLs may not embed a timestamp. Validate image-like
+    # candidates directly and use the current wall-clock time as a provenance marker.
+    for url in dict.fromkeys(urls):
+        if not re.search(r'\.(png|jpe?g|webp)(\?|$)', url, re.I):
+            continue
+        body, diag = download_frame({'timestamp': None, 'url': url}, referer=PANAHON_RADAR_PAGE, method='browser_fallback_no_timestamp')
+        diagnostics.append(diag)
+        if body is not None:
+            ts = datetime.now(PH_TZ).strftime('%Y%m%d%H%M%S')
+            return {'timestamp': ts, 'url': url, 'body': body, 'method': 'browser_fallback_no_timestamp'}, urls, diagnostics
+
     return None, urls, diagnostics
 
 

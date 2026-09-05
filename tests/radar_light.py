@@ -244,17 +244,6 @@ def browser_fallback(previous_timestamp):
         if body is not None:
             return {'timestamp': ts, 'url': url, 'body': body, 'method': 'browser_fallback'}, urls, diagnostics
 
-    # Some current PANaHON image URLs may not embed a timestamp. Validate image-like
-    # candidates directly and use the current wall-clock time as a provenance marker.
-    for url in dict.fromkeys(urls):
-        if not re.search(r'\.(png|jpe?g|webp)(\?|$)', url, re.I):
-            continue
-        body, diag = download_frame({'timestamp': None, 'url': url}, referer=PANAHON_RADAR_PAGE, method='browser_fallback_no_timestamp')
-        diagnostics.append(diag)
-        if body is not None:
-            ts = datetime.now(PH_TZ).strftime('%Y%m%d%H%M%S')
-            return {'timestamp': ts, 'url': url, 'body': body, 'method': 'browser_fallback_no_timestamp'}, urls, diagnostics
-
     return None, urls, diagnostics
 
 

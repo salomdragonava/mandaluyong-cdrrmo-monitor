@@ -30,67 +30,68 @@
     "reason": "No sustained accumulation or multi-point escalation is present in the supplied latest 3-day sequence. Current behavior is pulse-and-recovery rather than persistent rise."
   },
   "latest_monitor_run": {
-    "schema_version": 4,
-    "generated_at": "2026-09-05 18:06:05",
+    "schema_version": 5,
+    "generated_at": "2026-09-05 22:05:26",
     "model": "3-day flood precursor assessment",
     "prediction": {
-      "risk": "LOW-MODERATE",
-      "score": 33.0,
+      "risk": "LOW",
+      "score": 8.0,
       "confidence": 0.85,
-      "window": "latest 3 days",
+      "window": "latest 3 days; trend signals latest 36 hours",
       "imminent": false,
       "lead_signal": "No validated imminent pattern yet.",
       "signals": [
         "rainfall pulse",
-        "persistent water-level rise",
+        "recent water-level rise has recovered",
         "radar unavailable; confidence slightly reduced"
       ],
-      "interpretation": "ProjectLIGTAS risk_level is treated as the source classification. Its numerical risk_score is used for trend detection only. The validated precursor pattern is accumulation/persistence first, followed by renewed rainfall or warning forcing. A low source classification by itself does not mean flooding is occurring, and a rising score alone does not trigger an imminent prediction.",
+      "interpretation": "ProjectLIGTAS risk_level is treated as the source classification. Its numerical risk_score is used for trend detection only. Trend and rainfall-pulse signals are recency-bounded so recovered local conditions do not remain elevated solely because an older rise occurred earlier in the 3-day history. The validated precursor pattern is accumulation/persistence first, followed by renewed rainfall or warning forcing.",
       "data_quality": {
-        "distinct_days": 4,
+        "distinct_days": 3,
         "rows_in_window": 54,
+        "recent_trend_rows": 28,
         "radar_available": false
       }
     },
     "current_snapshot": {
-      "timestamp": "2026-09-05 18:06:05",
-      "rainfall_mm": 0.5,
+      "timestamp": "2026-09-05 22:05:26",
+      "rainfall_mm": 0.0,
       "points": {
         "P1": {
           "risk_level": "Low",
-          "risk_score": 0.3,
-          "rainfall_mm": 0.5,
-          "timestamp": "2026-09-05 18:06:05"
+          "risk_score": 0.0,
+          "rainfall_mm": 0.0,
+          "timestamp": "2026-09-05 22:05:26"
         },
         "P2": {
           "risk_level": "Low",
-          "risk_score": 0.3,
-          "rainfall_mm": 0.5,
-          "timestamp": "2026-09-05 18:06:05"
+          "risk_score": 0.0,
+          "rainfall_mm": 0.0,
+          "timestamp": "2026-09-05 22:05:26"
         },
         "P3": {
           "risk_level": "Low",
-          "risk_score": 0.3,
-          "rainfall_mm": 0.5,
-          "timestamp": "2026-09-05 18:06:05"
+          "risk_score": 0.0,
+          "rainfall_mm": 0.0,
+          "timestamp": "2026-09-05 22:05:26"
         },
         "P4": {
           "risk_level": "Low",
-          "risk_score": 0.3,
-          "rainfall_mm": 0.5,
-          "timestamp": "2026-09-05 18:06:05"
+          "risk_score": 0.0,
+          "rainfall_mm": 0.0,
+          "timestamp": "2026-09-05 22:05:26"
         },
         "P5": {
           "risk_level": "Low",
-          "risk_score": 0.3,
-          "rainfall_mm": 0.5,
-          "timestamp": "2026-09-05 18:06:05"
+          "risk_score": 0.0,
+          "rainfall_mm": 0.0,
+          "timestamp": "2026-09-05 22:05:26"
         },
         "P6": {
           "risk_level": "Low",
-          "risk_score": 0.3,
-          "rainfall_mm": 0.5,
-          "timestamp": "2026-09-05 18:06:05"
+          "risk_score": 0.0,
+          "rainfall_mm": 0.0,
+          "timestamp": "2026-09-05 22:05:26"
         }
       },
       "pagasa_warning": "GREEN",
@@ -98,8 +99,9 @@
       "flood_status": "NORMAL"
     },
     "data_quality": {
-      "distinct_days": 4,
+      "distinct_days": 3,
       "rows_in_window": 54,
+      "recent_trend_rows": 28,
       "radar_available": false
     }
   }

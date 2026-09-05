@@ -1,9 +1,8 @@
 {
-  "success": true,
-  "checked_at": "2026-09-02T15:06:57.605411+08:00",
-  "image_url": "https://api.meteopilipinas.gov.ph/tmp/d41d8cd98f00b204e9800998ecf8427e/radar/timeline/mosaic-hybrid/ph_hybrid_mosaic_20260902144500Ykky.png",
+  "success": false,
+  "checked_at": "2026-09-06T06:06:58.662173+08:00",
   "image_timestamp": "20260902144500",
-  "localized_image": "radar_data/mandaluyong_radar_localized.png",
-  "tracking_status": "ok",
-  "collector_mode": "lightweight"
+  "tracking_status": "source_unreachable",
+  "source_checked": true,
+  "collector_mode": "PANaHON_API_first"
 }

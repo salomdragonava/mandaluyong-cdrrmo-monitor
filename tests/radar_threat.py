@@ -68,10 +68,21 @@ def main():
         reverse=True,
     )
 
+    tracking_status = tracking.get('status', 'unknown')
+    # A fresh current frame is a valid radar observation even when there is
+    # not yet a prior frame to calculate movement against. Only an explicitly
+    # unavailable/stale collector state should suppress the radar observation.
+    current_timestamp = tracking.get('current_timestamp')
+    if current_timestamp and tracking_status in {'ok', 'insufficient_frames', 'unchanged_frame'}:
+        display_status = 'ok'
+    else:
+        display_status = tracking_status
+
     result = {
-        'status': 'ok' if tracking.get('status') == 'ok' else tracking.get('status', 'unknown'),
+        'status': display_status,
+        'collector_tracking_status': tracking_status,
         'previous_timestamp': tracking.get('previous_timestamp'),
-        'current_timestamp': tracking.get('current_timestamp'),
+        'current_timestamp': current_timestamp,
         'match_count': len(scored),
         'threat_candidate_count': len(candidates),
         'top_threats': candidates[:20],

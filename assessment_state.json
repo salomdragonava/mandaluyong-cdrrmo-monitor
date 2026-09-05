@@ -1,6 +1,6 @@
 {
   "schema_version": 4,
-  "generated_at": "2026-09-04 23:05:28",
+  "generated_at": "2026-09-05 01:04:58",
   "model": "3-day flood precursor assessment",
   "prediction": {
     "risk": "WATCH",
@@ -17,50 +17,50 @@
     ],
     "interpretation": "ProjectLIGTAS risk_level is treated as the source classification. Its numerical risk_score is used for trend detection only. The validated precursor pattern is accumulation/persistence first, followed by renewed rainfall or warning forcing. A low source classification by itself does not mean flooding is occurring, and a rising score alone does not trigger an imminent prediction.",
     "data_quality": {
-      "distinct_days": 3,
-      "rows_in_window": 40,
+      "distinct_days": 4,
+      "rows_in_window": 41,
       "radar_available": false
     }
   },
   "current_snapshot": {
-    "timestamp": "2026-09-04 23:05:28",
-    "rainfall_mm": 0.9,
+    "timestamp": "2026-09-05 01:04:58",
+    "rainfall_mm": 0.7,
     "points": {
       "P1": {
         "risk_level": "Low",
-        "risk_score": 0.5,
-        "rainfall_mm": 0.9,
-        "timestamp": "2026-09-04 23:05:28"
+        "risk_score": 0.4,
+        "rainfall_mm": 0.7,
+        "timestamp": "2026-09-05 01:04:58"
       },
       "P2": {
         "risk_level": "Low",
-        "risk_score": 0.5,
-        "rainfall_mm": 0.9,
-        "timestamp": "2026-09-04 23:05:28"
+        "risk_score": 0.4,
+        "rainfall_mm": 0.7,
+        "timestamp": "2026-09-05 01:04:58"
       },
       "P3": {
         "risk_level": "Low",
-        "risk_score": 0.5,
-        "rainfall_mm": 0.9,
-        "timestamp": "2026-09-04 23:05:28"
+        "risk_score": 0.4,
+        "rainfall_mm": 0.7,
+        "timestamp": "2026-09-05 01:04:58"
       },
       "P4": {
         "risk_level": "Low",
-        "risk_score": 0.6,
-        "rainfall_mm": 0.9,
-        "timestamp": "2026-09-04 23:05:28"
+        "risk_score": 0.4,
+        "rainfall_mm": 0.7,
+        "timestamp": "2026-09-05 01:04:58"
       },
       "P5": {
         "risk_level": "Low",
-        "risk_score": 0.5,
-        "rainfall_mm": 0.9,
-        "timestamp": "2026-09-04 23:05:28"
+        "risk_score": 0.4,
+        "rainfall_mm": 0.7,
+        "timestamp": "2026-09-05 01:04:58"
       },
       "P6": {
         "risk_level": "Low",
-        "risk_score": 0.5,
-        "rainfall_mm": 0.9,
-        "timestamp": "2026-09-04 23:05:28"
+        "risk_score": 0.4,
+        "rainfall_mm": 0.7,
+        "timestamp": "2026-09-05 01:04:58"
       }
     },
     "pagasa_warning": "YELLOW",
@@ -68,8 +68,8 @@
     "flood_status": "NORMAL"
   },
   "data_quality": {
-    "distinct_days": 3,
-    "rows_in_window": 40,
+    "distinct_days": 4,
+    "rows_in_window": 41,
     "radar_available": false
   }
 }

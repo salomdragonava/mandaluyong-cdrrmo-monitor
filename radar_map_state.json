@@ -1,9 +1,18 @@
 {
   "success": false,
-  "checked_at": "2026-09-05T18:06:25.240720+08:00",
+  "checked_at": "2026-09-05T21:06:28.470744+08:00",
   "image_timestamp": "20260902144500",
   "tracking_status": "source_unreachable",
   "resource_urls": [],
-  "download_diagnostics": [],
-  "message": "No newer usable PAGASA radar frame was captured. A known previous frame is retained separately from source availability."
+  "download_diagnostics": [
+    {
+      "source": "PANaHON",
+      "endpoint": "https://panahon.gov.ph/api/v1/radar/timeline?sublayer=mosaic-qpe",
+      "status": null,
+      "bytes": 0,
+      "frame_count": 0,
+      "error": "<HTTPError 404: 'Not Found'>"
+    }
+  ],
+  "message": "No newer usable PAGASA/PANaHON radar frame was captured. The previous frame is retained separately from current source availability."
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 4,
-  "generated_at": "2026-09-05 04:05:50",
+  "generated_at": "2026-09-05 05:05:31",
   "model": "3-day flood precursor assessment",
   "prediction": {
     "risk": "WATCH",
@@ -18,49 +18,49 @@
     "interpretation": "ProjectLIGTAS risk_level is treated as the source classification. Its numerical risk_score is used for trend detection only. The validated precursor pattern is accumulation/persistence first, followed by renewed rainfall or warning forcing. A low source classification by itself does not mean flooding is occurring, and a rising score alone does not trigger an imminent prediction.",
     "data_quality": {
       "distinct_days": 4,
-      "rows_in_window": 44,
+      "rows_in_window": 45,
       "radar_available": false
     }
   },
   "current_snapshot": {
-    "timestamp": "2026-09-05 04:05:50",
+    "timestamp": "2026-09-05 05:05:31",
     "rainfall_mm": 0.7,
     "points": {
       "P1": {
         "risk_level": "Low",
         "risk_score": 0.4,
         "rainfall_mm": 0.7,
-        "timestamp": "2026-09-05 04:05:50"
+        "timestamp": "2026-09-05 05:05:31"
       },
       "P2": {
         "risk_level": "Low",
         "risk_score": 0.4,
         "rainfall_mm": 0.7,
-        "timestamp": "2026-09-05 04:05:50"
+        "timestamp": "2026-09-05 05:05:31"
       },
       "P3": {
         "risk_level": "Low",
         "risk_score": 0.4,
         "rainfall_mm": 0.7,
-        "timestamp": "2026-09-05 04:05:50"
+        "timestamp": "2026-09-05 05:05:31"
       },
       "P4": {
         "risk_level": "Low",
         "risk_score": 0.4,
         "rainfall_mm": 0.7,
-        "timestamp": "2026-09-05 04:05:50"
+        "timestamp": "2026-09-05 05:05:31"
       },
       "P5": {
         "risk_level": "Low",
         "risk_score": 0.4,
         "rainfall_mm": 0.7,
-        "timestamp": "2026-09-05 04:05:50"
+        "timestamp": "2026-09-05 05:05:31"
       },
       "P6": {
         "risk_level": "Low",
         "risk_score": 0.4,
         "rainfall_mm": 0.7,
-        "timestamp": "2026-09-05 04:05:50"
+        "timestamp": "2026-09-05 05:05:31"
       }
     },
     "pagasa_warning": "YELLOW",
@@ -69,7 +69,7 @@
   },
   "data_quality": {
     "distinct_days": 4,
-    "rows_in_window": 44,
+    "rows_in_window": 45,
     "radar_available": false
   }
 }

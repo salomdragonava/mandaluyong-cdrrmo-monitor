@@ -1,8 +1,10 @@
 import io
 import json
 import re
+import ssl
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
+from urllib.request import Request, urlopen
 
 from PIL import Image, ImageDraw
 from playwright.sync_api import sync_playwright
@@ -28,25 +30,80 @@ def load_previous():
     return None, None
 
 
+def persist(path, body):
+    path.write_bytes(body)
+    return body
+
+
+def timestamp_from_url(url):
+    match = MOSAIC_RE.search(url)
+    return match.group(1) if match else None
+
+
+def valid_image(body):
+    return bool(body) and body.startswith((b"\x89PNG", b"\xff\xd8"))
+
+
+def direct_download(url):
+    diagnostics = {
+        "url": url,
+        "method": "urllib",
+        "status": None,
+        "content_type": None,
+        "bytes": 0,
+        "signature": None,
+        "valid_image": False,
+        "tls_fallback": False,
+        "error": None,
+    }
+    headers = {
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/151.0 Safari/537.36",
+        "Referer": RADAR_PAGE,
+        "Accept": "image/avif,image/webp,image/apng,image/png,image/*,*/*;q=0.8",
+    }
+    try:
+        req = Request(url, headers=headers)
+        try:
+            with urlopen(req, timeout=30) as response:
+                diagnostics["status"] = getattr(response, "status", None)
+                diagnostics["content_type"] = response.headers.get("Content-Type")
+                body = response.read()
+        except (ssl.SSLError, OSError) as first_error:
+            diagnostics["tls_fallback"] = True
+            diagnostics["first_error"] = repr(first_error)
+            with urlopen(req, timeout=30, context=ssl._create_unverified_context()) as response:
+                diagnostics["status"] = getattr(response, "status", None)
+                diagnostics["content_type"] = response.headers.get("Content-Type")
+                body = response.read()
+        diagnostics["bytes"] = len(body)
+        diagnostics["signature"] = body[:16].hex()
+        diagnostics["valid_image"] = valid_image(body)
+        if not diagnostics["valid_image"]:
+            diagnostics["error"] = "Response is not PNG/JPEG"
+            return None, diagnostics
+        return body, diagnostics
+    except Exception as exc:
+        diagnostics["error"] = repr(exc)
+        return None, diagnostics
+
+
 def main():
     OUTPUT_DIR.mkdir(exist_ok=True)
     previous_timestamp, previous_body = load_previous()
     captured = None
-    resource_urls = []
+    discovered_urls = []
+    diagnostics = []
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
 
-        # Keep the browser only as a lightweight discovery mechanism. Block
-        # unrelated images, fonts, media, analytics and other page assets.
         def route_handler(route):
             request = route.request
             url = request.url
-            resource_type = request.resource_type
             if "/radar/timeline/mosaic-hybrid/" in url:
                 route.continue_()
-            elif resource_type in {"document", "script", "stylesheet", "xhr", "fetch"}:
+            elif request.resource_type in {"document", "script", "stylesheet", "xhr", "fetch"}:
                 route.continue_()
             else:
                 route.abort()
@@ -56,33 +113,25 @@ def main():
         def on_response(response):
             nonlocal captured
             url = response.url
-            if captured is not None:
+            if "/radar/timeline/mosaic-hybrid/" not in url:
                 return
-            if "/radar/timeline/mosaic-hybrid/" not in url or response.status != 200:
+            if url not in discovered_urls:
+                discovered_urls.append(url)
+            if captured is not None or response.status != 200:
                 return
-            match = MOSAIC_RE.search(url)
-            if not match:
-                return
-            timestamp = match.group(1)
-            if timestamp == previous_timestamp:
+            timestamp = timestamp_from_url(url)
+            if not timestamp or timestamp == previous_timestamp:
                 return
             try:
                 body = response.body()
             except Exception:
                 return
-            if not body.startswith((b"\x89PNG", b"\xff\xd8")):
-                return
-            captured = {"url": url, "timestamp": timestamp, "body": body}
+            if valid_image(body):
+                captured = {"url": url, "timestamp": timestamp, "body": body, "method": "playwright_response"}
 
         page.on("response", on_response)
         page.goto(RADAR_PAGE, wait_until="domcontentloaded", timeout=60000)
-
-        # Give the radar application a short, bounded window to request the
-        # current mosaic. No network-idle wait and no extra resource downloads.
-        try:
-            page.wait_for_timeout(6000)
-        except Exception:
-            pass
+        page.wait_for_timeout(12000)
 
         try:
             resource_urls = page.evaluate(
@@ -90,17 +139,57 @@ def main():
             )
         except Exception:
             resource_urls = []
+        for url in resource_urls:
+            if url not in discovered_urls:
+                discovered_urls.append(url)
+
+        # Also inspect the page's JavaScript resources for radar image URLs.
+        try:
+            script_urls = page.evaluate(
+                """() => [...document.scripts].map(s => s.src).filter(Boolean).filter(u => /radar|map/i.test(u))"""
+            )
+            for script_url in script_urls:
+                try:
+                    response = page.request.get(script_url, timeout=30000)
+                    if response.ok:
+                        text = response.text()
+                        discovered_urls.extend(MOSAIC_RE.findall(text))
+                        for match in re.findall(r'https?[^\"\'\s]+/radar/timeline/mosaic-hybrid/[^\"\'\s]+', text):
+                            discovered_urls.append(match.replace('\\u0026', '&'))
+                except Exception:
+                    pass
+        except Exception:
+            pass
 
         browser.close()
+
+    discovered_urls = list(dict.fromkeys(u for u in discovered_urls if "/radar/timeline/mosaic-hybrid/" in u))
+
+    # If the browser response race was missed, explicitly download every
+    # discovered candidate until a valid radar image is obtained.
+    if captured is None:
+        candidates = []
+        for url in discovered_urls:
+            ts = timestamp_from_url(url)
+            if ts:
+                candidates.append((ts, url))
+        candidates.sort(reverse=True)
+        for ts, url in candidates:
+            body, diag = direct_download(url)
+            diagnostics.append(diag)
+            if body is not None and (previous_timestamp is None or ts != previous_timestamp):
+                captured = {"url": url, "timestamp": ts, "body": body, "method": "direct_download"}
+                break
 
     if captured is None:
         result = {
             "success": False,
             "checked_at": datetime.now(PH_TZ).isoformat(),
             "image_timestamp": previous_timestamp,
-            "tracking_status": "no_new_frame",
-            "resource_urls": list(dict.fromkeys(resource_urls)),
-            "message": "No newer PAGASA radar frame was captured during the bounded discovery window.",
+            "tracking_status": "source_unreachable" if not discovered_urls else "stale_or_unusable_source",
+            "resource_urls": discovered_urls,
+            "download_diagnostics": diagnostics,
+            "message": "No newer usable PAGASA radar frame was captured. A known previous frame is retained separately from source availability.",
         }
         MAP_STATE_FILE.write_text(json.dumps(result, indent=2), encoding="utf-8")
         print(json.dumps(result, indent=2))
@@ -109,7 +198,7 @@ def main():
     current_timestamp = captured["timestamp"]
     current_body = captured["body"]
     current_path = OUTPUT_DIR / f"radar_{current_timestamp}.png"
-    current_path.write_bytes(current_body)
+    persist(current_path, current_body)
 
     current_analysis = analyze(current_body, False)
     previous_analysis = analyze(previous_body, False) if previous_body else None
@@ -147,30 +236,32 @@ def main():
         }
 
     PREVIOUS_IMAGE.write_bytes(current_body)
-
-    result = {
-        "frames": [
+    MAP_STATE_FILE.write_text(
+        json.dumps(
             {
-                "url": captured["url"],
-                "timestamp": current_timestamp,
-                "path": str(current_path),
-                "bytes": len(current_body),
-                "analysis": current_analysis,
-                "source": "lightweight_playwright",
-            }
-        ],
-        "captured_images": [captured["url"]],
-        "resource_urls": list(dict.fromkeys(resource_urls)),
-        "radar_tracking": tracking,
-        "collector": {
-            "mode": "lightweight",
-            "blocked_unrelated_resources": True,
-            "additional_radar_downloads": 0,
-            "bounded_wait_seconds": 6,
-        },
-    }
-    MAP_STATE_FILE.write_text(json.dumps(result, indent=2), encoding="utf-8")
-
+                "frames": [{
+                    "url": captured["url"],
+                    "timestamp": current_timestamp,
+                    "path": str(current_path),
+                    "bytes": len(current_body),
+                    "analysis": current_analysis,
+                    "source": captured["method"],
+                }],
+                "captured_images": [captured["url"]],
+                "resource_urls": discovered_urls,
+                "radar_tracking": tracking,
+                "collector": {
+                    "mode": "robust_lightweight",
+                    "bounded_wait_seconds": 12,
+                    "direct_download_fallback": True,
+                    "tls_fallback": True,
+                    "download_diagnostics": diagnostics,
+                },
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
     STATE_FILE.write_text(
         json.dumps(
             {
@@ -180,14 +271,13 @@ def main():
                 "image_timestamp": current_timestamp,
                 "localized_image": "radar_data/mandaluyong_radar_localized.png",
                 "tracking_status": tracking["status"],
-                "collector_mode": "lightweight",
+                "collector_mode": captured["method"],
             },
             indent=2,
         ),
         encoding="utf-8",
     )
-
-    print(json.dumps(result, indent=2))
+    print(json.dumps({"success": True, "tracking_status": tracking["status"], "image_timestamp": current_timestamp, "source": captured["method"]}, indent=2))
 
 
 if __name__ == "__main__":

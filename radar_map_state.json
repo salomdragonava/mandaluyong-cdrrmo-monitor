@@ -1,8 +1,9 @@
 {
   "success": false,
-  "checked_at": "2026-09-05T17:05:51.394052+08:00",
+  "checked_at": "2026-09-05T18:06:25.240720+08:00",
   "image_timestamp": "20260902144500",
-  "tracking_status": "no_new_frame",
+  "tracking_status": "source_unreachable",
   "resource_urls": [],
-  "message": "No newer PAGASA radar frame was captured during the bounded discovery window."
+  "download_diagnostics": [],
+  "message": "No newer usable PAGASA radar frame was captured. A known previous frame is retained separately from source availability."
 }

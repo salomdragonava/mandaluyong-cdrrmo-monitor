@@ -60,9 +60,22 @@ def http_get(url, referer=RADAR_PAGE, timeout=30):
 
 
 def timestamp_from_value(value):
-    text = str(value)
+    if value is None:
+        return None
+    text = str(value).strip()
     match = MOSAIC_RE.search(text) or TIMESTAMP_RE.search(text)
-    return match.group(1) if match else None
+    if match:
+        return match.group(1)
+    if text.isdigit():
+        try:
+            epoch = int(text)
+            if epoch > 10_000_000_000:
+                epoch //= 1000
+            if 1_400_000_000 < epoch < 2_100_000_000:
+                return datetime.fromtimestamp(epoch, tz=timezone.utc).strftime('%Y%m%d%H%M%S')
+        except Exception:
+            pass
+    return None
 
 
 def radar_url(value):
@@ -74,15 +87,14 @@ def radar_url(value):
 def timeline_pairs(payload):
     urls = payload.get('image_urls') or []
     observations = payload.get('observation_dates') or []
-    values = []
     if isinstance(observations, dict):
-        values = list(observations.values())
         keys = list(observations.keys())
+        values = list(observations.values())
     elif isinstance(observations, list):
-        values = observations
         keys = list(range(len(observations)))
+        values = observations
     else:
-        keys = []
+        keys, values = [], []
 
     frames = []
     for index, raw_url in enumerate(urls):
@@ -102,24 +114,20 @@ def timeline_pairs(payload):
 
 def fetch_panahon_timeline():
     diagnostics = {
-        'source': 'PANaHON',
-        'endpoint': TIMELINE_API,
-        'status': None,
-        'content_type': None,
-        'bytes': 0,
-        'frame_count': 0,
-        'error': None,
+        'source': 'PANaHON', 'endpoint': TIMELINE_API, 'status': None,
+        'content_type': None, 'bytes': 0, 'frame_count': 0, 'error': None,
     }
     try:
         body, status, content_type = http_get(TIMELINE_API, referer=RADAR_PAGE)
-        diagnostics['status'] = status
-        diagnostics['content_type'] = content_type
-        diagnostics['bytes'] = len(body)
+        diagnostics.update(status=status, content_type=content_type, bytes=len(body))
         data = json.loads(body.decode('utf-8'))
+        if data.get('success') is False:
+            diagnostics['error'] = 'PANaHON returned success=false'
+            return [], diagnostics
         frames = timeline_pairs(data.get('data') or {})
         diagnostics['frame_count'] = len(frames)
         if not frames:
-            diagnostics['error'] = 'Timeline returned no image frames'
+            diagnostics['error'] = 'Timeline returned no parseable image frames'
         return frames, diagnostics
     except Exception as exc:
         diagnostics['error'] = repr(exc)
@@ -128,112 +136,61 @@ def fetch_panahon_timeline():
 
 def download_frame(frame, referer=PANAHON_BASE, method='PANaHON_timeline'):
     diagnostics = {
-        'url': frame['url'],
-        'timestamp': frame.get('timestamp'),
-        'method': method,
-        'status': None,
-        'content_type': None,
-        'bytes': 0,
-        'signature': None,
-        'valid_image': False,
-        'tls_fallback': False,
-        'error': None,
+        'url': frame['url'], 'timestamp': frame.get('timestamp'), 'method': method,
+        'status': None, 'content_type': None, 'bytes': 0, 'signature': None,
+        'valid_image': False, 'tls_fallback': False, 'error': None,
     }
     try:
         body, status, content_type = http_get(frame['url'], referer=referer)
-        diagnostics['status'] = status
-        diagnostics['content_type'] = content_type
-        diagnostics['bytes'] = len(body)
-        diagnostics['signature'] = body[:16].hex()
+        diagnostics.update(status=status, content_type=content_type, bytes=len(body), signature=body[:16].hex())
         diagnostics['valid_image'] = valid_image(body)
         if not diagnostics['valid_image']:
             diagnostics['error'] = 'Response is not a valid image'
             return None, diagnostics
         return body, diagnostics
-    except ssl.SSLError as exc:
-        diagnostics['tls_fallback'] = True
-        diagnostics['error'] = repr(exc)
-        return None, diagnostics
     except Exception as exc:
         diagnostics['error'] = repr(exc)
         return None, diagnostics
 
 
 def persist_current(captured, previous_timestamp, previous_body, discovered_urls, diagnostics):
-    ts = captured['timestamp']
-    body = captured['body']
+    ts, body = captured['timestamp'], captured['body']
     path = OUTPUT_DIR / f'radar_{ts}.png'
     path.write_bytes(body)
     current_analysis = analyze(body, False)
     previous_analysis = analyze(previous_body, False) if previous_body else None
     if previous_analysis and previous_timestamp != ts:
         matches = track(previous_analysis, current_analysis)
-        tracking = {
-            'status': 'ok',
-            'previous_timestamp': previous_timestamp,
-            'current_timestamp': ts,
-            'matches_count': len(matches),
-            'approaching_matches_count': sum(1 for m in matches if m['approaching_mandaluyong']),
-            'matches': matches,
-            'max_movement_km_per_frame': MAX_MOVEMENT_KM_PER_FRAME,
-        }
+        tracking = {'status': 'ok', 'previous_timestamp': previous_timestamp, 'current_timestamp': ts,
+                    'matches_count': len(matches), 'approaching_matches_count': sum(1 for m in matches if m['approaching_mandaluyong']),
+                    'matches': matches, 'max_movement_km_per_frame': MAX_MOVEMENT_KM_PER_FRAME}
     elif previous_timestamp == ts:
-        tracking = {
-            'status': 'unchanged_frame',
-            'previous_timestamp': previous_timestamp,
-            'current_timestamp': ts,
-            'matches_count': 0,
-            'approaching_matches_count': 0,
-            'matches': [],
-            'max_movement_km_per_frame': MAX_MOVEMENT_KM_PER_FRAME,
-        }
+        tracking = {'status': 'unchanged_frame', 'previous_timestamp': previous_timestamp, 'current_timestamp': ts,
+                    'matches_count': 0, 'approaching_matches_count': 0, 'matches': [],
+                    'max_movement_km_per_frame': MAX_MOVEMENT_KM_PER_FRAME}
     else:
-        tracking = {
-            'status': 'insufficient_frames',
-            'previous_timestamp': None,
-            'current_timestamp': ts,
-            'matches_count': 0,
-            'approaching_matches_count': 0,
-            'matches': [],
-            'max_movement_km_per_frame': MAX_MOVEMENT_KM_PER_FRAME,
-        }
+        tracking = {'status': 'insufficient_frames', 'previous_timestamp': None, 'current_timestamp': ts,
+                    'matches_count': 0, 'approaching_matches_count': 0, 'matches': [],
+                    'max_movement_km_per_frame': MAX_MOVEMENT_KM_PER_FRAME}
     PREVIOUS_IMAGE.write_bytes(body)
     MAP_STATE_FILE.write_text(json.dumps({
-        'frames': [{
-            'url': captured['url'],
-            'timestamp': ts,
-            'path': str(path),
-            'bytes': len(body),
-            'analysis': current_analysis,
-            'source': captured['method'],
-        }],
-        'captured_images': [captured['url']],
-        'resource_urls': discovered_urls,
+        'frames': [{'url': captured['url'], 'timestamp': ts, 'path': str(path), 'bytes': len(body),
+                    'analysis': current_analysis, 'source': captured['method']}],
+        'captured_images': [captured['url']], 'resource_urls': discovered_urls,
         'radar_tracking': tracking,
-        'collector': {
-            'mode': 'PANaHON_API_first',
-            'timeline_endpoint': TIMELINE_API,
-            'browser_fallback': True,
-            'source_checked_at': datetime.now(PH_TZ).isoformat(),
-            'download_diagnostics': diagnostics,
-        },
+        'collector': {'mode': 'PANaHON_API_first', 'timeline_endpoint': TIMELINE_API,
+                      'browser_fallback': True, 'source_checked_at': datetime.now(PH_TZ).isoformat(),
+                      'download_diagnostics': diagnostics},
     }, indent=2), encoding='utf-8')
-    STATE_FILE.write_text(json.dumps({
-        'success': True,
-        'checked_at': datetime.now(PH_TZ).isoformat(),
-        'image_url': captured['url'],
-        'image_timestamp': ts,
-        'localized_image': 'radar_data/mandaluyong_radar_localized.png',
-        'tracking_status': tracking['status'],
-        'collector_mode': captured['method'],
-    }, indent=2), encoding='utf-8')
+    STATE_FILE.write_text(json.dumps({'success': True, 'checked_at': datetime.now(PH_TZ).isoformat(),
+                                      'image_url': captured['url'], 'image_timestamp': ts,
+                                      'localized_image': 'radar_data/mandaluyong_radar_localized.png',
+                                      'tracking_status': tracking['status'], 'collector_mode': captured['method']}, indent=2), encoding='utf-8')
     print(json.dumps({'success': True, 'tracking_status': tracking['status'], 'image_timestamp': ts, 'source': captured['method']}, indent=2))
 
 
 def browser_fallback(previous_timestamp):
-    urls = []
-    diagnostics = []
-    browser = None
+    urls, diagnostics = [], []
     try:
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
@@ -248,21 +205,11 @@ def browser_fallback(previous_timestamp):
                 urls.extend(page.evaluate("""() => performance.getEntriesByType('resource').map(e => e.name).filter(u => /radar\\/timeline\\/mosaic-hybrid/i.test(u))"""))
             except Exception as exc:
                 diagnostics.append({'method': 'browser_discovery', 'stage': 'performance_resources', 'error': repr(exc)})
+            browser.close()
     except Exception as exc:
         diagnostics.append({'method': 'browser_discovery', 'stage': 'browser_start', 'error': repr(exc)})
-    finally:
-        try:
-            if browser:
-                browser.close()
-        except Exception:
-            pass
 
-    candidates = []
-    for url in dict.fromkeys(urls):
-        ts = timestamp_from_value(url)
-        if ts:
-            candidates.append((ts, url))
-    candidates.sort(reverse=True)
+    candidates = sorted({(timestamp_from_value(u), u) for u in urls if timestamp_from_value(u)}, reverse=True)
     for ts, url in candidates:
         if ts == previous_timestamp:
             continue
@@ -278,17 +225,15 @@ def main():
     previous_timestamp, previous_body = load_previous()
     frames, timeline_diag = fetch_panahon_timeline()
     discovered_urls = [f['url'] for f in frames]
-    diagnostics = [timeline_diag]
-    captured = None
+    diagnostics, captured = [timeline_diag], None
 
     for frame in sorted(frames, key=lambda f: f.get('timestamp') or '', reverse=True):
-        ts = frame.get('timestamp')
-        if not ts or ts == previous_timestamp:
+        if not frame.get('timestamp') or frame['timestamp'] == previous_timestamp:
             continue
         body, diag = download_frame(frame)
         diagnostics.append(diag)
         if body is not None:
-            captured = {'timestamp': ts, 'url': frame['url'], 'body': body, 'method': 'PANaHON_API'}
+            captured = {'timestamp': frame['timestamp'], 'url': frame['url'], 'body': body, 'method': 'PANaHON_API'}
             break
 
     if captured is None:
@@ -299,27 +244,14 @@ def main():
     discovered_urls = list(dict.fromkeys(discovered_urls))
     if captured is None:
         status = 'stale_or_unusable_source' if frames else 'source_unreachable'
-        result = {
-            'success': False,
-            'checked_at': datetime.now(PH_TZ).isoformat(),
-            'image_timestamp': previous_timestamp,
-            'tracking_status': status,
-            'resource_urls': discovered_urls,
-            'download_diagnostics': diagnostics,
-            'message': 'No newer usable PAGASA/PANaHON radar frame was captured. The previous frame is retained separately from current source availability.',
-        }
+        result = {'success': False, 'checked_at': datetime.now(PH_TZ).isoformat(), 'image_timestamp': previous_timestamp,
+                  'tracking_status': status, 'resource_urls': discovered_urls, 'download_diagnostics': diagnostics,
+                  'message': 'No newer usable PAGASA/PANaHON radar frame was captured. The previous frame is retained separately from current source availability.'}
         MAP_STATE_FILE.write_text(json.dumps(result, indent=2), encoding='utf-8')
-        STATE_FILE.write_text(json.dumps({
-            'success': False,
-            'checked_at': result['checked_at'],
-            'image_timestamp': previous_timestamp,
-            'tracking_status': status,
-            'source_checked': True,
-            'collector_mode': 'PANaHON_API_first',
-        }, indent=2), encoding='utf-8')
+        STATE_FILE.write_text(json.dumps({'success': False, 'checked_at': result['checked_at'], 'image_timestamp': previous_timestamp,
+                                          'tracking_status': status, 'source_checked': True, 'collector_mode': 'PANaHON_API_first'}, indent=2), encoding='utf-8')
         print(json.dumps(result, indent=2))
         return
-
     persist_current(captured, previous_timestamp, previous_body, discovered_urls, diagnostics)
 
 

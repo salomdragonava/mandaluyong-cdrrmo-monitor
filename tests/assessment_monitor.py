@@ -9,6 +9,7 @@ LOG_FILE = Path('assessment_log.json')
 ALERT_FILE = Path('assessment_alert.txt')
 POINTS = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6']
 UNKNOWN = {'UNKNOWN', 'UNAVAILABLE', 'NONE', 'NULL', ''}
+TREND_WINDOW = timedelta(hours=36)
 
 
 def ts(value):
@@ -89,15 +90,16 @@ def assess(history):
     now = parsed[-1][0]
     cutoff = now - timedelta(days=3)
     rows = [row for moment, row in parsed if moment >= cutoff]
+    recent_rows = [row for moment, row in parsed if moment >= now - TREND_WINDOW]
     days = {moment.date() for moment, _ in parsed if moment >= cutoff}
     confidence = 0.90 if len(days) >= 3 and len(rows) >= 3 else (0.75 if len(days) >= 2 and len(rows) >= 3 else 0.45)
 
     score = 0.0
     signals = []
-    rainfall = [num(row.get('rainfall_mm')) for row in rows]
+    recent_rainfall = [num(row.get('rainfall_mm')) for row in recent_rows]
 
-    if rainfall:
-        maximum = max(rainfall)
+    if recent_rainfall:
+        maximum = max(recent_rainfall)
         if maximum >= 10:
             score += 35
             signals.append('high rainfall pulse')
@@ -111,10 +113,8 @@ def assess(history):
     latest = rows[-1]
     high_count, medium_count = source_level_counts(latest)
 
-    # The ProjectLIGTAS risk_level is the source classification. Do not reinterpret
-    # its numerical risk_score as a separate 0-3 flood scale; the public service
-    # documents its risk levels on a 0-100 scale. The score is retained for trend
-    # detection only.
+    # ProjectLIGTAS risk_level is the source classification. Its numerical
+    # risk_score is used for trend detection only.
     if high_count:
         score += 40
         signals.append('high monitoring-point classification')
@@ -129,26 +129,38 @@ def assess(history):
         score += 8
         signals.append('multi-point pressure')
 
-    # Detect repeated rises using changes in the source model score. This is a
-    # trend/precursor signal, not an absolute flood-level measurement.
+    # Trend is deliberately recency-bounded. The old implementation counted
+    # every rise anywhere in the 3-day window, so an earlier wet period could
+    # keep contributing 25 points after local levels had recovered. A precursor
+    # signal must remain visible in the recent 36-hour observations to persist.
     rises = 0
-    for earlier, later in zip(rows, rows[1:]):
+    for earlier, later in zip(recent_rows, recent_rows[1:]):
         before = mean_score(earlier)
         after = mean_score(later)
         if after > before + 0.15:
             rises += 1
 
-    if rises >= 3:
-        score += 25
-        signals.append('persistent water-level rise')
-    elif rises == 2:
-        score += 12
-        signals.append('repeated water-level rise')
+    recent_mean = mean_score(recent_rows[-1]) if recent_rows else 0.0
+    latest_mean = mean_score(latest)
+    local_recovery = (
+        latest_mean <= 0.5
+        and high_count == 0
+        and medium_count == 0
+        and str(latest.get('flood_status')).upper() == 'NORMAL'
+    )
 
-    # Sustained source classifications are meaningful; numerical values such as
-    # 1.8 are not treated as Medium/High because they are not on that scale.
+    if not local_recovery:
+        if rises >= 3:
+            score += 25
+            signals.append('persistent water-level rise')
+        elif rises == 2:
+            score += 12
+            signals.append('repeated water-level rise')
+    elif rises:
+        signals.append('recent water-level rise has recovered')
+
     classified_pressure_rows = []
-    for row in rows:
+    for row in recent_rows:
         high, medium = source_level_counts(row)
         if high or medium >= 2:
             classified_pressure_rows.append(row)
@@ -188,8 +200,6 @@ def assess(history):
     score = max(0, min(100, score))
     risk = 'HIGH' if score >= 65 else 'WATCH' if score >= 35 else 'LOW-MODERATE' if score >= 15 else 'LOW'
 
-    # Imminent requires source-level Medium/High pressure plus forcing. A raw
-    # score such as 1.8 alone can never make the system imminent.
     imminent = (
         pressure_count >= 3
         and (pressure_rising or warning in ('ORANGE', 'RED'))
@@ -203,7 +213,7 @@ def assess(history):
         'risk': risk,
         'score': round(score, 1),
         'confidence': round(confidence, 2),
-        'window': 'latest 3 days',
+        'window': 'latest 3 days; trend signals latest 36 hours',
         'imminent': imminent,
         'lead_signal': (
             'Pre-flood pressure detected; source risk classifications are persisting '
@@ -213,15 +223,16 @@ def assess(history):
         'signals': signals,
         'interpretation': (
             'ProjectLIGTAS risk_level is treated as the source classification. '
-            'Its numerical risk_score is used for trend detection only. The validated '
-            'precursor pattern is accumulation/persistence first, followed by renewed '
-            'rainfall or warning forcing. A low source classification by itself does '
-            'not mean flooding is occurring, and a rising score alone does not trigger '
-            'an imminent prediction.'
+            'Its numerical risk_score is used for trend detection only. Trend and '
+            'rainfall-pulse signals are recency-bounded so recovered local conditions '
+            'do not remain elevated solely because an older rise occurred earlier in '
+            'the 3-day history. The validated precursor pattern is accumulation/'
+            'persistence first, followed by renewed rainfall or warning forcing.'
         ),
         'data_quality': {
             'distinct_days': len(days),
             'rows_in_window': len(rows),
+            'recent_trend_rows': len(recent_rows),
             'radar_available': latest.get('radar_status') not in UNKNOWN,
         },
     }
@@ -242,7 +253,7 @@ def main():
     STATE_FILE.write_text(json.dumps(history, ensure_ascii=False, indent=2), encoding='utf-8')
     prediction = assess(history)
     output = {
-        'schema_version': 4,
+        'schema_version': 5,
         'generated_at': current['timestamp'],
         'model': '3-day flood precursor assessment',
         'prediction': prediction,
@@ -263,7 +274,7 @@ def main():
         f"Risk score: {prediction['score']}/100\n"
         f"Confidence: {prediction['confidence']:.0%}\n"
         f"Imminent window: {imminent}\n"
-        f"Window: latest 3 days\n\n"
+        f"Window: latest 3 days; trend signals latest 36 hours\n\n"
         f"Current flood status: {current['flood_status']}\n"
         f"PAGASA: {current['pagasa_warning']}\n"
         f"Radar: {current['radar_status']}\n\n"

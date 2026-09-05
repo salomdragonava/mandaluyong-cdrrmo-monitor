@@ -40,7 +40,7 @@ jobs:
 
       - name: Run radar collection and threat analysis
         run: |
-          python tests/radar_light.py
+          python tests/rainviewer_radar.py
           python tests/radar_threat.py
 
       - name: Run 3-day flood assessment

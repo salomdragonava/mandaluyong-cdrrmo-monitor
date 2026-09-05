@@ -233,20 +233,29 @@ def persist_current(captured, previous_timestamp, previous_body, discovered_urls
 def browser_fallback(previous_timestamp):
     urls = []
     diagnostics = []
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
-        page.on('response', lambda r: urls.append(r.url) if '/radar/timeline/mosaic-hybrid/' in r.url and r.status == 200 else None)
+    browser = None
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True)
+            page = browser.new_page()
+            page.on('response', lambda r: urls.append(r.url) if '/radar/timeline/mosaic-hybrid/' in r.url and r.status == 200 else None)
+            try:
+                page.goto(RADAR_PAGE, wait_until='domcontentloaded', timeout=30000)
+                page.wait_for_timeout(10000)
+            except Exception as exc:
+                diagnostics.append({'method': 'browser_discovery', 'stage': 'page_goto', 'error': repr(exc)})
+            try:
+                urls.extend(page.evaluate("""() => performance.getEntriesByType('resource').map(e => e.name).filter(u => /radar\\/timeline\\/mosaic-hybrid/i.test(u))"""))
+            except Exception as exc:
+                diagnostics.append({'method': 'browser_discovery', 'stage': 'performance_resources', 'error': repr(exc)})
+    except Exception as exc:
+        diagnostics.append({'method': 'browser_discovery', 'stage': 'browser_start', 'error': repr(exc)})
+    finally:
         try:
-            page.goto(RADAR_PAGE, wait_until='networkidle', timeout=60000)
+            if browser:
+                browser.close()
         except Exception:
-            page.goto(RADAR_PAGE, wait_until='domcontentloaded', timeout=60000)
-        page.wait_for_timeout(20000)
-        try:
-            urls.extend(page.evaluate("""() => performance.getEntriesByType('resource').map(e => e.name).filter(u => /radar\\/timeline\\/mosaic-hybrid/i.test(u))"""))
-        except Exception as exc:
-            diagnostics.append({'method': 'browser_discovery', 'error': repr(exc)})
-        browser.close()
+            pass
 
     candidates = []
     for url in dict.fromkeys(urls):

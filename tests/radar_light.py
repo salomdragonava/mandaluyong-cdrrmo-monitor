@@ -9,11 +9,12 @@ from urllib.request import Request, urlopen
 from PIL import Image, ImageDraw
 from playwright.sync_api import sync_playwright
 
-from radar_monitor import analyze, track, TARGET_LAT, TARGET_LON, MAX_MOVEMENT_KM_PER_FRAME, OUTPUT_DIR, STATE_FILE, MAP_STATE_FILE, PREVIOUS_IMAGE
+from radar_monitor import analyze, track, MAX_MOVEMENT_KM_PER_FRAME, OUTPUT_DIR, STATE_FILE, MAP_STATE_FILE, PREVIOUS_IMAGE
 
 RADAR_PAGE = "https://www.pagasa.dost.gov.ph/radar"
 PH_TZ = timezone(timedelta(hours=8))
 MOSAIC_RE = re.compile(r"ph_hybrid_mosaic_(\d{14})")
+MOSAIC_URL_RE = re.compile(r"https?[^\"'\s]+/radar/timeline/mosaic-hybrid/[^\"'\s]+")
 
 
 def load_previous():
@@ -143,7 +144,6 @@ def main():
             if url not in discovered_urls:
                 discovered_urls.append(url)
 
-        # Also inspect the page's JavaScript resources for radar image URLs.
         try:
             script_urls = page.evaluate(
                 """() => [...document.scripts].map(s => s.src).filter(Boolean).filter(u => /radar|map/i.test(u))"""
@@ -153,9 +153,8 @@ def main():
                     response = page.request.get(script_url, timeout=30000)
                     if response.ok:
                         text = response.text()
-                        discovered_urls.extend(MOSAIC_RE.findall(text))
-                        for match in re.findall(r'https?[^\"\'\s]+/radar/timeline/mosaic-hybrid/[^\"\'\s]+', text):
-                            discovered_urls.append(match.replace('\\u0026', '&'))
+                        for match in MOSAIC_URL_RE.findall(text):
+                            discovered_urls.append(match.replace("\\u0026", "&"))
                 except Exception:
                     pass
         except Exception:
@@ -165,8 +164,6 @@ def main():
 
     discovered_urls = list(dict.fromkeys(u for u in discovered_urls if "/radar/timeline/mosaic-hybrid/" in u))
 
-    # If the browser response race was missed, explicitly download every
-    # discovered candidate until a valid radar image is obtained.
     if captured is None:
         candidates = []
         for url in discovered_urls:

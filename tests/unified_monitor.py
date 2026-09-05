@@ -120,6 +120,19 @@ def action_status(level, flood_status, pred, candidates, elevated_escape):
     return '🟢 SAFE', 'No immediate action is needed. Conditions are currently stable.'
 
 
+def radar_display_status(radar):
+    status = radar.get('status')
+    if status == 'ok':
+        return '🟢 No qualifying radar core detected for Mandaluyong'
+    if status in {'stale_or_unusable_source', 'unchanged_frame'}:
+        timestamp = radar.get('current_timestamp') or radar.get('previous_timestamp')
+        suffix = f' | last frame: {timestamp}' if timestamp else ''
+        return f'🟡 Radar frame stale/unavailable for movement tracking{suffix}'
+    if status == 'source_unreachable':
+        return '⚪ Radar source unreachable'
+    return '⚪ Radar status unavailable'
+
+
 def build_messages():
     pagasa = load(PAGASA_STATE, {})
     flood = load(FLOOD_STATE, {})
@@ -180,10 +193,8 @@ def build_messages():
                 f'{item.get("distance_to_mandaluyong_km", 0):.1f} km | '
                 f'movement {item.get("movement_km", 0):.1f} km'
             )
-    elif radar.get('status') == 'ok':
-        lines.append('🟢 No qualifying radar core detected for Mandaluyong')
     else:
-        lines.append('⚪ Radar status unavailable')
+        lines.append(radar_display_status(radar))
 
     if pred:
         icon = {

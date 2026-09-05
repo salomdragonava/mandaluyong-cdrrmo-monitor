@@ -92,22 +92,43 @@ jobs:
       - name: Save monitoring and assessment state to repository
         shell: bash
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add pagasa_state.json flood_state.json monitor_notification_state.json radar_state.json radar_map_state.json radar_threat_state.json radar_notification_state.json assessment_history.json assessment_state.json assessment_log.json
+
+          # Snapshot runtime-generated state before refreshing the branch. A run may
+          # have started from an older commit while another run advanced main.
+          state_dir="$(mktemp -d)"
+          state_files=(
+            pagasa_state.json
+            flood_state.json
+            monitor_notification_state.json
+            radar_state.json
+            radar_map_state.json
+            radar_threat_state.json
+            radar_notification_state.json
+            assessment_history.json
+            assessment_state.json
+            assessment_log.json
+          )
+          for file in "${state_files[@]}"; do
+            if [ -f "$file" ]; then cp "$file" "$state_dir/$file"; fi
+          done
+
+          # Always base the state commit on the current remote main, rather than
+          # rebasing generated JSON onto an arbitrary older workflow checkout.
+          git fetch origin main
+          git reset --hard origin/main
+
+          for file in "${state_files[@]}"; do
+            if [ -f "$state_dir/$file" ]; then cp "$state_dir/$file" "$file"; fi
+          done
+
+          git add "${state_files[@]}"
           if git diff --cached --quiet; then
             echo "No repository state changes."
             exit 0
           fi
+
           git commit -m "Update unified monitoring and assessment state"
-          for attempt in 1 2 3 4 5; do
-            git fetch origin main
-            if git rebase --autostash origin/main; then
-              if git push origin HEAD:main; then exit 0; fi
-            fi
-            git rebase --abort 2>/dev/null || true
-            echo "Push attempt $attempt failed; refreshing remote state."
-            sleep 2
-          done
-          echo "Unable to push unified monitoring state after 5 attempts."
-          exit 1
+          git push origin HEAD:main

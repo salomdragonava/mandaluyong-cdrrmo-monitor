@@ -7,6 +7,7 @@ STATE_FILE = Path('assessment_history.json')
 OUTPUT_FILE = Path('assessment_state.json')
 LOG_FILE = Path('assessment_log.json')
 ALERT_FILE = Path('assessment_alert.txt')
+FLOOD_STATE_FILE = Path('flood_state.json')
 POINTS = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6']
 UNKNOWN = {'UNKNOWN', 'UNAVAILABLE', 'NONE', 'NULL', ''}
 TREND_WINDOW = timedelta(hours=36)
@@ -30,8 +31,8 @@ def load(path, default):
         return default
 
 
-def snapshot():
-    flood = load(Path('flood_state.json'), {})
+def snapshot(flood=None):
+    flood = flood if flood is not None else load(FLOOD_STATE_FILE, {})
     pagasa = load(Path('pagasa_state.json'), {})
     radar = load(Path('radar_state.json'), {})
     points = {}
@@ -86,6 +87,9 @@ def assess(history):
         except (KeyError, TypeError, ValueError):
             pass
 
+    if not parsed:
+        return None
+
     parsed.sort(key=lambda item: item[0])
     now = parsed[-1][0]
     cutoff = now - timedelta(days=3)
@@ -129,10 +133,6 @@ def assess(history):
         score += 8
         signals.append('multi-point pressure')
 
-    # Trend is deliberately recency-bounded. The old implementation counted
-    # every rise anywhere in the 3-day window, so an earlier wet period could
-    # keep contributing 25 points after local levels had recovered. A precursor
-    # signal must remain visible in the recent 36-hour observations to persist.
     rises = 0
     for earlier, later in zip(recent_rows, recent_rows[1:]):
         before = mean_score(earlier)
@@ -140,7 +140,6 @@ def assess(history):
         if after > before + 0.15:
             rises += 1
 
-    recent_mean = mean_score(recent_rows[-1]) if recent_rows else 0.0
     latest_mean = mean_score(latest)
     local_recovery = (
         latest_mean <= 0.5
@@ -240,24 +239,52 @@ def assess(history):
 
 def main():
     current = snapshot()
-    if not current['timestamp']:
-        raise SystemExit('flood_state.json has no usable timestamp')
-
     history = load(STATE_FILE, [])
-    if history and history[-1].get('timestamp') == current['timestamp']:
-        history[-1] = current
+    local_data_current = bool(current['timestamp'])
+
+    if local_data_current:
+        if history and history[-1].get('timestamp') == current['timestamp']:
+            history[-1] = current
+        else:
+            history.append(current)
+        current_for_assessment = current
     else:
-        history.append(current)
+        # A temporary outage of the flood-risk API must not kill the hourly
+        # monitoring pipeline. Use the last known validated snapshot for the
+        # analytical calculation, but explicitly mark the local data stale.
+        # Never manufacture a timestamp or present the stale snapshot as fresh.
+        valid_history = [row for row in history if row.get('timestamp')]
+        if not valid_history:
+            raise SystemExit('No usable flood snapshot exists for assessment')
+        current_for_assessment = valid_history[-1]
+        current_for_assessment = dict(current_for_assessment)
+        current_for_assessment['local_data_current'] = False
+        current_for_assessment['local_data_status'] = 'STALE/UNAVAILABLE'
+        signals_note = 'local flood monitor unavailable; using last known snapshot'
 
     history = history[-5000:]
-    STATE_FILE.write_text(json.dumps(history, ensure_ascii=False, indent=2), encoding='utf-8')
     prediction = assess(history)
+    if prediction is None:
+        raise SystemExit('No usable assessment history exists')
+
+    if not local_data_current:
+        prediction['confidence'] = round(max(0.2, prediction['confidence'] - 0.15), 2)
+        prediction['signals'].append('local flood monitor unavailable; last known snapshot used')
+        prediction['data_quality']['local_data_current'] = False
+        prediction['data_quality']['local_data_status'] = 'STALE/UNAVAILABLE'
+        prediction['data_quality']['last_known_flood_timestamp'] = current_for_assessment.get('timestamp')
+    else:
+        prediction['data_quality']['local_data_current'] = True
+        prediction['data_quality']['local_data_status'] = 'CURRENT'
+
+    STATE_FILE.write_text(json.dumps(history, ensure_ascii=False, indent=2), encoding='utf-8')
+    generated_at = datetime.now(PH_TZ).strftime('%Y-%m-%d %H:%M:%S')
     output = {
-        'schema_version': 5,
-        'generated_at': current['timestamp'],
+        'schema_version': 6,
+        'generated_at': generated_at,
         'model': '3-day flood precursor assessment',
         'prediction': prediction,
-        'current_snapshot': current,
+        'current_snapshot': current_for_assessment,
         'data_quality': prediction['data_quality'],
     }
     OUTPUT_FILE.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding='utf-8')
@@ -268,6 +295,7 @@ def main():
     icon = {'HIGH': '🔴', 'WATCH': '🟠', 'LOW-MODERATE': '🟡', 'LOW': '🟢', 'UNKNOWN': '⚪'}[prediction['risk']]
     imminent = 'YES' if prediction['imminent'] else 'NO'
     signals = ', '.join(prediction['signals']) or 'No significant precursor signals'
+    freshness = 'CURRENT' if local_data_current else f"STALE/UNAVAILABLE — last known flood data: {current_for_assessment.get('timestamp')}"
     ALERT_FILE.write_text(
         f"{icon} MANDALUYONG FLOOD ASSESSMENT\n\n"
         f"Prediction: {prediction['risk']}\n"
@@ -275,9 +303,10 @@ def main():
         f"Confidence: {prediction['confidence']:.0%}\n"
         f"Imminent window: {imminent}\n"
         f"Window: latest 3 days; trend signals latest 36 hours\n\n"
-        f"Current flood status: {current['flood_status']}\n"
-        f"PAGASA: {current['pagasa_warning']}\n"
-        f"Radar: {current['radar_status']}\n\n"
+        f"Local flood data: {freshness}\n"
+        f"Current flood status: {current_for_assessment['flood_status']}\n"
+        f"PAGASA: {current_for_assessment['pagasa_warning']}\n"
+        f"Radar: {current_for_assessment['radar_status']}\n\n"
         f"Signals:\n{signals}\n\n"
         f"Assessment: {prediction['interpretation']}\n",
         encoding='utf-8',

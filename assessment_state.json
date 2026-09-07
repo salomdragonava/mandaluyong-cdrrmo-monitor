@@ -1,10 +1,10 @@
 {
   "schema_version": 6,
-  "generated_at": "2026-09-08 01:05:53",
+  "generated_at": "2026-09-08 02:07:37",
   "model": "3-day flood precursor assessment",
   "prediction": {
-    "risk": "LOW-MODERATE",
-    "score": 18.0,
+    "risk": "LOW",
+    "score": 8.0,
     "confidence": 0.85,
     "window": "latest 3 days; trend signals latest 36 hours",
     "imminent": false,
@@ -12,13 +12,12 @@
     "signals": [
       "rainfall pulse",
       "recent water-level rise has recovered",
-      "PAGASA yellow",
       "radar unavailable; confidence slightly reduced"
     ],
     "interpretation": "ProjectLIGTAS risk_level is treated as the source classification. Its numerical risk_score is used for trend detection only. Trend and rainfall-pulse signals are recency-bounded so recovered local conditions do not remain elevated solely because an older rise occurred earlier in the 3-day history. The validated precursor pattern is accumulation/persistence first, followed by renewed rainfall or warning forcing.",
     "data_quality": {
       "distinct_days": 4,
-      "rows_in_window": 62,
+      "rows_in_window": 61,
       "recent_trend_rows": 36,
       "radar_available": false,
       "local_data_current": true,
@@ -26,53 +25,53 @@
     }
   },
   "current_snapshot": {
-    "timestamp": "2026-09-07 17:05:22",
-    "rainfall_mm": 0.8,
+    "timestamp": "2026-09-07 18:06:59",
+    "rainfall_mm": 0.1,
     "points": {
       "P1": {
         "risk_level": "Low",
-        "risk_score": 0.5,
-        "rainfall_mm": 0.8,
-        "timestamp": "2026-09-07 17:05:21"
+        "risk_score": 0.0,
+        "rainfall_mm": 0.1,
+        "timestamp": "2026-09-07 18:06:59"
       },
       "P2": {
         "risk_level": "Low",
-        "risk_score": 0.5,
-        "rainfall_mm": 0.8,
-        "timestamp": "2026-09-07 17:05:21"
+        "risk_score": 0.0,
+        "rainfall_mm": 0.1,
+        "timestamp": "2026-09-07 18:06:59"
       },
       "P3": {
         "risk_level": "Low",
-        "risk_score": 0.3,
-        "rainfall_mm": 0.4,
-        "timestamp": "2026-09-07 17:05:21"
+        "risk_score": 0.0,
+        "rainfall_mm": 0.1,
+        "timestamp": "2026-09-07 18:06:59"
       },
       "P4": {
         "risk_level": "Low",
-        "risk_score": 0.5,
-        "rainfall_mm": 0.8,
-        "timestamp": "2026-09-07 17:05:21"
+        "risk_score": 0.0,
+        "rainfall_mm": 0.1,
+        "timestamp": "2026-09-07 18:06:59"
       },
       "P5": {
         "risk_level": "Low",
-        "risk_score": 0.5,
-        "rainfall_mm": 0.8,
-        "timestamp": "2026-09-07 17:05:22"
+        "risk_score": 0.0,
+        "rainfall_mm": 0.1,
+        "timestamp": "2026-09-07 18:06:59"
       },
       "P6": {
         "risk_level": "Low",
-        "risk_score": 0.2,
-        "rainfall_mm": 0.4,
-        "timestamp": "2026-09-07 17:05:22"
+        "risk_score": 0.0,
+        "rainfall_mm": 0.1,
+        "timestamp": "2026-09-07 18:06:59"
       }
     },
-    "pagasa_warning": "YELLOW",
+    "pagasa_warning": "GREEN",
     "radar_status": "UNKNOWN",
     "flood_status": "NORMAL"
   },
   "data_quality": {
     "distinct_days": 4,
-    "rows_in_window": 62,
+    "rows_in_window": 61,
     "recent_trend_rows": 36,
     "radar_available": false,
     "local_data_current": true,

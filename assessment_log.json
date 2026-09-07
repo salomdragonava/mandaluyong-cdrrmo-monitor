@@ -31,7 +31,7 @@
   },
   "latest_monitor_run": {
     "schema_version": 6,
-    "generated_at": "2026-09-07 13:06:07",
+    "generated_at": "2026-09-07 14:08:47",
     "model": "3-day flood precursor assessment",
     "prediction": {
       "risk": "LOW",
@@ -47,7 +47,7 @@
       "interpretation": "ProjectLIGTAS risk_level is treated as the source classification. Its numerical risk_score is used for trend detection only. Trend and rainfall-pulse signals are recency-bounded so recovered local conditions do not remain elevated solely because an older rise occurred earlier in the 3-day history. The validated precursor pattern is accumulation/persistence first, followed by renewed rainfall or warning forcing.",
       "data_quality": {
         "distinct_days": 4,
-        "rows_in_window": 62,
+        "rows_in_window": 61,
         "recent_trend_rows": 31,
         "radar_available": false,
         "local_data_current": true,
@@ -55,44 +55,44 @@
       }
     },
     "current_snapshot": {
-      "timestamp": "2026-09-07 05:05:31",
+      "timestamp": "2026-09-07 06:08:20",
       "rainfall_mm": 1.0,
       "points": {
         "P1": {
           "risk_level": "Low",
           "risk_score": 0.6,
           "rainfall_mm": 1.0,
-          "timestamp": "2026-09-07 05:05:31"
+          "timestamp": "2026-09-07 06:08:20"
         },
         "P2": {
           "risk_level": "Low",
           "risk_score": 0.6,
           "rainfall_mm": 1.0,
-          "timestamp": "2026-09-07 05:05:31"
+          "timestamp": "2026-09-07 06:08:20"
         },
         "P3": {
           "risk_level": "Low",
           "risk_score": 0.6,
           "rainfall_mm": 1.0,
-          "timestamp": "2026-09-07 05:05:31"
+          "timestamp": "2026-09-07 06:08:20"
         },
         "P4": {
           "risk_level": "Low",
           "risk_score": 0.6,
           "rainfall_mm": 1.0,
-          "timestamp": "2026-09-07 05:05:31"
+          "timestamp": "2026-09-07 06:08:20"
         },
         "P5": {
           "risk_level": "Low",
           "risk_score": 0.6,
           "rainfall_mm": 1.0,
-          "timestamp": "2026-09-07 05:05:31"
+          "timestamp": "2026-09-07 06:08:20"
         },
         "P6": {
           "risk_level": "Low",
           "risk_score": 0.6,
           "rainfall_mm": 1.0,
-          "timestamp": "2026-09-07 05:05:31"
+          "timestamp": "2026-09-07 06:08:20"
         }
       },
       "pagasa_warning": "YELLOW",
@@ -101,7 +101,7 @@
     },
     "data_quality": {
       "distinct_days": 4,
-      "rows_in_window": 62,
+      "rows_in_window": 61,
       "recent_trend_rows": 31,
       "radar_available": false,
       "local_data_current": true,

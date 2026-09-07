@@ -1,9 +1,9 @@
 {
   "frames": [
     {
-      "url": "https://tilecache.rainviewer.com/v2/radar/4f1a2a267d13/512/6/14.5794/121.0359/2/1_0.png",
-      "timestamp": "20260907140000",
-      "path": "radar_data/radar_20260907140000.png",
+      "url": "https://tilecache.rainviewer.com/v2/radar/a0047bd09f58/512/6/14.5794/121.0359/2/1_0.png",
+      "timestamp": "20260907150000",
+      "path": "radar_data/radar_20260907150000.png",
       "bytes": 1096,
       "analysis": {
         "image_size": [
@@ -29,15 +29,15 @@
     }
   ],
   "captured_images": [
-    "https://tilecache.rainviewer.com/v2/radar/4f1a2a267d13/512/6/14.5794/121.0359/2/1_0.png"
+    "https://tilecache.rainviewer.com/v2/radar/a0047bd09f58/512/6/14.5794/121.0359/2/1_0.png"
   ],
   "resource_urls": [
-    "https://tilecache.rainviewer.com/v2/radar/4f1a2a267d13/512/6/14.5794/121.0359/2/1_0.png"
+    "https://tilecache.rainviewer.com/v2/radar/a0047bd09f58/512/6/14.5794/121.0359/2/1_0.png"
   ],
   "radar_tracking": {
     "status": "ok",
-    "previous_timestamp": "20260907130000",
-    "current_timestamp": "20260907140000",
+    "previous_timestamp": "20260907140000",
+    "current_timestamp": "20260907150000",
     "matches_count": 0,
     "approaching_matches_count": 0,
     "matches": [],
@@ -53,21 +53,21 @@
       "zoom": 6
     },
     "freshness_limit_minutes": 20,
-    "source_checked_at": "2026-09-07T22:06:48.372283+08:00",
+    "source_checked_at": "2026-09-07T23:06:47.545337+08:00",
     "download_diagnostics": [
       {
         "source": "RainViewer",
         "endpoint": "https://api.rainviewer.com/public/weather-maps.json",
         "status": 200,
         "content_type": "application/json",
-        "bytes": 818,
-        "frame_count": 13,
-        "generated": 1788789923
+        "bytes": 766,
+        "frame_count": 12,
+        "generated": 1788793522
       },
       {
         "source": "RainViewer",
-        "url": "https://tilecache.rainviewer.com/v2/radar/4f1a2a267d13/512/6/14.5794/121.0359/2/1_0.png",
-        "timestamp": "20260907140000",
+        "url": "https://tilecache.rainviewer.com/v2/radar/a0047bd09f58/512/6/14.5794/121.0359/2/1_0.png",
+        "timestamp": "20260907150000",
         "age_minutes": 6.8,
         "status": 200,
         "content_type": "image/png",

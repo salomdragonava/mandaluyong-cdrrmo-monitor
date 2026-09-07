@@ -31,19 +31,20 @@
   },
   "latest_monitor_run": {
     "schema_version": 6,
-    "generated_at": "2026-09-08 02:07:37",
+    "generated_at": "2026-09-08 03:05:43",
     "model": "3-day flood precursor assessment",
     "prediction": {
       "risk": "LOW",
       "score": 8.0,
-      "confidence": 0.85,
+      "confidence": 0.7,
       "window": "latest 3 days; trend signals latest 36 hours",
       "imminent": false,
       "lead_signal": "No validated imminent pattern yet.",
       "signals": [
         "rainfall pulse",
         "recent water-level rise has recovered",
-        "radar unavailable; confidence slightly reduced"
+        "radar unavailable; confidence slightly reduced",
+        "local flood monitor unavailable; last known snapshot used"
       ],
       "interpretation": "ProjectLIGTAS risk_level is treated as the source classification. Its numerical risk_score is used for trend detection only. Trend and rainfall-pulse signals are recency-bounded so recovered local conditions do not remain elevated solely because an older rise occurred earlier in the 3-day history. The validated precursor pattern is accumulation/persistence first, followed by renewed rainfall or warning forcing.",
       "data_quality": {
@@ -51,8 +52,9 @@
         "rows_in_window": 61,
         "recent_trend_rows": 36,
         "radar_available": false,
-        "local_data_current": true,
-        "local_data_status": "CURRENT"
+        "local_data_current": false,
+        "local_data_status": "STALE/UNAVAILABLE",
+        "last_known_flood_timestamp": "2026-09-07 18:06:59"
       }
     },
     "current_snapshot": {
@@ -98,15 +100,18 @@
       },
       "pagasa_warning": "GREEN",
       "radar_status": "UNKNOWN",
-      "flood_status": "NORMAL"
+      "flood_status": "NORMAL",
+      "local_data_current": false,
+      "local_data_status": "STALE/UNAVAILABLE"
     },
     "data_quality": {
       "distinct_days": 4,
       "rows_in_window": 61,
       "recent_trend_rows": 36,
       "radar_available": false,
-      "local_data_current": true,
-      "local_data_status": "CURRENT"
+      "local_data_current": false,
+      "local_data_status": "STALE/UNAVAILABLE",
+      "last_known_flood_timestamp": "2026-09-07 18:06:59"
     }
   }
 }

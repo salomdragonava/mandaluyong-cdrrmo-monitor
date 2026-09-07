@@ -1,16 +1,15 @@
 {
   "schema_version": 6,
-  "generated_at": "2026-09-07 12:06:23",
+  "generated_at": "2026-09-07 13:06:07",
   "model": "3-day flood precursor assessment",
   "prediction": {
-    "risk": "LOW-MODERATE",
-    "score": 22.0,
+    "risk": "LOW",
+    "score": 10.0,
     "confidence": 0.85,
     "window": "latest 3 days; trend signals latest 36 hours",
     "imminent": false,
     "lead_signal": "No validated imminent pattern yet.",
     "signals": [
-      "repeated water-level rise",
       "PAGASA yellow",
       "radar unavailable; confidence slightly reduced"
     ],
@@ -25,44 +24,44 @@
     }
   },
   "current_snapshot": {
-    "timestamp": "2026-09-07 04:05:48",
+    "timestamp": "2026-09-07 05:05:31",
     "rainfall_mm": 1.0,
     "points": {
       "P1": {
         "risk_level": "Low",
         "risk_score": 0.6,
         "rainfall_mm": 1.0,
-        "timestamp": "2026-09-07 04:05:48"
+        "timestamp": "2026-09-07 05:05:31"
       },
       "P2": {
         "risk_level": "Low",
         "risk_score": 0.6,
         "rainfall_mm": 1.0,
-        "timestamp": "2026-09-07 04:05:48"
+        "timestamp": "2026-09-07 05:05:31"
       },
       "P3": {
         "risk_level": "Low",
         "risk_score": 0.6,
         "rainfall_mm": 1.0,
-        "timestamp": "2026-09-07 04:05:48"
+        "timestamp": "2026-09-07 05:05:31"
       },
       "P4": {
         "risk_level": "Low",
         "risk_score": 0.6,
         "rainfall_mm": 1.0,
-        "timestamp": "2026-09-07 04:05:48"
+        "timestamp": "2026-09-07 05:05:31"
       },
       "P5": {
         "risk_level": "Low",
         "risk_score": 0.6,
         "rainfall_mm": 1.0,
-        "timestamp": "2026-09-07 04:05:48"
+        "timestamp": "2026-09-07 05:05:31"
       },
       "P6": {
         "risk_level": "Low",
         "risk_score": 0.6,
         "rainfall_mm": 1.0,
-        "timestamp": "2026-09-07 04:05:48"
+        "timestamp": "2026-09-07 05:05:31"
       }
     },
     "pagasa_warning": "YELLOW",

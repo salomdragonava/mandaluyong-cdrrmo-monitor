@@ -1,11 +1,58 @@
 {
   "status": "ok",
   "collector_tracking_status": "ok",
-  "previous_timestamp": "20260908120000",
-  "current_timestamp": "20260908130000",
-  "match_count": 1,
-  "threat_candidate_count": 0,
-  "top_threats": [],
-  "alert_recommendation": "NO_THREAT_CANDIDATE",
+  "previous_timestamp": "20260908130000",
+  "current_timestamp": "20260908140000",
+  "match_count": 3,
+  "threat_candidate_count": 2,
+  "top_threats": [
+    {
+      "previous_class": "cyan",
+      "current_class": "purple",
+      "pixels_previous": 12,
+      "pixels_current": 9,
+      "from_lonlat": [
+        121.7079,
+        13.2999
+      ],
+      "to_lonlat": [
+        121.3728,
+        13.9192
+      ],
+      "movement_km": 77.7,
+      "bearing_deg": 332.3,
+      "previous_distance_km": 159.3,
+      "distance_to_mandaluyong_km": 81.7,
+      "distance_change_km": -77.6,
+      "approaching_mandaluyong": true,
+      "threat_score": 77.3,
+      "trend": "approaching",
+      "threat_candidate": true
+    },
+    {
+      "previous_class": "blue",
+      "current_class": "blue",
+      "pixels_previous": 17,
+      "pixels_current": 32,
+      "from_lonlat": [
+        121.7688,
+        13.354
+      ],
+      "to_lonlat": [
+        121.2227,
+        13.7805
+      ],
+      "movement_km": 75.6,
+      "bearing_deg": 308.8,
+      "previous_distance_km": 157.2,
+      "distance_to_mandaluyong_km": 90.9,
+      "distance_change_km": -66.3,
+      "approaching_mandaluyong": true,
+      "threat_score": 37.6,
+      "trend": "approaching",
+      "threat_candidate": true
+    }
+  ],
+  "alert_recommendation": "MONITOR",
   "note": "Diagnostic ranking only. Color classes are not assigned PAGASA dBZ or rainfall-warning thresholds."
 }

@@ -1,11 +1,35 @@
 {
   "status": "ok",
   "collector_tracking_status": "ok",
-  "previous_timestamp": "20260908090000",
-  "current_timestamp": "20260908100000",
-  "match_count": 0,
-  "threat_candidate_count": 0,
-  "top_threats": [],
-  "alert_recommendation": "NO_THREAT_CANDIDATE",
+  "previous_timestamp": "20260908100000",
+  "current_timestamp": "20260908110000",
+  "match_count": 4,
+  "threat_candidate_count": 1,
+  "top_threats": [
+    {
+      "previous_class": "cyan",
+      "current_class": "cyan",
+      "pixels_previous": 12,
+      "pixels_current": 11,
+      "from_lonlat": [
+        121.7079,
+        13.2999
+      ],
+      "to_lonlat": [
+        121.5353,
+        13.9115
+      ],
+      "movement_km": 70.4,
+      "bearing_deg": 344.7,
+      "previous_distance_km": 159.3,
+      "distance_to_mandaluyong_km": 91.5,
+      "distance_change_km": -67.8,
+      "approaching_mandaluyong": true,
+      "threat_score": 32.9,
+      "trend": "approaching",
+      "threat_candidate": true
+    }
+  ],
+  "alert_recommendation": "MONITOR",
   "note": "Diagnostic ranking only. Color classes are not assigned PAGASA dBZ or rainfall-warning thresholds."
 }

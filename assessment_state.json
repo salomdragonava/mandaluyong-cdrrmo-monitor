@@ -1,6 +1,6 @@
 {
   "schema_version": 6,
-  "generated_at": "2026-09-11 04:06:12",
+  "generated_at": "2026-09-11 05:05:59",
   "model": "3-day flood precursor assessment",
   "prediction": {
     "risk": "WATCH",
@@ -26,44 +26,44 @@
     }
   },
   "current_snapshot": {
-    "timestamp": "2026-09-10 20:05:43",
-    "rainfall_mm": 1.5,
+    "timestamp": "2026-09-10 21:05:35",
+    "rainfall_mm": 2.4,
     "points": {
       "P1": {
         "risk_level": "Low",
-        "risk_score": 0.9,
-        "rainfall_mm": 1.5,
-        "timestamp": "2026-09-10 20:05:42"
+        "risk_score": 1.0,
+        "rainfall_mm": 1.7,
+        "timestamp": "2026-09-10 21:05:35"
       },
       "P2": {
         "risk_level": "Low",
-        "risk_score": 0.9,
-        "rainfall_mm": 1.5,
-        "timestamp": "2026-09-10 20:05:42"
+        "risk_score": 1.4,
+        "rainfall_mm": 2.4,
+        "timestamp": "2026-09-10 21:05:35"
       },
       "P3": {
         "risk_level": "Low",
-        "risk_score": 0.9,
-        "rainfall_mm": 1.5,
-        "timestamp": "2026-09-10 20:05:42"
+        "risk_score": 1.0,
+        "rainfall_mm": 1.7,
+        "timestamp": "2026-09-10 21:05:35"
       },
       "P4": {
         "risk_level": "Low",
-        "risk_score": 0.9,
-        "rainfall_mm": 1.5,
-        "timestamp": "2026-09-10 20:05:42"
+        "risk_score": 1.0,
+        "rainfall_mm": 1.7,
+        "timestamp": "2026-09-10 21:05:35"
       },
       "P5": {
         "risk_level": "Low",
-        "risk_score": 0.9,
-        "rainfall_mm": 1.5,
-        "timestamp": "2026-09-10 20:05:42"
+        "risk_score": 1.0,
+        "rainfall_mm": 1.7,
+        "timestamp": "2026-09-10 21:05:35"
       },
       "P6": {
         "risk_level": "Low",
-        "risk_score": 0.9,
-        "rainfall_mm": 1.5,
-        "timestamp": "2026-09-10 20:05:43"
+        "risk_score": 1.0,
+        "rainfall_mm": 1.7,
+        "timestamp": "2026-09-10 21:05:35"
       }
     },
     "pagasa_warning": "YELLOW",

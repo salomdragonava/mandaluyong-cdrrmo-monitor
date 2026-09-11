@@ -1,9 +1,9 @@
 {
   "frames": [
     {
-      "url": "https://tilecache.rainviewer.com/v2/radar/027678b53d0c/512/6/14.5794/121.0359/2/1_0.png",
-      "timestamp": "20260911090000",
-      "path": "radar_data/radar_20260911090000.png",
+      "url": "https://tilecache.rainviewer.com/v2/radar/9aa1c6b45ffe/512/6/14.5794/121.0359/2/1_0.png",
+      "timestamp": "20260911100000",
+      "path": "radar_data/radar_20260911100000.png",
       "bytes": 1096,
       "analysis": {
         "image_size": [
@@ -29,15 +29,15 @@
     }
   ],
   "captured_images": [
-    "https://tilecache.rainviewer.com/v2/radar/027678b53d0c/512/6/14.5794/121.0359/2/1_0.png"
+    "https://tilecache.rainviewer.com/v2/radar/9aa1c6b45ffe/512/6/14.5794/121.0359/2/1_0.png"
   ],
   "resource_urls": [
-    "https://tilecache.rainviewer.com/v2/radar/027678b53d0c/512/6/14.5794/121.0359/2/1_0.png"
+    "https://tilecache.rainviewer.com/v2/radar/9aa1c6b45ffe/512/6/14.5794/121.0359/2/1_0.png"
   ],
   "radar_tracking": {
     "status": "ok",
-    "previous_timestamp": "20260911080000",
-    "current_timestamp": "20260911090000",
+    "previous_timestamp": "20260911090000",
+    "current_timestamp": "20260911100000",
     "matches_count": 0,
     "approaching_matches_count": 0,
     "matches": [],
@@ -53,7 +53,7 @@
       "zoom": 6
     },
     "freshness_limit_minutes": 20,
-    "source_checked_at": "2026-09-11T17:06:34.122494+08:00",
+    "source_checked_at": "2026-09-11T18:06:32.322445+08:00",
     "download_diagnostics": [
       {
         "source": "RainViewer",
@@ -62,13 +62,13 @@
         "content_type": "application/json",
         "bytes": 818,
         "frame_count": 13,
-        "generated": 1789117522
+        "generated": 1789121132
       },
       {
         "source": "RainViewer",
-        "url": "https://tilecache.rainviewer.com/v2/radar/027678b53d0c/512/6/14.5794/121.0359/2/1_0.png",
-        "timestamp": "20260911090000",
-        "age_minutes": 6.6,
+        "url": "https://tilecache.rainviewer.com/v2/radar/9aa1c6b45ffe/512/6/14.5794/121.0359/2/1_0.png",
+        "timestamp": "20260911100000",
+        "age_minutes": 6.5,
         "status": 200,
         "content_type": "image/png",
         "bytes": 1096,

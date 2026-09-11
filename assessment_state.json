@@ -1,6 +1,6 @@
 {
   "schema_version": 6,
-  "generated_at": "2026-09-11 11:06:35",
+  "generated_at": "2026-09-11 12:06:37",
   "model": "3-day flood precursor assessment",
   "prediction": {
     "risk": "LOW-MODERATE",
@@ -18,51 +18,51 @@
     "data_quality": {
       "distinct_days": 4,
       "rows_in_window": 72,
-      "recent_trend_rows": 36,
+      "recent_trend_rows": 37,
       "radar_available": false,
       "local_data_current": true,
       "local_data_status": "CURRENT"
     }
   },
   "current_snapshot": {
-    "timestamp": "2026-09-11 03:06:08",
+    "timestamp": "2026-09-11 04:06:09",
     "rainfall_mm": 0.0,
     "points": {
       "P1": {
         "risk_level": "Low",
         "risk_score": 0.0,
         "rainfall_mm": 0.0,
-        "timestamp": "2026-09-11 03:06:08"
+        "timestamp": "2026-09-11 04:06:09"
       },
       "P2": {
         "risk_level": "Low",
         "risk_score": 0.0,
         "rainfall_mm": 0.0,
-        "timestamp": "2026-09-11 03:06:08"
+        "timestamp": "2026-09-11 04:06:09"
       },
       "P3": {
         "risk_level": "Low",
         "risk_score": 0.0,
         "rainfall_mm": 0.0,
-        "timestamp": "2026-09-11 03:06:08"
+        "timestamp": "2026-09-11 04:06:09"
       },
       "P4": {
         "risk_level": "Low",
         "risk_score": 0.0,
         "rainfall_mm": 0.0,
-        "timestamp": "2026-09-11 03:06:08"
+        "timestamp": "2026-09-11 04:06:09"
       },
       "P5": {
         "risk_level": "Low",
         "risk_score": 0.0,
         "rainfall_mm": 0.0,
-        "timestamp": "2026-09-11 03:06:08"
+        "timestamp": "2026-09-11 04:06:09"
       },
       "P6": {
         "risk_level": "Low",
         "risk_score": 0.0,
         "rainfall_mm": 0.0,
-        "timestamp": "2026-09-11 03:06:08"
+        "timestamp": "2026-09-11 04:06:09"
       }
     },
     "pagasa_warning": "GREEN",
@@ -72,7 +72,7 @@
   "data_quality": {
     "distinct_days": 4,
     "rows_in_window": 72,
-    "recent_trend_rows": 36,
+    "recent_trend_rows": 37,
     "radar_available": false,
     "local_data_current": true,
     "local_data_status": "CURRENT"

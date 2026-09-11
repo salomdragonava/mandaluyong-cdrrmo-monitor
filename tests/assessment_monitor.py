@@ -31,6 +31,22 @@ def load(path, default):
         return default
 
 
+def radar_status(radar):
+    # Radar collector currently exposes tracking_status rather than the
+    # legacy status/radar_status field. Normalize both schemas here so a
+    # successful fresh frame is not incorrectly reported as unavailable.
+    status = radar.get('status') or radar.get('radar_status')
+    if not status:
+        tracking = str(radar.get('tracking_status') or '').upper()
+        if tracking == 'OK':
+            return 'OK'
+        if tracking in {'STALE', 'UNCHANGED_FRAME'}:
+            return 'UNCHANGED_FRAME'
+        if tracking in {'UNAVAILABLE', 'SOURCE_UNREACHABLE'}:
+            return 'SOURCE_UNREACHABLE'
+    return str(status or 'UNKNOWN').upper()
+
+
 def snapshot(flood=None):
     flood = flood if flood is not None else load(FLOOD_STATE_FILE, {})
     pagasa = load(Path('pagasa_state.json'), {})
@@ -56,10 +72,13 @@ def snapshot(flood=None):
 
     return {
         'timestamp': max(times).strftime('%Y-%m-%d %H:%M:%S') if times else None,
+        # ProjectLIGTAS rainfall is a current observation/rolling value, not
+        # a quantity to maximize across 36 hours. Using max() kept an old
+        # 5 mm observation active long after rainfall had returned to 0.
         'rainfall_mm': max(rains) if rains else 0.0,
         'points': points,
         'pagasa_warning': str(pagasa.get('level') or pagasa.get('warning_level') or 'UNKNOWN').upper(),
-        'radar_status': str(radar.get('status') or radar.get('radar_status') or 'UNKNOWN').upper(),
+        'radar_status': radar_status(radar),
         'flood_status': 'ELEVATED' if any(
             str(value.get('risk_level')).lower() not in (None, 'low')
             for value in points.values()
@@ -100,21 +119,23 @@ def assess(history):
 
     score = 0.0
     signals = []
-    recent_rainfall = [num(row.get('rainfall_mm')) for row in recent_rows]
 
-    if recent_rainfall:
-        maximum = max(recent_rainfall)
-        if maximum >= 10:
-            score += 35
-            signals.append('high rainfall pulse')
-        elif maximum >= 5:
-            score += 20
-            signals.append('moderate rainfall pulse')
-        elif maximum >= 2:
-            score += 8
-            signals.append('rainfall pulse')
-
+    # Rainfall forcing is based on the latest observation, not the maximum
+    # value seen anywhere in the 36-hour trend window. Historical rainfall is
+    # retained in history for analysis, but should not remain an active pulse
+    # after current conditions have dried out.
     latest = rows[-1]
+    latest_rainfall = num(latest.get('rainfall_mm'))
+    if latest_rainfall >= 10:
+        score += 35
+        signals.append('high rainfall pulse')
+    elif latest_rainfall >= 5:
+        score += 20
+        signals.append('moderate rainfall pulse')
+    elif latest_rainfall >= 2:
+        score += 8
+        signals.append('rainfall pulse')
+
     high_count, medium_count = source_level_counts(latest)
 
     # ProjectLIGTAS risk_level is the source classification. Its numerical
@@ -192,7 +213,8 @@ def assess(history):
         score += 30
         signals.append('PAGASA red')
 
-    if latest.get('radar_status') in UNKNOWN:
+    radar = str(latest.get('radar_status') or 'UNKNOWN').upper()
+    if radar in UNKNOWN or radar in {'SOURCE_UNREACHABLE', 'STALE', 'UNCHANGED_FRAME'}:
         confidence -= 0.05
         signals.append('radar unavailable; confidence slightly reduced')
 
@@ -222,17 +244,17 @@ def assess(history):
         'signals': signals,
         'interpretation': (
             'ProjectLIGTAS risk_level is treated as the source classification. '
-            'Its numerical risk_score is used for trend detection only. Trend and '
-            'rainfall-pulse signals are recency-bounded so recovered local conditions '
-            'do not remain elevated solely because an older rise occurred earlier in '
-            'the 3-day history. The validated precursor pattern is accumulation/'
-            'persistence first, followed by renewed rainfall or warning forcing.'
+            'Its numerical risk_score is used for trend detection only. Current '
+            'rainfall forcing is evaluated from the latest observation, while '
+            'water-level trend signals remain bounded to the latest 36 hours. '
+            'The validated precursor pattern is accumulation/persistence first, '
+            'followed by renewed rainfall or warning forcing.'
         ),
         'data_quality': {
             'distinct_days': len(days),
             'rows_in_window': len(rows),
             'recent_trend_rows': len(recent_rows),
-            'radar_available': latest.get('radar_status') not in UNKNOWN,
+            'radar_available': radar not in UNKNOWN and radar not in {'SOURCE_UNREACHABLE', 'STALE', 'UNCHANGED_FRAME'},
         },
     }
 
@@ -260,7 +282,6 @@ def main():
         current_for_assessment = dict(current_for_assessment)
         current_for_assessment['local_data_current'] = False
         current_for_assessment['local_data_status'] = 'STALE/UNAVAILABLE'
-        signals_note = 'local flood monitor unavailable; using last known snapshot'
 
     history = history[-5000:]
     prediction = assess(history)
@@ -280,7 +301,7 @@ def main():
     STATE_FILE.write_text(json.dumps(history, ensure_ascii=False, indent=2), encoding='utf-8')
     generated_at = datetime.now(PH_TZ).strftime('%Y-%m-%d %H:%M:%S')
     output = {
-        'schema_version': 6,
+        'schema_version': 7,
         'generated_at': generated_at,
         'model': '3-day flood precursor assessment',
         'prediction': prediction,

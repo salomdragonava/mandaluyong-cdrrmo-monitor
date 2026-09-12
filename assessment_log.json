@@ -31,7 +31,7 @@
   },
   "latest_monitor_run": {
     "schema_version": 7,
-    "generated_at": "2026-09-12 10:06:46",
+    "generated_at": "2026-09-12 11:06:19",
     "model": "3-day flood precursor assessment",
     "prediction": {
       "risk": "LOW",
@@ -47,51 +47,51 @@
       "data_quality": {
         "distinct_days": 4,
         "rows_in_window": 72,
-        "recent_trend_rows": 36,
+        "recent_trend_rows": 37,
         "radar_available": true,
         "local_data_current": true,
         "local_data_status": "CURRENT"
       }
     },
     "current_snapshot": {
-      "timestamp": "2026-09-12 02:06:20",
+      "timestamp": "2026-09-12 03:05:51",
       "rainfall_mm": 0.0,
       "points": {
         "P1": {
           "risk_level": "Low",
           "risk_score": 0.0,
           "rainfall_mm": 0.0,
-          "timestamp": "2026-09-12 02:06:20"
+          "timestamp": "2026-09-12 03:05:51"
         },
         "P2": {
           "risk_level": "Low",
           "risk_score": 0.0,
           "rainfall_mm": 0.0,
-          "timestamp": "2026-09-12 02:06:20"
+          "timestamp": "2026-09-12 03:05:51"
         },
         "P3": {
           "risk_level": "Low",
           "risk_score": 0.0,
           "rainfall_mm": 0.0,
-          "timestamp": "2026-09-12 02:06:20"
+          "timestamp": "2026-09-12 03:05:50"
         },
         "P4": {
           "risk_level": "Low",
           "risk_score": 0.0,
           "rainfall_mm": 0.0,
-          "timestamp": "2026-09-12 02:06:20"
+          "timestamp": "2026-09-12 03:05:51"
         },
         "P5": {
           "risk_level": "Low",
           "risk_score": 0.0,
           "rainfall_mm": 0.0,
-          "timestamp": "2026-09-12 02:06:20"
+          "timestamp": "2026-09-12 03:05:50"
         },
         "P6": {
           "risk_level": "Low",
           "risk_score": 0.0,
           "rainfall_mm": 0.0,
-          "timestamp": "2026-09-12 02:06:20"
+          "timestamp": "2026-09-12 03:05:51"
         }
       },
       "pagasa_warning": "GREEN",
@@ -101,7 +101,7 @@
     "data_quality": {
       "distinct_days": 4,
       "rows_in_window": 72,
-      "recent_trend_rows": 36,
+      "recent_trend_rows": 37,
       "radar_available": true,
       "local_data_current": true,
       "local_data_status": "CURRENT"

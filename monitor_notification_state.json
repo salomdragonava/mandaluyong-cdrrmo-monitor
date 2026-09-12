@@ -1,6 +1,17 @@
 {
   "pagasa_level": "GREEN",
   "flood": {
+    "P4": {
+      "name": "J.P. Rizal \u00d7 Ilino Cruz",
+      "purpose": "ESCAPE ROUTE",
+      "lat": 14.576385,
+      "lng": 121.024315,
+      "risk_level": "Low",
+      "risk_score": 0.0,
+      "rainfall": 0,
+      "flood_history": 0,
+      "timestamp": "2026-09-12 05:05:17"
+    },
     "P3": {
       "name": "J.P. Rizal \u00d7 San Pedro",
       "purpose": "ESCAPE ROUTE",
@@ -10,18 +21,7 @@
       "risk_score": 0.0,
       "rainfall": 0,
       "flood_history": 0,
-      "timestamp": "2026-09-12 04:05:58"
-    },
-    "P6": {
-      "name": "J.P. Rizal \u00d7 Coronado",
-      "purpose": "ESCAPE ROUTE",
-      "lat": 14.570609,
-      "lng": 121.030969,
-      "risk_level": "Low",
-      "risk_score": 0.0,
-      "rainfall": 0,
-      "flood_history": 0,
-      "timestamp": "2026-09-12 04:05:58"
+      "timestamp": "2026-09-12 05:05:16"
     },
     "P5": {
       "name": "J.P. Rizal \u00d7 Saniboy",
@@ -32,18 +32,18 @@
       "risk_score": 0.0,
       "rainfall": 0,
       "flood_history": 0,
-      "timestamp": "2026-09-12 04:05:58"
+      "timestamp": "2026-09-12 05:05:17"
     },
-    "P4": {
-      "name": "J.P. Rizal \u00d7 Ilino Cruz",
+    "P6": {
+      "name": "J.P. Rizal \u00d7 Coronado",
       "purpose": "ESCAPE ROUTE",
-      "lat": 14.576385,
-      "lng": 121.024315,
+      "lat": 14.570609,
+      "lng": 121.030969,
       "risk_level": "Low",
       "risk_score": 0.0,
       "rainfall": 0,
       "flood_history": 0,
-      "timestamp": "2026-09-12 04:05:58"
+      "timestamp": "2026-09-12 05:05:17"
     },
     "P1": {
       "name": "Pananalig \u00d7 Villarica",
@@ -54,7 +54,7 @@
       "risk_score": 0.0,
       "rainfall": 0,
       "flood_history": 0,
-      "timestamp": "2026-09-12 04:05:58"
+      "timestamp": "2026-09-12 05:05:17"
     },
     "P2": {
       "name": "Villarica \u00d7 Nanirahan",
@@ -65,11 +65,11 @@
       "risk_score": 0.0,
       "rainfall": 0,
       "flood_history": 0,
-      "timestamp": "2026-09-12 04:05:58"
+      "timestamp": "2026-09-12 05:05:17"
     }
   },
   "radar_candidate": false,
   "escape_elevated": false,
   "imminent": false,
-  "last_checked": "2026-09-12T12:06:22.051259+08:00"
+  "last_checked": "2026-09-12T13:05:43.155688+08:00"
 }

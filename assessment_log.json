@@ -31,24 +31,27 @@
   },
   "latest_monitor_run": {
     "schema_version": 7,
-    "generated_at": "2026-09-13 08:08:57",
+    "generated_at": "2026-09-13 09:05:47",
     "model": "3-day flood precursor assessment",
     "prediction": {
       "risk": "LOW",
       "score": 0,
-      "confidence": 0.9,
+      "confidence": 0.75,
       "window": "latest 3 days; trend signals latest 36 hours",
       "imminent": false,
       "lead_signal": "No validated imminent pattern yet.",
-      "signals": [],
+      "signals": [
+        "local flood monitor unavailable; last known snapshot used"
+      ],
       "interpretation": "ProjectLIGTAS risk_level is treated as the source classification. Its numerical risk_score is used for trend detection only. Current rainfall forcing is evaluated from the latest observation, while water-level trend signals remain bounded to the latest 36 hours. The validated precursor pattern is accumulation/persistence first, followed by renewed rainfall or warning forcing.",
       "data_quality": {
         "distinct_days": 4,
         "rows_in_window": 72,
         "recent_trend_rows": 36,
         "radar_available": true,
-        "local_data_current": true,
-        "local_data_status": "CURRENT"
+        "local_data_current": false,
+        "local_data_status": "STALE/UNAVAILABLE",
+        "last_known_flood_timestamp": "2026-09-13 00:08:21"
       }
     },
     "current_snapshot": {
@@ -94,15 +97,18 @@
       },
       "pagasa_warning": "GREEN",
       "radar_status": "OK",
-      "flood_status": "NORMAL"
+      "flood_status": "NORMAL",
+      "local_data_current": false,
+      "local_data_status": "STALE/UNAVAILABLE"
     },
     "data_quality": {
       "distinct_days": 4,
       "rows_in_window": 72,
       "recent_trend_rows": 36,
       "radar_available": true,
-      "local_data_current": true,
-      "local_data_status": "CURRENT"
+      "local_data_current": false,
+      "local_data_status": "STALE/UNAVAILABLE",
+      "last_known_flood_timestamp": "2026-09-13 00:08:21"
     }
   }
 }

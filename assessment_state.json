@@ -1,6 +1,6 @@
 {
   "schema_version": 7,
-  "generated_at": "2026-09-22 18:43:59",
+  "generated_at": "2026-09-22 23:20:03",
   "model": "3-day flood precursor assessment",
   "prediction": {
     "risk": "LOW",
@@ -16,51 +16,51 @@
     "data_quality": {
       "distinct_days": 4,
       "rows_in_window": 19,
-      "recent_trend_rows": 9,
+      "recent_trend_rows": 8,
       "radar_available": true,
       "local_data_current": true,
       "local_data_status": "CURRENT"
     }
   },
   "current_snapshot": {
-    "timestamp": "2026-09-22 10:43:31",
+    "timestamp": "2026-09-22 15:19:24",
     "rainfall_mm": 0.0,
     "points": {
       "P1": {
         "risk_level": "Low",
         "risk_score": 0.0,
         "rainfall_mm": 0.0,
-        "timestamp": "2026-09-22 10:43:31"
+        "timestamp": "2026-09-22 15:19:24"
       },
       "P2": {
         "risk_level": "Low",
         "risk_score": 0.0,
         "rainfall_mm": 0.0,
-        "timestamp": "2026-09-22 10:43:31"
+        "timestamp": "2026-09-22 15:19:24"
       },
       "P3": {
         "risk_level": "Low",
         "risk_score": 0.0,
         "rainfall_mm": 0.0,
-        "timestamp": "2026-09-22 10:43:31"
+        "timestamp": "2026-09-22 15:19:24"
       },
       "P4": {
         "risk_level": "Low",
         "risk_score": 0.0,
         "rainfall_mm": 0.0,
-        "timestamp": "2026-09-22 10:43:31"
+        "timestamp": "2026-09-22 15:19:24"
       },
       "P5": {
         "risk_level": "Low",
         "risk_score": 0.0,
         "rainfall_mm": 0.0,
-        "timestamp": "2026-09-22 10:43:31"
+        "timestamp": "2026-09-22 15:19:24"
       },
       "P6": {
         "risk_level": "Low",
         "risk_score": 0.0,
         "rainfall_mm": 0.0,
-        "timestamp": "2026-09-22 10:43:31"
+        "timestamp": "2026-09-22 15:19:24"
       }
     },
     "pagasa_warning": "GREEN",
@@ -70,7 +70,7 @@
   "data_quality": {
     "distinct_days": 4,
     "rows_in_window": 19,
-    "recent_trend_rows": 9,
+    "recent_trend_rows": 8,
     "radar_available": true,
     "local_data_current": true,
     "local_data_status": "CURRENT"

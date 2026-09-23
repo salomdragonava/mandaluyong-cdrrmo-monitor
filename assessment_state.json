@@ -1,6 +1,6 @@
 {
   "schema_version": 7,
-  "generated_at": "2026-09-24 02:07:57",
+  "generated_at": "2026-09-24 05:56:48",
   "model": "3-day flood precursor assessment",
   "prediction": {
     "risk": "LOW",
@@ -16,51 +16,51 @@
     "data_quality": {
       "distinct_days": 4,
       "rows_in_window": 17,
-      "recent_trend_rows": 8,
+      "recent_trend_rows": 9,
       "radar_available": true,
       "local_data_current": true,
       "local_data_status": "CURRENT"
     }
   },
   "current_snapshot": {
-    "timestamp": "2026-09-23 18:07:29",
-    "rainfall_mm": 0.4,
+    "timestamp": "2026-09-23 21:56:09",
+    "rainfall_mm": 0.0,
     "points": {
       "P1": {
         "risk_level": "Low",
-        "risk_score": 0.2,
-        "rainfall_mm": 0.4,
-        "timestamp": "2026-09-23 18:07:28"
+        "risk_score": 0.0,
+        "rainfall_mm": 0.0,
+        "timestamp": "2026-09-23 21:56:09"
       },
       "P2": {
         "risk_level": "Low",
-        "risk_score": 0.2,
-        "rainfall_mm": 0.4,
-        "timestamp": "2026-09-23 18:07:29"
+        "risk_score": 0.0,
+        "rainfall_mm": 0.0,
+        "timestamp": "2026-09-23 21:56:09"
       },
       "P3": {
         "risk_level": "Low",
-        "risk_score": 0.2,
-        "rainfall_mm": 0.4,
-        "timestamp": "2026-09-23 18:07:28"
+        "risk_score": 0.0,
+        "rainfall_mm": 0.0,
+        "timestamp": "2026-09-23 21:56:09"
       },
       "P4": {
         "risk_level": "Low",
-        "risk_score": 0.2,
-        "rainfall_mm": 0.4,
-        "timestamp": "2026-09-23 18:07:28"
+        "risk_score": 0.0,
+        "rainfall_mm": 0.0,
+        "timestamp": "2026-09-23 21:56:09"
       },
       "P5": {
         "risk_level": "Low",
-        "risk_score": 0.2,
-        "rainfall_mm": 0.4,
-        "timestamp": "2026-09-23 18:07:28"
+        "risk_score": 0.0,
+        "rainfall_mm": 0.0,
+        "timestamp": "2026-09-23 21:56:09"
       },
       "P6": {
         "risk_level": "Low",
-        "risk_score": 0.2,
-        "rainfall_mm": 0.4,
-        "timestamp": "2026-09-23 18:07:28"
+        "risk_score": 0.0,
+        "rainfall_mm": 0.0,
+        "timestamp": "2026-09-23 21:56:09"
       }
     },
     "pagasa_warning": "GREEN",
@@ -70,7 +70,7 @@
   "data_quality": {
     "distinct_days": 4,
     "rows_in_window": 17,
-    "recent_trend_rows": 8,
+    "recent_trend_rows": 9,
     "radar_available": true,
     "local_data_current": true,
     "local_data_status": "CURRENT"

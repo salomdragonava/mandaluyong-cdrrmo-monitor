@@ -1,24 +1,79 @@
 {
-  "success": false,
-  "checked_at": "2026-11-18T02:58:13.676515+08:00",
-  "image_timestamp": "20261117095000",
-  "tracking_status": "source_unreachable",
-  "resource_urls": [],
-  "download_diagnostics": [
+  "frames": [
     {
-      "source": "RainViewer",
-      "endpoint": "https://api.rainviewer.com/public/weather-maps.json",
-      "error": "UnicodeDecodeError('utf-8', b'\\x12)\\x00P7V\\x00\\x00P\\x1a\\x835\\xbbP80,\"generated\":1794941729,\"host\":\"https://tilecache.rainviewer.com\",\"radar\":{\"past\":[{\"time\":1794934200,\"path\":\"/v2/radar/01b4b023c167\"},{\"time\":1794934800,\"path\":\"/v2/radar/b937e7489110\"},{\"time\":1794935400,\"path\":\"/v2/radar/2215c485890e\"},{\"time\":1794936000,\"path\":\"/v2/radar/e90ae792f7a6\"},{\"time\":1794936600,\"path\":\"/v2/radar/db5d6db46e05\"},{\"time\":1794937200,\"path\":\"/v2/radar/458d2da3040f\"},{\"time\":1794937800,\"path\":\"/v2/radar/c5c7a439a40a\"},{\"time\":1794938400,\"path\":\"/v2/radar/cd70fefd443b\"},{\"time\":1794939000,\"path\":\"/v2/radar/19e6a154d0b7\"},{\"time\":1794939600,\"path\":\"/v2/radar/f418443d0c71\"},{\"time\":1794940200,\"path\":\"/v2/radar/28032c06e808\"},{\"time\":1794940800,\"path\":\"/v2/radar/51998d2e6e4e\"},{\"time\":1794941400,\"path\":\"/v2/radar/d030f7a0d9ff\"}],\"nowcast\":[]},\"satellite\":{\"infrared\":[]}}', 10, 11, 'invalid start byte')"
-    },
-    {
-      "source": "PANaHON",
-      "endpoint": "https://panahon.gov.ph/api/v1/radar/timeline?sublayer=mosaic-qpe",
-      "status": 200,
-      "content_type": "application/json",
-      "bytes": 126,
-      "frame_count": 0,
-      "error": "Timeline returned no parseable image frames"
+      "url": "https://tilecache.rainviewer.com/v2/radar/36cc28911ebb/512/6/14.5794/121.0359/2/1_0.png",
+      "timestamp": "20261118012000",
+      "path": "radar_data/radar_20261118012000.png",
+      "bytes": 1096,
+      "analysis": {
+        "image_size": [
+          512,
+          512
+        ],
+        "projection": "WebMercator",
+        "target": {
+          "lat": 14.5794,
+          "lon": 121.0359
+        },
+        "zoom": 6,
+        "target_pixel": [
+          256.0,
+          256.0
+        ],
+        "color_class_counts": {},
+        "components_count": 0,
+        "components": [],
+        "note": "Color classes are diagnostic only. They are not dBZ or PAGASA rainfall warning thresholds."
+      },
+      "source": "RainViewer"
     }
   ],
-  "message": "No fresh usable radar frame was captured. Previous frame is retained only as historical data."
+  "captured_images": [
+    "https://tilecache.rainviewer.com/v2/radar/36cc28911ebb/512/6/14.5794/121.0359/2/1_0.png"
+  ],
+  "resource_urls": [
+    "https://tilecache.rainviewer.com/v2/radar/36cc28911ebb/512/6/14.5794/121.0359/2/1_0.png"
+  ],
+  "radar_tracking": {
+    "status": "ok",
+    "previous_timestamp": "20261117095000",
+    "current_timestamp": "20261118012000",
+    "matches_count": 0,
+    "approaching_matches_count": 0,
+    "matches": [],
+    "max_movement_km_per_frame": 80.0
+  },
+  "collector": {
+    "mode": "RainViewer_primary",
+    "source": "RainViewer/PAGASA-PANAHON",
+    "endpoint": "https://api.rainviewer.com/public/weather-maps.json",
+    "center": {
+      "lat": 14.5794,
+      "lon": 121.0359,
+      "zoom": 6
+    },
+    "freshness_limit_minutes": 20,
+    "source_checked_at": "2026-11-18T09:30:07.599181+08:00",
+    "download_diagnostics": [
+      {
+        "source": "RainViewer",
+        "endpoint": "https://api.rainviewer.com/public/weather-maps.json",
+        "status": 200,
+        "content_type": "application/json",
+        "bytes": 818,
+        "frame_count": 13,
+        "generated": 1794965126
+      },
+      {
+        "source": "RainViewer",
+        "url": "https://tilecache.rainviewer.com/v2/radar/36cc28911ebb/512/6/14.5794/121.0359/2/1_0.png",
+        "timestamp": "20261118012000",
+        "age_minutes": 10.1,
+        "status": 200,
+        "content_type": "image/png",
+        "bytes": 1096,
+        "valid_image": true
+      }
+    ]
+  }
 }
